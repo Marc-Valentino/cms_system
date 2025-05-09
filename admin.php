@@ -759,6 +759,9 @@
         <div class="content-card" id="settings">
             <div class="card-header">
                 <h5 class="card-title">System Settings</h5>
+                <button class="btn btn-outline-secondary action-btn">
+                    <i class="bi bi-arrow-clockwise"></i> Reset to Default
+                </button>
             </div>
             <div class="settings-grid">
             <div class="settings-item">
@@ -841,33 +844,9 @@
                 </div>
                 <div class="settings-item">
                     <div class="settings-icon">
-                        <i class="bi bi-shield-lock"></i>
+                        <i class="bi bi-bell"></i>
                     </div>
-                    <div class="settings-label">Security Settings</div>
-                </div>
-                <div class="settings-item">
-                    <div class="settings-icon">
-                        <i class="bi bi-database"></i>
-                    </div>
-                    <div class="settings-label">Backup & Restore</div>
-                </div>
-                <div class="settings-item">
-                    <div class="settings-icon">
-                        <i class="bi bi-calendar-check"></i>
-                    </div>
-                    <div class="settings-label">Appointment Settings</div>
-                </div>
-                <div class="settings-item">
-                    <div class="settings-icon">
-                        <i class="bi bi-cash"></i>
-                    </div>
-                    <div class="settings-label">Payment Methods</div>
-                </div>
-                <div class="settings-item">
-                    <div class="settings-icon">
-                        <i class="bi bi-translate"></i>
-                    </div>
-                    <div class="settings-label">Language Settings</div>
+                    <div class="settings-label">Notification Settings</div>
                 </div>
                 <div class="settings-item">
                     <div class="settings-icon">
@@ -901,33 +880,9 @@
                 </div>
                 <div class="settings-item">
                     <div class="settings-icon">
-                        <i class="bi bi-shield-lock"></i>
+                        <i class="bi bi-bell"></i>
                     </div>
-                    <div class="settings-label">Security Settings</div>
-                </div>
-                <div class="settings-item">
-                    <div class="settings-icon">
-                        <i class="bi bi-database"></i>
-                    </div>
-                    <div class="settings-label">Backup & Restore</div>
-                </div>
-                <div class="settings-item">
-                    <div class="settings-icon">
-                        <i class="bi bi-calendar-check"></i>
-                    </div>
-                    <div class="settings-label">Appointment Settings</div>
-                </div>
-                <div class="settings-item">
-                    <div class="settings-icon">
-                        <i class="bi bi-cash"></i>
-                    </div>
-                    <div class="settings-label">Payment Methods</div>
-                </div>
-                <div class="settings-item">
-                    <div class="settings-icon">
-                        <i class="bi bi-translate"></i>
-                    </div>
-                    <div class="settings-label">Language Settings</div>
+                    <div class="settings-label">Notification Settings</div>
                 </div>
                 <div class="settings-item">
                     <div class="settings-icon">
@@ -961,33 +916,9 @@
                 </div>
                 <div class="settings-item">
                     <div class="settings-icon">
-                        <i class="bi bi-shield-lock"></i>
+                        <i class="bi bi-bell"></i>
                     </div>
-                    <div class="settings-label">Security Settings</div>
-                </div>
-                <div class="settings-item">
-                    <div class="settings-icon">
-                        <i class="bi bi-database"></i>
-                    </div>
-                    <div class="settings-label">Backup & Restore</div>
-                </div>
-                <div class="settings-item">
-                    <div class="settings-icon">
-                        <i class="bi bi-calendar-check"></i>
-                    </div>
-                    <div class="settings-label">Appointment Settings</div>
-                </div>
-                <div class="settings-item">
-                    <div class="settings-icon">
-                        <i class="bi bi-cash"></i>
-                    </div>
-                    <div class="settings-label">Payment Methods</div>
-                </div>
-                <div class="settings-item">
-                    <div class="settings-icon">
-                        <i class="bi bi-translate"></i>
-                    </div>
-                    <div class="settings-label">Language Settings</div>
+                    <div class="settings-label">Notification Settings</div>
                 </div>
                 <div class="settings-item">
                     <div class="settings-icon">
@@ -1021,33 +952,9 @@
                 </div>
                 <div class="settings-item">
                     <div class="settings-icon">
-                        <i class="bi bi-shield-lock"></i>
+                        <i class="bi bi-bell"></i>
                     </div>
-                    <div class="settings-label">Security Settings</div>
-                </div>
-                <div class="settings-item">
-                    <div class="settings-icon">
-                        <i class="bi bi-database"></i>
-                    </div>
-                    <div class="settings-label">Backup & Restore</div>
-                </div>
-                <div class="settings-item">
-                    <div class="settings-icon">
-                        <i class="bi bi-calendar-check"></i>
-                    </div>
-                    <div class="settings-label">Appointment Settings</div>
-                </div>
-                <div class="settings-item">
-                    <div class="settings-icon">
-                        <i class="bi bi-cash"></i>
-                    </div>
-                    <div class="settings-label">Payment Methods</div>
-                </div>
-                <div class="settings-item">
-                    <div class="settings-icon">
-                        <i class="bi bi-translate"></i>
-                    </div>
-                    <div class="settings-label">Language Settings</div>
+                    <div class="settings-label">Notification Settings</div>
                 </div>
                 <div class="settings-item">
                     <div class="settings-icon">
@@ -1081,33 +988,9 @@
                 </div>
                 <div class="settings-item">
                     <div class="settings-icon">
-                        <i class="bi bi-shield-lock"></i>
+                        <i class="bi bi-bell"></i>
                     </div>
-                    <div class="settings-label">Security Settings</div>
-                </div>
-                <div class="settings-item">
-                    <div class="settings-icon">
-                        <i class="bi bi-database"></i>
-                    </div>
-                    <div class="settings-label">Backup & Restore</div>
-                </div>
-                <div class="settings-item">
-                    <div class="settings-icon">
-                        <i class="bi bi-calendar-check"></i>
-                    </div>
-                    <div class="settings-label">Appointment Settings</div>
-                </div>
-                <div class="settings-item">
-                    <div class="settings-icon">
-                        <i class="bi bi-cash"></i>
-                    </div>
-                    <div class="settings-label">Payment Methods</div>
-                </div>
-                <div class="settings-item">
-                    <div class="settings-icon">
-                        <i class="bi bi-translate"></i>
-                    </div>
-                    <div class="settings-label">Language Settings</div>
+                    <div class="settings-label">Notification Settings</div>
                 </div>
                 <div class="settings-item">
                     <div class="settings-icon">
@@ -1141,33 +1024,9 @@
                 </div>
                 <div class="settings-item">
                     <div class="settings-icon">
-                        <i class="bi bi-shield-lock"></i>
+                        <i class="bi bi-bell"></i>
                     </div>
-                    <div class="settings-label">Security Settings</div>
-                </div>
-                <div class="settings-item">
-                    <div class="settings-icon">
-                        <i class="bi bi-database"></i>
-                    </div>
-                    <div class="settings-label">Backup & Restore</div>
-                </div>
-                <div class="settings-item">
-                    <div class="settings-icon">
-                        <i class="bi bi-calendar-check"></i>
-                    </div>
-                    <div class="settings-label">Appointment Settings</div>
-                </div>
-                <div class="settings-item">
-                    <div class="settings-icon">
-                        <i class="bi bi-cash"></i>
-                    </div>
-                    <div class="settings-label">Payment Methods</div>
-                </div>
-                <div class="settings-item">
-                    <div class="settings-icon">
-                        <i class="bi bi-translate"></i>
-                    </div>
-                    <div class="settings-label">Language Settings</div>
+                    <div class="settings-label">Notification Settings</div>
                 </div>
                 <div class="settings-item">
                     <div class="settings-icon">
@@ -1201,33 +1060,9 @@
                 </div>
                 <div class="settings-item">
                     <div class="settings-icon">
-                        <i class="bi bi-shield-lock"></i>
+                        <i class="bi bi-bell"></i>
                     </div>
-                    <div class="settings-label">Security Settings</div>
-                </div>
-                <div class="settings-item">
-                    <div class="settings-icon">
-                        <i class="bi bi-database"></i>
-                    </div>
-                    <div class="settings-label">Backup & Restore</div>
-                </div>
-                <div class="settings-item">
-                    <div class="settings-icon">
-                        <i class="bi bi-calendar-check"></i>
-                    </div>
-                    <div class="settings-label">Appointment Settings</div>
-                </div>
-                <div class="settings-item">
-                    <div class="settings-icon">
-                        <i class="bi bi-cash"></i>
-                    </div>
-                    <div class="settings-label">Payment Methods</div>
-                </div>
-                <div class="settings-item">
-                    <div class="settings-icon">
-                        <i class="bi bi-translate"></i>
-                    </div>
-                    <div class="settings-label">Language Settings</div>
+                    <div class="settings-label">Notification Settings</div>
                 </div>
                 <div class="settings-item">
                     <div class="settings-icon">
@@ -1261,33 +1096,9 @@
                 </div>
                 <div class="settings-item">
                     <div class="settings-icon">
-                        <i class="bi bi-shield-lock"></i>
+                        <i class="bi bi-bell"></i>
                     </div>
-                    <div class="settings-label">Security Settings</div>
-                </div>
-                <div class="settings-item">
-                    <div class="settings-icon">
-                        <i class="bi bi-database"></i>
-                    </div>
-                    <div class="settings-label">Backup & Restore</div>
-                </div>
-                <div class="settings-item">
-                    <div class="settings-icon">
-                        <i class="bi bi-calendar-check"></i>
-                    </div>
-                    <div class="settings-label">Appointment Settings</div>
-                </div>
-                <div class="settings-item">
-                    <div class="settings-icon">
-                        <i class="bi bi-cash"></i>
-                    </div>
-                    <div class="settings-label">Payment Methods</div>
-                </div>
-                <div class="settings-item">
-                    <div class="settings-icon">
-                        <i class="bi bi-translate"></i>
-                    </div>
-                    <div class="settings-label">Language Settings</div>
+                    <div class="settings-label">Notification Settings</div>
                 </div>
                 <div class="settings-item">
                     <div class="settings-icon">
@@ -1321,33 +1132,9 @@
                 </div>
                 <div class="settings-item">
                     <div class="settings-icon">
-                        <i class="bi bi-shield-lock"></i>
+                        <i class="bi bi-bell"></i>
                     </div>
-                    <div class="settings-label">Security Settings</div>
-                </div>
-                <div class="settings-item">
-                    <div class="settings-icon">
-                        <i class="bi bi-database"></i>
-                    </div>
-                    <div class="settings-label">Backup & Restore</div>
-                </div>
-                <div class="settings-item">
-                    <div class="settings-icon">
-                        <i class="bi bi-calendar-check"></i>
-                    </div>
-                    <div class="settings-label">Appointment Settings</div>
-                </div>
-                <div class="settings-item">
-                    <div class="settings-icon">
-                        <i class="bi bi-cash"></i>
-                    </div>
-                    <div class="settings-label">Payment Methods</div>
-                </div>
-                <div class="settings-item">
-                    <div class="settings-icon">
-                        <i class="bi bi-translate"></i>
-                    </div>
-                    <div class="settings-label">Language Settings</div>
+                    <div class="settings-label">Notification Settings</div>
                 </div>
                 <div class="settings-item">
                     <div class="settings-icon">
@@ -1381,33 +1168,9 @@
                 </div>
                 <div class="settings-item">
                     <div class="settings-icon">
-                        <i class="bi bi-shield-lock"></i>
+                        <i class="bi bi-bell"></i>
                     </div>
-                    <div class="settings-label">Security Settings</div>
-                </div>
-                <div class="settings-item">
-                    <div class="settings-icon">
-                        <i class="bi bi-database"></i>
-                    </div>
-                    <div class="settings-label">Backup & Restore</div>
-                </div>
-                <div class="settings-item">
-                    <div class="settings-icon">
-                        <i class="bi bi-calendar-check"></i>
-                    </div>
-                    <div class="settings-label">Appointment Settings</div>
-                </div>
-                <div class="settings-item">
-                    <div class="settings-icon">
-                        <i class="bi bi-cash"></i>
-                    </div>
-                    <div class="settings-label">Payment Methods</div>
-                </div>
-                <div class="settings-item">
-                    <div class="settings-icon">
-                        <i class="bi bi-translate"></i>
-                    </div>
-                    <div class="settings-label">Language Settings</div>
+                    <div class="settings-label">Notification Settings</div>
                 </div>
                 <div class="settings-item">
                     <div class="settings-icon">
@@ -1441,33 +1204,9 @@
                 </div>
                 <div class="settings-item">
                     <div class="settings-icon">
-                        <i class="bi bi-shield-lock"></i>
+                        <i class="bi bi-bell"></i>
                     </div>
-                    <div class="settings-label">Security Settings</div>
-                </div>
-                <div class="settings-item">
-                    <div class="settings-icon">
-                        <i class="bi bi-database"></i>
-                    </div>
-                    <div class="settings-label">Backup & Restore</div>
-                </div>
-                <div class="settings-item">
-                    <div class="settings-icon">
-                        <i class="bi bi-calendar-check"></i>
-                    </div>
-                    <div class="settings-label">Appointment Settings</div>
-                </div>
-                <div class="settings-item">
-                    <div class="settings-icon">
-                        <i class="bi bi-cash"></i>
-                    </div>
-                    <div class="settings-label">Payment Methods</div>
-                </div>
-                <div class="settings-item">
-                    <div class="settings-icon">
-                        <i class="bi bi-translate"></i>
-                    </div>
-                    <div class="settings-label">Language Settings</div>
+                    <div class="settings-label">Notification Settings</div>
                 </div>
                 <div class="settings-item">
                     <div class="settings-icon">
@@ -1501,33 +1240,9 @@
                 </div>
                 <div class="settings-item">
                     <div class="settings-icon">
-                        <i class="bi bi-shield-lock"></i>
+                        <i class="bi bi-bell"></i>
                     </div>
-                    <div class="settings-label">Security Settings</div>
-                </div>
-                <div class="settings-item">
-                    <div class="settings-icon">
-                        <i class="bi bi-database"></i>
-                    </div>
-                    <div class="settings-label">Backup & Restore</div>
-                </div>
-                <div class="settings-item">
-                    <div class="settings-icon">
-                        <i class="bi bi-calendar-check"></i>
-                    </div>
-                    <div class="settings-label">Appointment Settings</div>
-                </div>
-                <div class="settings-item">
-                    <div class="settings-icon">
-                        <i class="bi bi-cash"></i>
-                    </div>
-                    <div class="settings-label">Payment Methods</div>
-                </div>
-                <div class="settings-item">
-                    <div class="settings-icon">
-                        <i class="bi bi-translate"></i>
-                    </div>
-                    <div class="settings-label">Language Settings</div>
+                    <div class="settings-label">Notification Settings</div>
                 </div>
                 <div class="settings-item">
                     <div class="settings-icon">
@@ -1561,33 +1276,9 @@
                 </div>
                 <div class="settings-item">
                     <div class="settings-icon">
-                        <i class="bi bi-shield-lock"></i>
+                        <i class="bi bi-bell"></i>
                     </div>
-                    <div class="settings-label">Security Settings</div>
-                </div>
-                <div class="settings-item">
-                    <div class="settings-icon">
-                        <i class="bi bi-database"></i>
-                    </div>
-                    <div class="settings-label">Backup & Restore</div>
-                </div>
-                <div class="settings-item">
-                    <div class="settings-icon">
-                        <i class="bi bi-calendar-check"></i>
-                    </div>
-                    <div class="settings-label">Appointment Settings</div>
-                </div>
-                <div class="settings-item">
-                    <div class="settings-icon">
-                        <i class="bi bi-cash"></i>
-                    </div>
-                    <div class="settings-label">Payment Methods</div>
-                </div>
-                <div class="settings-item">
-                    <div class="settings-icon">
-                        <i class="bi bi-translate"></i>
-                    </div>
-                    <div class="settings-label">Language Settings</div>
+                    <div class="settings-label">Notification Settings</div>
                 </div>
                 <div class="settings-item">
                     <div class="settings-icon">
