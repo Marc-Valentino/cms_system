@@ -33,13 +33,15 @@
             background-color: #fff;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             z-index: 1000;
-            transition: all 0.3s;
+            transition: all 0.3s ease;
+            overflow-y: auto;
         }
         
         .sidebar-header {
             height: var(--header-height);
             display: flex;
             align-items: center;
+            justify-content: space-between;
             padding: 0 20px;
             background-color: var(--primary-color);
             color: white;
@@ -62,17 +64,20 @@
             color: #495057;
             text-decoration: none;
             transition: all 0.3s;
+            border-left: 4px solid transparent;
         }
         
         .menu-item:hover {
             background-color: rgba(13, 110, 253, 0.1);
             color: var(--primary-color);
+            border-left: 4px solid var(--primary-color);
         }
         
         .menu-item.active {
             background-color: rgba(13, 110, 253, 0.1);
             color: var(--primary-color);
             border-left: 4px solid var(--primary-color);
+            font-weight: 600;
         }
         
         .menu-item i {
@@ -80,6 +85,70 @@
             font-size: 1.2rem;
             width: 24px;
             text-align: center;
+        }
+        
+        /* Responsive Adjustments */
+        @media (max-width: 992px) {
+            :root {
+                --sidebar-width: 0px;
+            }
+            
+            .sidebar {
+                width: 250px;
+                transform: translateX(-100%);
+                box-shadow: 5px 0 15px rgba(0, 0, 0, 0.1);
+            }
+            
+            .sidebar.active {
+                transform: translateX(0);
+            }
+            
+            .main-content {
+                margin-left: 0;
+                width: 100%;
+            }
+            
+            .toggle-sidebar {
+                display: block;
+            }
+        }
+        
+        .toggle-sidebar {
+            display: none;
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            z-index: 1001;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            width: 40px;
+            height: 40px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s;
+        }
+        
+        .toggle-sidebar:hover {
+            background-color: var(--primary-hover);
+        }
+        
+        /* Close button for mobile */
+        .close-sidebar {
+            display: none;
+            color: white;
+            background: transparent;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+        
+        @media (max-width: 992px) {
+            .close-sidebar {
+                display: block;
+            }
         }
         
         /* Header Styles */
@@ -96,6 +165,7 @@
             align-items: center;
             justify-content: flex-end;
             padding: 0 20px;
+            transition: all 0.3s ease;
         }
         
         .admin-profile {
@@ -159,6 +229,7 @@
             margin-top: var(--header-height);
             padding: 20px;
             min-height: calc(100vh - var(--header-height));
+            transition: all 0.3s ease;
         }
         
         .dashboard-title {
@@ -282,6 +353,7 @@
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
             gap: 15px;
+            margin-top: 20px;
         }
         
         .settings-item {
@@ -330,22 +402,6 @@
             }
         }
         
-        .toggle-sidebar {
-            display: none;
-            position: fixed;
-            top: 10px;
-            left: 10px;
-            z-index: 1001;
-            background-color: var(--primary-color);
-            color: white;
-            border: none;
-            border-radius: 4px;
-            width: 40px;
-            height: 40px;
-            font-size: 1.2rem;
-            cursor: pointer;
-        }
-        
         /* Staff breakdown chart */
         .staff-chart {
             display: flex;
@@ -390,6 +446,9 @@
     <div class="sidebar" id="sidebar">
         <div class="sidebar-header">
             <h3>Admin Panel</h3>
+            <button class="close-sidebar" id="closeSidebar">
+                <i class="bi bi-x-lg"></i>
+            </button>
         </div>
         <div class="sidebar-menu">
             <a href="#dashboard" class="menu-item active">
@@ -408,6 +467,21 @@
                 <i class="bi bi-box-arrow-right"></i>
                 <span>Logout</span>
             </a>
+        </div>
+    </div>
+
+    <!-- Main Header -->
+    <div class="main-header" id="mainHeader">
+        <div class="admin-profile">
+            <img src="https://via.placeholder.com/40" alt="Admin Avatar">
+            <div class="admin-info">
+                <div class="admin-name">Admin User</div>
+                <div class="admin-role">Administrator</div>
+            </div>
+        </div>
+        <div class="notification-icon" data-bs-toggle="tooltip" title="Notifications">
+            <i class="bi bi-bell"></i>
+            <span class="notification-badge">3</span>
         </div>
     </div>
 
@@ -462,7 +536,7 @@
         <div class="content-card" id="users">
             <div class="card-header">
                 <h5 class="card-title">User Management</h5>
-                <button class="btn btn-primary action-btn">
+                <button class="btn btn-primary action-btn" data-bs-toggle="tooltip" title="Add new user">
                     <i class="bi bi-plus"></i> Add New User
                 </button>
             </div>
@@ -498,7 +572,7 @@
         <div class="content-card" id="settings">
             <div class="card-header">
                 <h5 class="card-title">System Settings - Roles & Permissions</h5>
-                <button class="btn btn-outline-primary action-btn">
+                <button class="btn btn-outline-primary action-btn" data-bs-toggle="tooltip" title="Reset permissions">
                     <i class="bi bi-arrow-clockwise"></i> Reset to Default
                 </button>
             </div>
@@ -528,7 +602,7 @@
                                         <span class="badge bg-info rounded-pill">Limited</span>
                                     </li>
                                 </ul>
-                                <button class="btn btn-sm btn-primary mt-3">
+                                <button class="btn btn-sm btn-primary mt-3" data-bs-toggle="tooltip" title="Add new role">
                                     <i class="bi bi-plus"></i> Add New Role
                                 </button>
                             </div>
@@ -612,7 +686,7 @@
                                     </table>
                                 </div>
                                 <div class="mt-3">
-                                    <button class="btn btn-primary">Save Changes</button>
+                                    <button class="btn btn-primary" data-bs-toggle="tooltip" title="Save permission changes">Save Changes</button>
                                     <button class="btn btn-outline-secondary ms-2">Cancel</button>
                                 </div>
                             </div>
@@ -621,21 +695,66 @@
                 </div>
             </div>
         </div>
-        <div class="settings-grid">  
+        
+        <!-- Settings Grid Section -->
+        <div class="settings-grid">
+            <div class="settings-item" data-bs-toggle="tooltip" title="General Settings">
+                <div class="settings-icon">
+                    <i class="bi bi-gear"></i>
+                </div>
+                <div class="settings-label">General Settings</div>
+            </div>
+            <div class="settings-item" data-bs-toggle="tooltip" title="User Management">
+                <div class="settings-icon">
+                    <i class="bi bi-people"></i>
+                </div>
+                <div class="settings-label">User Management</div>
+            </div>
+            <div class="settings-item" data-bs-toggle="tooltip" title="Backup & Restore">
+                <div class="settings-icon">
+                    <i class="bi bi-cloud-arrow-up"></i>
+                </div>
+                <div class="settings-label">Backup & Restore</div>
+            </div>
+            <div class="settings-item" data-bs-toggle="tooltip" title="System Logs">
+                <div class="settings-icon">
+                    <i class="bi bi-journal-text"></i>
+                </div>
+                <div class="settings-label">System Logs</div>
+            </div>
         </div>
+    </div>
+    
     <!-- Bootstrap JS Bundle with Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     
     <script>
         // Toggle sidebar on mobile
         document.getElementById('toggleSidebar').addEventListener('click', function() {
-            document.getElementById('sidebar').classList.toggle('active');
+            document.getElementById('sidebar').classList.add('active');
+        });
+        
+        // Close sidebar on mobile
+        document.getElementById('closeSidebar').addEventListener('click', function() {
+            document.getElementById('sidebar').classList.remove('active');
+        });
+        
+        // Close sidebar when clicking on menu items (on mobile)
+        const menuItems = document.querySelectorAll('.menu-item');
+        menuItems.forEach(item => {
+            item.addEventListener('click', function() {
+                if (window.innerWidth <= 992) {
+                    document.getElementById('sidebar').classList.remove('active');
+                }
+            });
         });
         
         // Initialize tooltips
-        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
-        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-            return new bootstrap.Tooltip(tooltipTriggerEl)
+        document.addEventListener('DOMContentLoaded', function() {
+            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl);
+            });
         });
     </script>
 </body>
