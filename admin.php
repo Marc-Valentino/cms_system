@@ -764,54 +764,60 @@
                 </button>
             </div>
             <div class="settings-grid">
-            <div class="settings-item">
-                <div class="settings-icon">
-                    <i class="bi bi-person-badge"></i>
+                <div class="settings-item">
+                    <div class="settings-icon">
+                        <i class="bi bi-person-badge"></i>
+                    </div>
+                    <div class="settings-label">Roles & Permissions</div>
                 </div>
-                <div class="settings-label">Roles & Permissions</div>
-            </div>
-            <div class="settings-item">
-                <div class="settings-icon">
-                    <i class="bi bi-building"></i>
+                <div class="settings-item">
+                    <div class="settings-icon">
+                        <i class="bi bi-building"></i>
+                    </div>
+                    <div class="settings-label">Clinic Information</div>
                 </div>
-                <div class="settings-label">Clinic Information</div>
-            </div>
-            <div class="settings-item">
-                <div class="settings-icon">
-                    <i class="bi bi-envelope"></i>
+                <div class="settings-item">
+                    <div class="settings-icon">
+                        <i class="bi bi-envelope"></i>
+                    </div>
+                    <div class="settings-label">Email Templates</div>
                 </div>
-                <div class="settings-label">Email Templates</div>
-            </div>
-            <div class="settings-item">
-                <div class="settings-icon">
-                    <i class="bi bi-shield-lock"></i>
+                <div class="settings-item">
+                    <div class="settings-icon">
+                        <i class="bi bi-shield-lock"></i>
+                    </div>
+                    <div class="settings-label">Security Settings</div>
                 </div>
-                <div class="settings-label">Security Settings</div>
-            </div>
-            <div class="settings-item">
-                <div class="settings-icon">
-                    <i class="bi bi-database"></i>
+                <div class="settings-item">
+                    <div class="settings-icon">
+                        <i class="bi bi-database"></i>
+                    </div>
+                    <div class="settings-label">Backup & Restore</div>
                 </div>
-                <div class="settings-label">Backup & Restore</div>
-            </div>
-            <div class="settings-item">
-                <div class="settings-icon">
-                    <i class="bi bi-calendar-check"></i>
+                <div class="settings-item">
+                    <div class="settings-icon">
+                        <i class="bi bi-calendar-check"></i>
+                    </div>
+                    <div class="settings-label">Appointment Settings</div>
                 </div>
-                <div class="settings-label">Appointment Settings</div>
-            </div>
-            <div class="settings-item">
-                <div class="settings-icon">
-                    <i class="bi bi-cash"></i>
+                <div class="settings-item">
+                    <div class="settings-icon">
+                        <i class="bi bi-cash"></i>
+                    </div>
+                    <div class="settings-label">Payment Methods</div>
                 </div>
-                <div class="settings-label">Payment Methods</div>
-            </div>
-            <div class="settings-item">
-                <div class="settings-icon">
-                    <i class="bi bi-translate"></i>
+                <div class="settings-item">
+                    <div class="settings-icon">
+                        <i class="bi bi-translate"></i>
+                    </div>
+                    <div class="settings-label">Language Settings</div>
                 </div>
-                <div class="settings-label">Language Settings</div>
-            </div>
+                <div class="settings-item">
+                    <div class="settings-icon">
+                        <i class="bi bi-bell"></i>
+                    </div>
+                    <div class="settings-label">Notification Settings</div>
+                </div>
                 <div class="settings-item">
                     <div class="settings-icon">
                         <i class="bi bi-shield-lock"></i>
