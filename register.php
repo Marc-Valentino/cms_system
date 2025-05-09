@@ -5,27 +5,30 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Clinic Management System - Registration</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary-color: #3498db;
-            --secondary-color: #2ecc71;
-            --accent-color: #9b59b6;
-            --text-color: #333;
-            --light-color: #f9f9f9;
+            --primary-color: #1a73e8; /* Deeper blue */
+            --secondary-color: #4285f4; /* Google blue */
+            --accent-color: #34a0ff; /* Light blue accent */
+            --text-color: #202124; /* Darker text for better contrast */
+            --light-color: #f0f6ff; /* Light blue tint for backgrounds */
             --error-color: #e74c3c;
-            --success-color: #27ae60;
-            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --success-color: #0f9d58; /* Google green */
+            --shadow: 0 4px 12px rgba(26, 115, 232, 0.2);
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Poppins', sans-serif;
         }
 
         body {
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            background: linear-gradient(135deg, #e8f0fe 0%, #c2d7ff 100%); /* Blue gradient background */
             min-height: 100vh;
             display: flex;
             justify-content: center;
@@ -53,10 +56,37 @@
             justify-content: center;
         }
 
+        /* Heart Logo and Animation Styles */
+        .logo-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .heart-logo {
+            width: 80px;
+            height: 80px;
+            position: relative;
+            animation: heartbeat 3s ease-in-out infinite; /* Increased from 1.5s to 3s */
+        }
+
+        @keyframes heartbeat {
+            0% { transform: scale(1); }
+            10% { transform: scale(1); }
+            15% { transform: scale(1.12); }
+            25% { transform: scale(1); }
+            35% { transform: scale(1); }
+            40% { transform: scale(1.12); }
+            50% { transform: scale(1); }
+            100% { transform: scale(1); }
+        }
+
         .info-section h1 {
             font-size: 2.5rem;
             margin-bottom: 20px;
             font-weight: 700;
+            text-align: center;
         }
 
         .info-section p {
@@ -138,7 +168,7 @@
 
         .form-control:focus {
             border-color: var(--primary-color);
-            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+            box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.2);
             outline: none;
         }
 
@@ -170,12 +200,13 @@
             width: 100%;
             transition: all 0.3s ease;
             margin-top: 10px;
-            box-shadow: 0 4px 6px rgba(46, 204, 113, 0.2);
+            box-shadow: 0 4px 6px rgba(26, 115, 232, 0.3);
         }
 
         .btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 8px rgba(46, 204, 113, 0.3);
+            box-shadow: 0 6px 10px rgba(26, 115, 232, 0.4);
+            background: linear-gradient(to right, #0d62d1, #3b7deb); /* Slightly darker on hover */
         }
 
         .btn:active {
@@ -248,6 +279,14 @@
 <body>
     <div class="container">
         <div class="info-section">
+            <div class="logo-container">
+                <svg class="heart-logo" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Heart shape -->
+                    <path d="M50,90 C25,65 0,50 0,25 C0,10 10,0 25,0 C35,0 45,5 50,15 C55,5 65,0 75,0 C90,0 100,10 100,25 C100,50 75,65 50,90 Z" fill="#ffffff"/>
+                    <!-- Lifeline across the heart -->
+                    <path d="M10,50 L30,50 L35,35 L45,65 L55,35 L65,65 L70,50 L90,50" stroke="#1a73e8" stroke-width="3" fill="none" stroke-linecap="round"/>
+                </svg>
+            </div>
             <h1>Clinic Management System</h1>
             <p>Join our platform to streamline your healthcare practice. Register now to access our comprehensive clinic management tools.</p>
             
