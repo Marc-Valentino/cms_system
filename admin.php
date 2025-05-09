@@ -389,7 +389,7 @@
     <!-- Sidebar -->
     <div class="sidebar" id="sidebar">
         <div class="sidebar-header">
-            <h3>Clinic Management</h3>
+            <h3>Admin Panel</h3>
         </div>
         <div class="sidebar-menu">
             <a href="#dashboard" class="menu-item active">
@@ -411,26 +411,6 @@
         </div>
     </div>
 
-    <!-- Header -->
-    <div class="main-header">
-        <div class="d-flex justify-content-between w-100 align-items-center">
-            <div class="page-title d-none d-md-block">
-                <h4 class="m-0">Clinic Management System</h4>
-            </div>
-            <div class="admin-profile">
-                <div class="notification-icon">
-                    <i class="bi bi-bell"></i>
-                    <span class="notification-badge">3</span>
-                </div>
-                <img src="https://via.placeholder.com/40" alt="Admin Profile">
-                <div class="admin-info">
-                    <span class="admin-name">Dr. John Smith</span>
-                    <span class="admin-role">Admin</span>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <!-- Main Content -->
     <div class="main-content">
         <h2 class="dashboard-title">Dashboard</h2>
@@ -445,8 +425,8 @@
                     <div class="stats-icon">
                         <i class="bi bi-person"></i>
                     </div>
-                    <div class="stats-number">1,248</div>
-                    <div class="stats-label">Total Patients</div>
+                    <div class="stats-number">0</div>
+                    <div class="stats-label">Total Doctors</div>
                 </div>
             </div>
             <div class="col-md-3 col-sm-6">
@@ -454,22 +434,8 @@
                     <div class="stats-icon">
                         <i class="bi bi-people"></i>
                     </div>
-                    <div class="stats-number">42</div>
-                    <div class="stats-label">Total Staff</div>
-                    <div class="staff-chart">
-                        <div class="chart-bar">
-                            <div class="bar-fill doctors-bar"></div>
-                            <div class="bar-label">Doctors (18)</div>
-                        </div>
-                        <div class="chart-bar">
-                            <div class="bar-fill nurses-bar"></div>
-                            <div class="bar-label">Nurses (15)</div>
-                        </div>
-                        <div class="chart-bar">
-                            <div class="bar-fill receptionists-bar"></div>
-                            <div class="bar-label">Reception (9)</div>
-                        </div>
-                    </div>
+                    <div class="stats-number">0</div>
+                    <div class="stats-label">Total Nurses</div>
                 </div>
             </div>
             <div class="col-md-3 col-sm-6">
@@ -477,8 +443,8 @@
                     <div class="stats-icon">
                         <i class="bi bi-calendar-check"></i>
                     </div>
-                    <div class="stats-number">37</div>
-                    <div class="stats-label">Appointments Today</div>
+                    <div class="stats-number">0</div>
+                    <div class="stats-label">Total Receptionists</div>
                 </div>
             </div>
             <div class="col-md-3 col-sm-6">
@@ -486,8 +452,8 @@
                     <div class="stats-icon">
                         <i class="bi bi-currency-dollar"></i>
                     </div>
-                    <div class="stats-number">$8,540</div>
-                    <div class="stats-label">Today's Revenue</div>
+                    <div class="stats-number">0</div>
+                    <div class="stats-label">Total Users</div>
                 </div>
             </div>
         </div>
@@ -513,69 +479,17 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>
-                                <div class="d-flex align-items-center">
-                                    <img src="https://via.placeholder.com/40" alt="User" class="user-avatar me-2">
-                                    <span>Dr. Sarah Johnson</span>
-                                </div>
-                            </td>
-                            <td>Doctor</td>
-                            <td>sarah.j@clinic.com</td>
-                            <td><span class="status-badge status-active">Active</span></td>
-                            <td>Today, 9:45 AM</td>
-                            <td>
-                                <i class="bi bi-eye action-icon"></i>
-                                <i class="bi bi-pencil action-icon"></i>
-                                <i class="bi bi-trash action-icon delete"></i>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div class="d-flex align-items-center">
-                                    <img src="https://via.placeholder.com/40" alt="User" class="user-avatar me-2">
-                                    <span>Nurse Mike Peterson</span>
-                                </div>
-                            </td>
-                            <td>Nurse</td>
-                            <td>mike.p@clinic.com</td>
-                            <td><span class="status-badge status-active">Active</span></td>
-                            <td>Yesterday, 4:30 PM</td>
-                            <td>
-                                <i class="bi bi-eye action-icon"></i>
-                                <i class="bi bi-pencil action-icon"></i>
-                                <i class="bi bi-trash action-icon delete"></i>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div class="d-flex align-items-center">
-                                    <img src="https://via.placeholder.com/40" alt="User" class="user-avatar me-2">
-                                    <span>Lisa Morgan</span>
-                                </div>
-                            </td>
-                            <td>Receptionist</td>
-                            <td>lisa.m@clinic.com</td>
-                            <td><span class="status-badge status-inactive">Inactive</span></td>
-                            <td>Aug 15, 2023</td>
-                            <td>
-                                <i class="bi bi-eye action-icon"></i>
-                                <i class="bi bi-pencil action-icon"></i>
-                                <i class="bi bi-trash action-icon delete"></i>
-                            </td>
-                        </tr>
+                        <!-- Empty table - no default users -->
                     </tbody>
                 </table>
             </div>
             <div class="d-flex justify-content-between align-items-center mt-3">
-                <div>Showing 1-3 of 42 users</div>
+                <div>Showing 0 users</div>
                 <nav>
                     <ul class="pagination mb-0">
                         <li class="page-item disabled"><a class="page-link" href="#">Previous</a></li>
                         <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                        <li class="page-item"><a class="page-link" href="#">2</a></li>
-                        <li class="page-item"><a class="page-link" href="#">3</a></li>
-                        <li class="page-item"><a class="page-link" href="#">Next</a></li>
+                        <li class="page-item disabled"><a class="page-link" href="#">Next</a></li>
                     </ul>
                 </nav>
             </div>
@@ -583,69 +497,146 @@
         <!-- System Settings Section -->
         <div class="content-card" id="settings">
             <div class="card-header">
-                <h5 class="card-title">System Settings</h5>
+                <h5 class="card-title">System Settings - Roles & Permissions</h5>
                 <button class="btn btn-outline-primary action-btn">
                     <i class="bi bi-arrow-clockwise"></i> Reset to Default
                 </button>
             </div>
-            <div class="settings-grid">
-                <div class="settings-item">
-                    <div class="settings-icon">
-                        <i class="bi bi-person-badge"></i>
+            <div class="roles-permissions-container">
+                <div class="row mb-4">
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-header">
+                                <h6 class="mb-0">Available Roles</h6>
+                            </div>
+                            <div class="card-body">
+                                <ul class="list-group">
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        Administrator
+                                        <span class="badge bg-primary rounded-pill">Full Access</span>
+                                    </li>
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        Doctor
+                                        <span class="badge bg-info rounded-pill">Limited</span>
+                                    </li>
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        Nurse
+                                        <span class="badge bg-info rounded-pill">Limited</span>
+                                    </li>
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        Receptionist
+                                        <span class="badge bg-info rounded-pill">Limited</span>
+                                    </li>
+                                </ul>
+                                <button class="btn btn-sm btn-primary mt-3">
+                                    <i class="bi bi-plus"></i> Add New Role
+                                </button>
+                            </div>
+                        </div>
                     </div>
-                    <div class="settings-label">Roles & Permissions</div>
-                </div>
-                <div class="settings-item">
-                    <div class="settings-icon">
-                        <i class="bi bi-building"></i>
+                    <div class="col-md-8">
+                        <div class="card">
+                            <div class="card-header">
+                                <h6 class="mb-0">Permission Management</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th>Permission</th>
+                                                <th>Administrator</th>
+                                                <th>Doctor</th>
+                                                <th>Nurse</th>
+                                                <th>Receptionist</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>View Patients</td>
+                                                <td><input type="checkbox" checked disabled></td>
+                                                <td><input type="checkbox" checked></td>
+                                                <td><input type="checkbox" checked></td>
+                                                <td><input type="checkbox" checked></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Add Patients</td>
+                                                <td><input type="checkbox" checked disabled></td>
+                                                <td><input type="checkbox" checked></td>
+                                                <td><input type="checkbox" checked></td>
+                                                <td><input type="checkbox" checked></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Edit Patients</td>
+                                                <td><input type="checkbox" checked disabled></td>
+                                                <td><input type="checkbox" checked></td>
+                                                <td><input type="checkbox" checked></td>
+                                                <td><input type="checkbox"></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Delete Patients</td>
+                                                <td><input type="checkbox" checked disabled></td>
+                                                <td><input type="checkbox"></td>
+                                                <td><input type="checkbox"></td>
+                                                <td><input type="checkbox"></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Manage Appointments</td>
+                                                <td><input type="checkbox" checked disabled></td>
+                                                <td><input type="checkbox" checked></td>
+                                                <td><input type="checkbox" checked></td>
+                                                <td><input type="checkbox" checked></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Access Reports</td>
+                                                <td><input type="checkbox" checked disabled></td>
+                                                <td><input type="checkbox" checked></td>
+                                                <td><input type="checkbox"></td>
+                                                <td><input type="checkbox"></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Manage Users</td>
+                                                <td><input type="checkbox" checked disabled></td>
+                                                <td><input type="checkbox"></td>
+                                                <td><input type="checkbox"></td>
+                                                <td><input type="checkbox"></td>
+                                            </tr>
+                                            <tr>
+                                                <td>System Settings</td>
+                                                <td><input type="checkbox" checked disabled></td>
+                                                <td><input type="checkbox"></td>
+                                                <td><input type="checkbox"></td>
+                                                <td><input type="checkbox"></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="mt-3">
+                                    <button class="btn btn-primary">Save Changes</button>
+                                    <button class="btn btn-outline-secondary ms-2">Cancel</button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="settings-label">Site Information</div>
-                </div>
-                <div class="settings-item">
-                    <div class="settings-icon">
-                        <i class="bi bi-envelope"></i>
-                    </div>
-                    <div class="settings-label">Email Templates</div>
-                </div>
-                <div class="settings-item">
-                    <div class="settings-icon">
-                        <i class="bi bi-shield-lock"></i>
-                    </div>
-                    <div class="settings-label">Security Settings</div>
-                </div>
-                <div class="settings-item">
-                    <div class="settings-icon">
-                        <i class="bi bi-database"></i>
-                    </div>
-                    <div class="settings-label">Backup & Restore</div>
-                </div>
-                <div class="settings-item">
-                    <div class="settings-icon">
-                        <i class="bi bi-translate"></i>
-                    </div>
-                    <div class="settings-label">Language Settings</div>
-                </div>
-                <div class="settings-item">
-                    <div class="settings-icon">
-                        <i class="bi bi-palette"></i>
-                    </div>
-                    <div class="settings-label">Theme Settings</div>
-                </div>
-                <div class="settings-item">
-                    <div class="settings-icon">
-                        <i class="bi bi-bell"></i>
-                    </div>
-                    <div class="settings-label">Notification Settings</div>
                 </div>
             </div>
         </div>
-        <!-- System Settings Section -->
-        <div class="content-card" id="settings">
-            <div class="card-header">
-                <h5 class="card-title">System Settings</h5>
-                <button class="btn btn-outline-secondary action-btn">
-                    <i class="bi bi-arrow-clockwise"></i> Reset to Default
-                </button>
-            </div>
-
-            
+        <div class="settings-grid">  
+        </div>
+    <!-- Bootstrap JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // Toggle sidebar on mobile
+        document.getElementById('toggleSidebar').addEventListener('click', function() {
+            document.getElementById('sidebar').classList.toggle('active');
+        });
+        
+        // Initialize tooltips
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl)
+        });
+    </script>
+</body>
+</html>
