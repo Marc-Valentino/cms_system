@@ -400,14 +400,6 @@
                 <i class="bi bi-people"></i>
                 <span>User Management</span>
             </a>
-            <a href="#audit" class="menu-item">
-                <i class="bi bi-journal-text"></i>
-                <span>Audit Logs</span>
-            </a>
-            <a href="#billing" class="menu-item">
-                <i class="bi bi-cash-coin"></i>
-                <span>Billing</span>
-            </a>
             <a href="#settings" class="menu-item">
                 <i class="bi bi-gear"></i>
                 <span>System Settings</span>
@@ -769,54 +761,54 @@
                 <h5 class="card-title">System Settings</h5>
             </div>
             <div class="settings-grid">
-                <div class="settings-item">
-                    <div class="settings-icon">
-                        <i class="bi bi-person-badge"></i>
-                    </div>
-                    <div class="settings-label">Roles & Permissions</div>
+            <div class="settings-item">
+                <div class="settings-icon">
+                    <i class="bi bi-person-badge"></i>
                 </div>
-                <div class="settings-item">
-                    <div class="settings-icon">
-                        <i class="bi bi-building"></i>
-                    </div>
-                    <div class="settings-label">Clinic Information</div>
+                <div class="settings-label">Roles & Permissions</div>
+            </div>
+            <div class="settings-item">
+                <div class="settings-icon">
+                    <i class="bi bi-building"></i>
                 </div>
-                <div class="settings-item">
-                    <div class="settings-icon">
-                        <i class="bi bi-envelope"></i>
-                    </div>
-                    <div class="settings-label">Email Templates</div>
+                <div class="settings-label">Clinic Information</div>
+            </div>
+            <div class="settings-item">
+                <div class="settings-icon">
+                    <i class="bi bi-envelope"></i>
                 </div>
-                <div class="settings-item">
-                    <div class="settings-icon">
-                        <i class="bi bi-shield-lock"></i>
-                    </div>
-                    <div class="settings-label">Security Settings</div>
+                <div class="settings-label">Email Templates</div>
+            </div>
+            <div class="settings-item">
+                <div class="settings-icon">
+                    <i class="bi bi-shield-lock"></i>
                 </div>
-                <div class="settings-item">
-                    <div class="settings-icon">
-                        <i class="bi bi-database"></i>
-                    </div>
-                    <div class="settings-label">Backup & Restore</div>
+                <div class="settings-label">Security Settings</div>
+            </div>
+            <div class="settings-item">
+                <div class="settings-icon">
+                    <i class="bi bi-database"></i>
                 </div>
-                <div class="settings-item">
-                    <div class="settings-icon">
-                        <i class="bi bi-calendar-check"></i>
-                    </div>
-                    <div class="settings-label">Appointment Settings</div>
+                <div class="settings-label">Backup & Restore</div>
+            </div>
+            <div class="settings-item">
+                <div class="settings-icon">
+                    <i class="bi bi-calendar-check"></i>
                 </div>
-                <div class="settings-item">
-                    <div class="settings-icon">
-                        <i class="bi bi-cash"></i>
-                    </div>
-                    <div class="settings-label">Payment Methods</div>
+                <div class="settings-label">Appointment Settings</div>
+            </div>
+            <div class="settings-item">
+                <div class="settings-icon">
+                    <i class="bi bi-cash"></i>
                 </div>
-                <div class="settings-item">
-                    <div class="settings-icon">
-                        <i class="bi bi-translate"></i>
-                    </div>
-                    <div class="settings-label">Language Settings</div>
+                <div class="settings-label">Payment Methods</div>
+            </div>
+            <div class="settings-item">
+                <div class="settings-icon">
+                    <i class="bi bi-translate"></i>
                 </div>
+                <div class="settings-label">Language Settings</div>
+            </div>
                 <div class="settings-item">
                     <div class="settings-icon">
                         <i class="bi bi-shield-lock"></i>
