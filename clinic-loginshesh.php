@@ -447,7 +447,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             </form>
             
             <div class="login-footer">
-                <p>Need help? <a href="#">Contact Support</a></p>
+                <p>No account yet? <a href="#">Register</a></p>
             </div>
         </div>
     </div>
