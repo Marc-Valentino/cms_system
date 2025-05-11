@@ -10,15 +10,15 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
     <style>
         :root {
-            --primary-color: #0d6efd;
-            --primary-hover: #0b5ed7;
-            --sidebar-width: 250px;
-            --header-height: 60px;
+            --primary-color: #3498db;
+            --primary-hover: #2980b9;
+            --sidebar-width: 260px;
+            --header-height: 70px;
         }
         
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f8f9fa;
+            background-color: #f5f7fa;
             margin: 0;
             padding: 0;
         }
@@ -30,8 +30,8 @@
             left: 0;
             width: var(--sidebar-width);
             height: 100vh;
-            background-color: #fff;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            background-color: #2c3e50;
+            color: #ecf0f1;
             z-index: 1000;
             transition: all 0.3s ease;
             overflow-y: auto;
@@ -43,12 +43,13 @@
             align-items: center;
             justify-content: space-between;
             padding: 0 20px;
-            background-color: var(--primary-color);
+            background-color: #1a2530;
             color: white;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
         
         .sidebar-header h3 {
-            font-size: 1.2rem;
+            font-size: 1.3rem;
             margin: 0;
             font-weight: 600;
         }
@@ -60,30 +61,32 @@
         .menu-item {
             display: flex;
             align-items: center;
-            padding: 12px 20px;
-            color: #495057;
+            padding: 14px 20px;
+            color: #ecf0f1;
             text-decoration: none;
             transition: all 0.3s;
             border-left: 4px solid transparent;
+            margin-bottom: 8px;
+            font-size: 1.05rem;
         }
         
         .menu-item:hover {
-            background-color: rgba(13, 110, 253, 0.1);
-            color: var(--primary-color);
-            border-left: 4px solid var(--primary-color);
+            background-color: rgba(255, 255, 255, 0.15);
+            color: #fff;
+            border-left: 4px solid #3498db;
         }
         
         .menu-item.active {
-            background-color: rgba(13, 110, 253, 0.1);
-            color: var(--primary-color);
-            border-left: 4px solid var(--primary-color);
+            background-color: rgba(255, 255, 255, 0.15);
+            color: #fff;
+            border-left: 4px solid #3498db;
             font-weight: 600;
         }
         
         .menu-item i {
-            margin-right: 10px;
+            margin-right: 12px;
             font-size: 1.2rem;
-            width: 24px;
+            width: 28px;
             text-align: center;
         }
         
@@ -94,7 +97,7 @@
             }
             
             .sidebar {
-                width: 250px;
+                width: 240px;
                 transform: translateX(-100%);
                 box-shadow: 5px 0 15px rgba(0, 0, 0, 0.1);
             }
@@ -103,8 +106,8 @@
                 transform: translateX(0);
             }
             
-            .main-content {
-                margin-left: 0;
+            .main-header, .main-content {
+                left: 0;
                 width: 100%;
             }
             
@@ -116,16 +119,16 @@
         .toggle-sidebar {
             display: none;
             position: fixed;
-            top: 10px;
-            left: 10px;
+            top: 15px;
+            left: 15px;
             z-index: 1001;
             background-color: var(--primary-color);
             color: white;
             border: none;
             border-radius: 4px;
-            width: 40px;
-            height: 40px;
-            font-size: 1.2rem;
+            width: 45px;
+            height: 45px;
+            font-size: 1.5rem;
             cursor: pointer;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
             transition: all 0.3s;
@@ -133,6 +136,28 @@
         
         .toggle-sidebar:hover {
             background-color: var(--primary-hover);
+        }
+        
+        /* Responsive Adjustments */
+        @media (max-width: 992px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            
+            .sidebar.active {
+                transform: translateX(0);
+            }
+            
+            .main-header, .main-content {
+                left: 0;
+                width: 100%;
+            }
+            
+            .toggle-sidebar {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
         }
         
         /* Close button for mobile */
@@ -159,12 +184,12 @@
             right: 0;
             height: var(--header-height);
             background-color: #fff;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
             z-index: 900;
             display: flex;
             align-items: center;
             justify-content: flex-end;
-            padding: 0 20px;
+            padding: 0 25px;
             transition: all 0.3s ease;
         }
         
@@ -174,10 +199,11 @@
         }
         
         .admin-profile img {
-            width: 40px;
-            height: 40px;
+            width: 36px;
+            height: 36px;
             border-radius: 50%;
             margin-right: 10px;
+            border: 2px solid #f1f1f1;
         }
         
         .admin-info {
@@ -189,11 +215,12 @@
         .admin-name {
             font-weight: 600;
             font-size: 0.9rem;
+            color: #2c3e50;
         }
         
         .admin-role {
-            font-size: 0.75rem;
-            background-color: var(--primary-color);
+            font-size: 0.7rem;
+            background-color: #3498db;
             color: white;
             padding: 2px 8px;
             border-radius: 10px;
@@ -203,16 +230,21 @@
         .notification-icon {
             margin-left: 20px;
             font-size: 1.2rem;
-            color: #6c757d;
+            color: #7f8c8d;
             cursor: pointer;
             position: relative;
+            transition: color 0.3s;
+        }
+        
+        .notification-icon:hover {
+            color: #3498db;
         }
         
         .notification-badge {
             position: absolute;
             top: -5px;
             right: -5px;
-            background-color: #dc3545;
+            background-color: #e74c3c;
             color: white;
             border-radius: 50%;
             width: 18px;
@@ -227,14 +259,16 @@
         .main-content {
             margin-left: var(--sidebar-width);
             margin-top: var(--header-height);
-            padding: 20px;
+            padding: 30px;
             min-height: calc(100vh - var(--header-height));
             transition: all 0.3s ease;
         }
         
         .dashboard-title {
-            margin-bottom: 20px;
-            color: #343a40;
+            margin-bottom: 30px;
+            color: #2c3e50;
+            font-weight: 600;
+            font-size: 1.8rem;
         }
         
         .stats-card {
@@ -460,8 +494,12 @@
                 <span>User Management</span>
             </a>
             <a href="#settings" class="menu-item">
+                <i class="bi bi-shield-lock"></i>
+                <span>Roles & Permissions</span>
+            </a>
+            <a href="#profile" class="menu-item">
                 <i class="bi bi-gear"></i>
-                <span>System Settings</span>
+                <span>General Settings</span>
             </a>
             <a href="login.php" class="menu-item">
                 <i class="bi bi-box-arrow-right"></i>
@@ -473,7 +511,6 @@
     <!-- Main Header -->
     <div class="main-header" id="mainHeader">
         <div class="admin-profile">
-            <img src="https://via.placeholder.com/40" alt="Admin Avatar">
             <div class="admin-info">
                 <div class="admin-name">Admin User</div>
                 <div class="admin-role">Administrator</div>
@@ -571,7 +608,7 @@
         <!-- System Settings Section -->
         <div class="content-card" id="settings">
             <div class="card-header">
-                <h5 class="card-title">System Settings - Roles & Permissions</h5>
+                <h5 class="card-title">Roles & Permissions</h5>
                 <button class="btn btn-outline-primary action-btn" data-bs-toggle="tooltip" title="Reset permissions">
                     <i class="bi bi-arrow-clockwise"></i> Reset to Default
                 </button>
@@ -676,7 +713,7 @@
                                                 <td><input type="checkbox"></td>
                                             </tr>
                                             <tr>
-                                                <td>System Settings</td>
+                                                <td>Roles & Permissions</td>
                                                 <td><input type="checkbox" checked disabled></td>
                                                 <td><input type="checkbox"></td>
                                                 <td><input type="checkbox"></td>
@@ -710,52 +747,166 @@
                 </div>
                 <div class="settings-label">User Management</div>
             </div>
-            <div class="settings-item" data-bs-toggle="tooltip" title="Backup & Restore">
+            <div class="settings-item" data-bs-toggle="tooltip" title="Roles & Permissions">
                 <div class="settings-icon">
-                    <i class="bi bi-cloud-arrow-up"></i>
+                    <i class="bi bi-shield-lock"></i>
                 </div>
-                <div class="settings-label">Backup & Restore</div>
-            </div>
-            <div class="settings-item" data-bs-toggle="tooltip" title="System Logs">
-                <div class="settings-icon">
-                    <i class="bi bi-journal-text"></i>
-                </div>
-                <div class="settings-label">System Logs</div>
+                <div class="settings-label">Roles & Permissions</div>
             </div>
         </div>
     </div>
     
     <!-- Bootstrap JS Bundle with Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-    
     <script>
         // Toggle sidebar on mobile
         document.getElementById('toggleSidebar').addEventListener('click', function() {
             document.getElementById('sidebar').classList.add('active');
+            document.body.style.overflow = 'hidden'; // Prevent scrolling when sidebar is open
         });
         
         // Close sidebar on mobile
         document.getElementById('closeSidebar').addEventListener('click', function() {
             document.getElementById('sidebar').classList.remove('active');
+            document.body.style.overflow = ''; // Restore scrolling
         });
         
-        // Close sidebar when clicking on menu items (on mobile)
-        const menuItems = document.querySelectorAll('.menu-item');
-        menuItems.forEach(item => {
-            item.addEventListener('click', function() {
-                if (window.innerWidth <= 992) {
-                    document.getElementById('sidebar').classList.remove('active');
+        // Handle navigation
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get all menu items
+            const menuItems = document.querySelectorAll('.menu-item');
+            
+            // Get all sections
+            const sections = {
+                dashboard: document.querySelector('.row.mb-4'),
+                users: document.getElementById('users'),
+                settings: document.getElementById('settings'),
+                profile: document.getElementById('profile')
+            };
+            
+            // Settings grid
+            const settingsGrid = document.querySelector('.settings-grid');
+            
+            // Function to show a section
+            function showSection(sectionId) {
+                // Hide all sections first
+                for (const key in sections) {
+                    if (sections[key]) {
+                        sections[key].style.display = 'none';
+                    }
                 }
+                
+                // Hide settings grid by default
+                if (settingsGrid) {
+                    settingsGrid.style.display = 'none';
+                }
+                
+                // Show dashboard title by default
+                document.querySelector('.dashboard-title').style.display = 'block';
+                
+                // Show the selected section
+                if (sectionId === '#dashboard') {
+                    // For dashboard, show the overview section and settings grid
+                    sections.dashboard.style.display = 'flex';
+                    if (settingsGrid) {
+                        settingsGrid.style.display = 'grid';
+                    }
+                } else if (sectionId === '#users') {
+                    sections.users.style.display = 'block';
+                } else if (sectionId === '#settings') {
+                    sections.settings.style.display = 'block';
+                } else if (sectionId === '#profile') {
+                    sections.profile.style.display = 'block';
+                }
+                
+                // Update active menu item
+                menuItems.forEach(item => {
+                    if (item.getAttribute('href') === sectionId) {
+                        item.classList.add('active');
+                    } else {
+                        item.classList.remove('active');
+                    }
+                });
+            }
+            
+            // Add click event to menu items
+            menuItems.forEach(item => {
+                item.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    const targetId = this.getAttribute('href');
+                    showSection(targetId);
+                    
+                    // Close sidebar on mobile
+                    if (window.innerWidth <= 992) {
+                        document.getElementById('sidebar').classList.remove('active');
+                        document.body.style.overflow = ''; // Restore scrolling
+                    }
+                });
             });
+            
+            // Handle settings grid items click
+            const settingsItems = document.querySelectorAll('.settings-item');
+            settingsItems.forEach((item, index) => {
+                item.addEventListener('click', function() {
+                    if (index === 0) {
+                        // General Settings
+                        showSection('#profile');
+                    } else if (index === 1) {
+                        // User Management
+                        showSection('#users');
+                    } else if (index === 2) {
+                        // Roles & Permissions
+                        showSection('#settings');
+                    }
+                });
+            });
+            
+            // Show dashboard by default
+            showSection('#dashboard');
         });
         
         // Initialize tooltips
-        document.addEventListener('DOMContentLoaded', function() {
-            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-            var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-                return new bootstrap.Tooltip(tooltipTriggerEl);
-            });
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl)
         });
     </script>
 </body>
 </html>
+
+        <!-- User Profile Section (General Settings) --> 
+        <div class="content-card" id="profile"> 
+            <div class="card-header"> 
+                <h5 class="card-title">General Settings</h5> 
+                <button class="btn btn-primary action-btn" data-bs-toggle="tooltip" title="Save changes"> 
+                    <i class="bi bi-save"></i> Save Changes 
+                </button> 
+            </div> 
+            <div class="p-4">
+                <div class="mb-4">
+                    <label class="form-label">Email</label>
+                    <input type="email" class="form-control" value="admin@example.com">
+                </div>
+                
+                <div class="mb-4">
+                    <label class="form-label">Role</label>
+                    <input type="text" class="form-control" value="Administrator" disabled>
+                </div>
+                
+                <div class="mt-5 mb-3">
+                    <h5>Change Password</h5>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">New Password</label>
+                        <input type="password" class="form-control">
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Confirm New Password</label>
+                        <input type="password" class="form-control">
+                    </div>
+                </div>
+            </div>
+        </div>
