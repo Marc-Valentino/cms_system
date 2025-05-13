@@ -1,3 +1,4 @@
+<link rel="stylesheet" href="css/sidebar.css">
 <div class="sidebar">
     <div class="sidebar-header">
         <div class="logo-container">
@@ -71,57 +72,3 @@
     });
 </script>
 
-<style>
-    /* Heart Logo Animation */
-    .heart-logo {
-        width: 65px;
-        height: 65px;
-        margin-right: 10px;
-    }
-    
-    .heart {
-        animation: pulse 1.5s ease-in-out infinite;
-        transform-origin: center;
-    }
-    
-    .heartbeat-line {
-        stroke-dasharray: 400;
-        stroke-dashoffset: 400;
-        animation: dash 3s linear infinite;
-    }
-    
-    @keyframes pulse {
-        0% {
-            transform: scale(1);
-        }
-        50% {
-            transform: scale(1.1);
-        }
-        100% {
-            transform: scale(1);
-        }
-    }
-    
-    @keyframes dash {
-        0% {
-            stroke-dashoffset: 400;
-        }
-        100% {
-            stroke-dashoffset: 0;
-        }
-    }
-    
-    /* Logo container styling */
-    .logo-container {
-        display: flex;
-        align-items: center;
-        padding: 15px;
-    }
-    
-    .logo-container h3 {
-        margin: 0;
-        color: #fff;
-        font-size: 1.3rem;
-        font-weight: 700;
-    }
-</style>

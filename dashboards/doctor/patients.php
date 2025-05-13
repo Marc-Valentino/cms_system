@@ -87,7 +87,8 @@ $notifications = [
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="css/doctor.css">
+    <link rel="stylesheet" href="css/patients.css">
 </head>
 <body>
     <div class="dashboard-container">
@@ -676,66 +677,3 @@ $notifications = [
         });
 remove    </script>
 
-<style>
-    /* Modal styling */
-    .modal-content {
-        border-radius: 0.5rem;
-        border: none;
-        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
-    }
-    
-    .modal-header {
-        border-bottom: 1px solid #e9ecef;
-        background-color: #f8f9fa;
-        border-top-left-radius: 0.5rem;
-        border-top-right-radius: 0.5rem;
-    }
-    
-    .modal-footer {
-        border-top: 1px solid #e9ecef;
-        background-color: #f8f9fa;
-        border-bottom-left-radius: 0.5rem;
-        border-bottom-right-radius: 0.5rem;
-    }
-    
-    /* Form styling */
-    .form-control:focus, .form-select:focus {
-        border-color: #80bdff;
-        box-shadow: 0 0 0 0.25rem rgba(0, 123, 255, 0.25);
-    }
-    
-    /* Button hover effects */
-    .btn-primary:hover, .btn-success:hover {
-        transform: translateY(-1px);
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        transition: all 0.2s;
-    }
-    
-    .btn-danger:hover {
-        background-color: #c82333;
-        border-color: #bd2130;
-    }
-    
-    /* Patient profile in view modal */
-    .patient-avatar {
-        width: 80px;
-        height: 80px;
-        border-radius: 50%;
-        background-color: #e9ecef;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin: 0 auto;
-    }
-    
-    /* Responsive adjustments */
-    @media (max-width: 576px) {
-        .patient-details .row {
-            margin-bottom: 1rem;
-        }
-        
-        .patient-details .col-md-4 {
-            margin-bottom: 0.25rem;
-        }
-    }
-</style>

@@ -82,7 +82,8 @@ $medicalNotes = [
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="css/doctor.css">
+    <link rel="stylesheet" href="css/medical-notes.css">
 </head>
 <body>
     <div class="dashboard-container">
@@ -278,35 +279,7 @@ $medicalNotes = [
     </div>
 
     <!-- Add custom styles for the modal -->
-    <style>
-        /* Avatar styling */
-        .avatar-container {
-            display: inline-block;
-            position: relative;
-        }
-        
-        /* Responsive icon sizing */
-        @media (max-width: 576px) {
-            .avatar-container .bi-person-circle {
-                font-size: 3rem !important;
-            }
-        }
-        
-        /* Row styling for better mobile display */
-        .patient-details .row {
-            margin-bottom: 0.5rem;
-            padding: 0.5rem;
-            background-color: #f8f9fa;
-            border-radius: 0.25rem;
-        }
-        
-        /* Responsive text adjustments */
-        @media (max-width: 767px) {
-            .patient-details .col-md-4 {
-                margin-bottom: 0.25rem;
-            }
-        }
-    </style>
+    
 
     <!-- Edit Note Modal -->
     <div class="modal fade" id="editNoteModal" tabindex="-1" aria-labelledby="editNoteModalLabel" aria-hidden="true">
@@ -419,46 +392,7 @@ $medicalNotes = [
     </div>
 
     <!-- Add custom styles for the modals -->
-    <style>
-        /* Modal animation */
-        .modal.fade .modal-dialog {
-            transition: transform 0.3s ease-out;
-        }
-        
-        /* Form element styling */
-        .form-control:hover, .form-select:hover {
-            border-color: #80bdff;
-        }
-        
-        .form-control:focus, .form-select:focus {
-            border-color: #80bdff;
-            box-shadow: 0 0 0 0.25rem rgba(0, 123, 255, 0.25);
-        }
-        
-        /* Button hover effects */
-        .btn-success:hover, .btn-danger:hover {
-            transform: translateY(-1px);
-            transition: all 0.2s;
-        }
-        
-        /* Toast styling */
-        .toast {
-            opacity: 1;
-            border: none;
-            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
-        }
-        
-        /* Responsive adjustments */
-        @media (max-width: 576px) {
-            .modal-dialog {
-                margin: 0.5rem;
-            }
-            
-            .toast {
-                width: 300px;
-            }
-        }
-    </style>
+    
 
     <!-- Add JavaScript for modal functionality -->
     <script>

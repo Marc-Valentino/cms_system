@@ -90,7 +90,7 @@ foreach ($appointments as $appointment) {
     <link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css" rel="stylesheet">
     
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="doctor.css">
     
 </head>
 <body>

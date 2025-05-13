@@ -5,33 +5,8 @@
 
 <!-- Header -->
 <!-- Add this style section if you don't have these styles in your styles.css -->
-<style>
-    .header {
-        position: fixed;
-        top: 0;
-        right: 0;
-        left: 250px; /* Match the width of your sidebar */
-        z-index: 1000;
-        background-color: #fff;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        padding: 15px 20px;
-        display: flex;
-        align-items: center;
-        transition: left 0.3s ease;
-    }
 
-    /* Responsive adjustments for mobile */
-    @media (max-width: 991.98px) {
-        .header {
-            left: 0;
-        }
-        
-        .sidebar.active + .main-content .header {
-            left: 250px;
-        }
-    }
-</style>
-
+<link rel="stylesheet" href="css/navbar.css">
 <div class="header">
     <button class="btn d-lg-none" id="toggle-sidebar">
         <i class="bi bi-list"></i>
