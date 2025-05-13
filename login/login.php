@@ -37,7 +37,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <title>Clinic Management System</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="css/clinic-login.css">
+    <link rel="stylesheet" href="login.css">
 </head>
 <body>
     <div class="container">
@@ -117,28 +117,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             </form>
             
             <div class="login-footer">
-                <p>No account yet? <a href="#">Register</a></p>
+                <p>No account yet? <a href="../register/register.php">Register</a></p>
             </div>
         </div>
     </div>
     
-    <script>
-        // Role selector functionality
-        document.querySelectorAll('.role-option').forEach(option => {
-            option.addEventListener('click', function() {
-                // Remove active class from all options
-                document.querySelectorAll('.role-option').forEach(opt => {
-                    opt.classList.remove('active');
-                });
-                
-                // Add active class to clicked option
-                this.classList.add('active');
-                
-                // Set username field based on role
-                const role = this.getAttribute('data-role');
-                document.getElementById('username').value = role;
-            });
-        });
-    </script>
+<script src="login.js"></script>
 </body>
 </html>

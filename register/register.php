@@ -5,245 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Clinic Management System - Registration</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        :root {
-            --primary-color: #3498db;
-            --secondary-color: #2ecc71;
-            --accent-color: #9b59b6;
-            --text-color: #333;
-            --light-color: #f9f9f9;
-            --error-color: #e74c3c;
-            --success-color: #27ae60;
-            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-
-        body {
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
-
-        .container {
-            width: 100%;
-            max-width: 1200px;
-            display: flex;
-            box-shadow: var(--shadow);
-            border-radius: 15px;
-            overflow: hidden;
-            background-color: white;
-        }
-
-        .info-section {
-            flex: 1;
-            background: linear-gradient(135deg, var(--primary-color) 0%, var(--accent-color) 100%);
-            padding: 40px;
-            color: white;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-
-        .info-section h1 {
-            font-size: 2.5rem;
-            margin-bottom: 20px;
-            font-weight: 700;
-        }
-
-        .info-section p {
-            font-size: 1.1rem;
-            margin-bottom: 30px;
-            line-height: 1.6;
-        }
-
-        .features {
-            margin-top: 30px;
-        }
-
-        .feature-item {
-            display: flex;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-
-        .feature-icon {
-            width: 40px;
-            height: 40px;
-            background-color: rgba(255, 255, 255, 0.2);
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-right: 15px;
-        }
-
-        .feature-text {
-            font-size: 1rem;
-        }
-
-        .form-section {
-            flex: 1;
-            padding: 40px;
-            background-color: white;
-        }
-
-        .form-section h2 {
-            font-size: 1.8rem;
-            margin-bottom: 30px;
-            color: var(--text-color);
-            text-align: center;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-            position: relative;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: var(--text-color);
-        }
-
-        .input-group {
-            position: relative;
-        }
-
-        .input-group i {
-            position: absolute;
-            left: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #aaa;
-        }
-
-        .form-control {
-            width: 100%;
-            padding: 15px 15px 15px 45px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            font-size: 1rem;
-            transition: all 0.3s ease;
-        }
-
-        .form-control:focus {
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
-            outline: none;
-        }
-
-        .error-message {
-            color: var(--error-color);
-            font-size: 0.85rem;
-            margin-top: 5px;
-            display: none;
-        }
-
-        .form-row {
-            display: flex;
-            gap: 15px;
-        }
-
-        .form-row .form-group {
-            flex: 1;
-        }
-
-        .btn {
-            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
-            color: white;
-            border: none;
-            padding: 15px 25px;
-            border-radius: 8px;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            width: 100%;
-            transition: all 0.3s ease;
-            margin-top: 10px;
-            box-shadow: 0 4px 6px rgba(46, 204, 113, 0.2);
-        }
-
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 8px rgba(46, 204, 113, 0.3);
-        }
-
-        .btn:active {
-            transform: translateY(0);
-        }
-
-        .terms {
-            margin-top: 20px;
-            font-size: 0.9rem;
-            color: #777;
-            text-align: center;
-        }
-
-        .terms a {
-            color: var(--primary-color);
-            text-decoration: none;
-        }
-
-        .success-message {
-            display: none;
-            background-color: var(--success-color);
-            color: white;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            text-align: center;
-        }
-
-        .login-link {
-            text-align: center;
-            margin-top: 20px;
-            font-size: 0.95rem;
-            color: #666;
-        }
-
-        .login-link a {
-            color: var(--primary-color);
-            text-decoration: none;
-            font-weight: 600;
-        }
-
-        /* Responsive styles */
-        @media (max-width: 992px) {
-            .container {
-                flex-direction: column;
-                max-width: 600px;
-            }
-            
-            .info-section, .form-section {
-                padding: 30px;
-            }
-            
-            .info-section {
-                text-align: center;
-            }
-            
-            .feature-item {
-                justify-content: center;
-            }
-        }
-
-        @media (max-width: 576px) {
-            .form-row {
-                flex-direction: column;
-                gap: 0;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="register.css">
 </head>
 <body>
     <div class="container">
@@ -333,7 +95,6 @@
                             <option value="">Select your role</option>
                             <option value="doctor">Doctor</option>
                             <option value="nurse">Nurse</option>
-                            <option value="receptionist">Receptionist</option>
                             <option value="admin">Administrator</option>
                         </select>
                     </div>
@@ -359,119 +120,25 @@
                         <div class="error-message" id="confirmPasswordError"></div>
                     </div>
                 </div>
+
+                <div class="terms">
+                    <label class="checkbox-container">
+                        <input type="checkbox" id="termsCheckbox" required>
+                        <span class="checkmark"></span>
+                        agree to our <a href="#"> Terms of Service </a> and <a href="#">  Privacy Policy</a>
+                    </label>
+                </div>
                 
                 <button type="submit" class="btn">Register Account</button>
                 
-                <div class="terms">
-                    By registering, you agree to our <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>
-                </div>
+                
                 
                 <div class="login-link">
-                    Already have an account? <a href="login.php">Login here</a>
+                    Already have an account? <a href="../login/login.php">Login here</a>
                 </div>
             </form>
         </div>
     </div>
-
-    <script>
-        function validateForm(event) {
-            event.preventDefault();
-            let isValid = true;
-            
-            // Reset error messages
-            const errorElements = document.querySelectorAll('.error-message');
-            errorElements.forEach(element => {
-                element.style.display = 'none';
-                element.textContent = '';
-            });
-            
-            // Validate first name
-            const firstName = document.getElementById('firstName').value.trim();
-            if (firstName === '') {
-                document.getElementById('firstNameError').textContent = 'First name is required';
-                document.getElementById('firstNameError').style.display = 'block';
-                isValid = false;
-            }
-            
-            // Validate last name
-            const lastName = document.getElementById('lastName').value.trim();
-            if (lastName === '') {
-                document.getElementById('lastNameError').textContent = 'Last name is required';
-                document.getElementById('lastNameError').style.display = 'block';
-                isValid = false;
-            }
-            
-            // Validate email
-            const email = document.getElementById('email').value.trim();
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            if (email === '') {
-                document.getElementById('emailError').textContent = 'Email address is required';
-                document.getElementById('emailError').style.display = 'block';
-                isValid = false;
-            } else if (!emailRegex.test(email)) {
-                document.getElementById('emailError').textContent = 'Please enter a valid email address';
-                document.getElementById('emailError').style.display = 'block';
-                isValid = false;
-            }
-            
-            // Validate phone
-            const phone = document.getElementById('phone').value.trim();
-            const phoneRegex = /^\+?[0-9]{10,15}$/;
-            if (phone === '') {
-                document.getElementById('phoneError').textContent = 'Phone number is required';
-                document.getElementById('phoneError').style.display = 'block';
-                isValid = false;
-            } else if (!phoneRegex.test(phone)) {
-                document.getElementById('phoneError').textContent = 'Please enter a valid phone number';
-                document.getElementById('phoneError').style.display = 'block';
-                isValid = false;
-            }
-            
-            // Validate role
-            const role = document.getElementById('role').value;
-            if (role === '') {
-                document.getElementById('roleError').textContent = 'Please select a role';
-                document.getElementById('roleError').style.display = 'block';
-                isValid = false;
-            }
-            
-            // Validate password
-            const password = document.getElementById('password').value;
-            if (password === '') {
-                document.getElementById('passwordError').textContent = 'Password is required';
-                document.getElementById('passwordError').style.display = 'block';
-                isValid = false;
-            } else if (password.length < 8) {
-                document.getElementById('passwordError').textContent = 'Password must be at least 8 characters long';
-                document.getElementById('passwordError').style.display = 'block';
-                isValid = false;
-            }
-            
-            // Validate confirm password
-            const confirmPassword = document.getElementById('confirmPassword').value;
-            if (confirmPassword === '') {
-                document.getElementById('confirmPasswordError').textContent = 'Please confirm your password';
-                document.getElementById('confirmPasswordError').style.display = 'block';
-                isValid = false;
-            } else if (confirmPassword !== password) {
-                document.getElementById('confirmPasswordError').textContent = 'Passwords do not match';
-                document.getElementById('confirmPasswordError').style.display = 'block';
-                isValid = false;
-            }
-            
-            // If form is valid, show success message
-            if (isValid) {
-                document.getElementById('successMessage').style.display = 'block';
-                document.getElementById('registrationForm').reset();
-                
-                // Simulate redirect after 3 seconds
-                setTimeout(() => {
-                    window.location.href = 'dashboard.php';
-                }, 3000);
-            }
-            
-            return false;
-        }
-    </script>
+<script src="register.js"></script>
 </body>
 </html>
