@@ -22,7 +22,7 @@
             <li><a href="vitals.php" <?php echo basename($_SERVER['PHP_SELF']) == 'vitals.php' ? 'class="active"' : ''; ?>><i class="bi bi-heart-pulse"></i> <span>Vitals</span></a></li>
             <li><a href="medications.php" <?php echo basename($_SERVER['PHP_SELF']) == 'medications.php' ? 'class="active"' : ''; ?>><i class="bi bi-capsule"></i> <span>Medications</span></a></li>
             <li><a href="schedule.php" <?php echo basename($_SERVER['PHP_SELF']) == 'schedule.php' ? 'class="active"' : ''; ?>><i class="bi bi-calendar-check"></i> <span>Schedule</span></a></li>
-            <li><a href="notifications.php" <?php echo basename($_SERVER['PHP_SELF']) == 'notifications.php' ? 'class="active"' : ''; ?>><i class="bi bi-bell"></i> <span>Notifications</span></a></li>
+            <li><a href="nurse-notification.php" <?php echo basename($_SERVER['PHP_SELF']) == 'nurse-notification.php' ? 'class="active"' : ''; ?>><i class="bi bi-bell"></i> <span>Notifications</span></a></li>
             <li><a href="settings.php" <?php echo basename($_SERVER['PHP_SELF']) == 'settings.php' ? 'class="active"' : ''; ?>><i class="bi bi-gear"></i> <span>Settings</span></a></li>
             <li><a href="#" id="logout-link"><i class="bi bi-box-arrow-right"></i> <span>Logout</span></a></li>
         </ul>
