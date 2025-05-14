@@ -1,0 +1,26 @@
+.header {
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 250px; /* Match the width of your sidebar */
+    z-index: 1000;
+    background-color: #fff;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    padding: 15px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: left 0.3s ease;
+    height: 70px; /* Set a fixed height for the navbar */
+}
+
+/* Responsive adjustments for mobile */
+@media (max-width: 991.98px) {
+    .header {
+        left: 0;
+    }
+    
+    .sidebar.active + .main-content .header {
+        left: 250px;
+    }
+}
