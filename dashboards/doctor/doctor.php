@@ -4,11 +4,11 @@ if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }
 
-// Check if doctor is logged in
-// if (!isset($_SESSION['doctor_id'])) {
-//     header("Location: ../login.php");
-//     exit();
-// }
+// Check if user is logged in and has doctor role
+if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'doctor') {
+    header("Location: ../../login/login.php");
+    exit();
+}
 
 // Placeholder doctor data - replace with actual data from your database
 $doctor = [

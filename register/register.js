@@ -1,11 +1,21 @@
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('registrationForm');
+    
+    form.addEventListener('submit', function(event) {
+        event.preventDefault();
+        
+        if (validateForm(event)) {
+            submitForm();
+        }
+    });
+});
+
 function validateForm(event) {
-    event.preventDefault();
     let isValid = true;
     
-    // Reset error messages
+    // Clear previous error messages
     const errorElements = document.querySelectorAll('.error-message');
     errorElements.forEach(element => {
-        element.style.display = 'none';
         element.textContent = '';
     });
     
@@ -13,7 +23,6 @@ function validateForm(event) {
     const firstName = document.getElementById('firstName').value.trim();
     if (firstName === '') {
         document.getElementById('firstNameError').textContent = 'First name is required';
-        document.getElementById('firstNameError').style.display = 'block';
         isValid = false;
     }
     
@@ -21,33 +30,23 @@ function validateForm(event) {
     const lastName = document.getElementById('lastName').value.trim();
     if (lastName === '') {
         document.getElementById('lastNameError').textContent = 'Last name is required';
-        document.getElementById('lastNameError').style.display = 'block';
         isValid = false;
     }
     
     // Validate email
     const email = document.getElementById('email').value.trim();
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (email === '') {
-        document.getElementById('emailError').textContent = 'Email address is required';
-        document.getElementById('emailError').style.display = 'block';
+        document.getElementById('emailError').textContent = 'Email is required';
         isValid = false;
-    } else if (!emailRegex.test(email)) {
-        document.getElementById('emailError').textContent = 'Please enter a valid email address';
-        document.getElementById('emailError').style.display = 'block';
+    } else if (!isValidEmail(email)) {
+        document.getElementById('emailError').textContent = 'Invalid email format';
         isValid = false;
     }
     
     // Validate phone
     const phone = document.getElementById('phone').value.trim();
-    const phoneRegex = /^\+?[0-9]{10,15}$/;
     if (phone === '') {
         document.getElementById('phoneError').textContent = 'Phone number is required';
-        document.getElementById('phoneError').style.display = 'block';
-        isValid = false;
-    } else if (!phoneRegex.test(phone)) {
-        document.getElementById('phoneError').textContent = 'Please enter a valid phone number';
-        document.getElementById('phoneError').style.display = 'block';
         isValid = false;
     }
     
@@ -55,7 +54,6 @@ function validateForm(event) {
     const role = document.getElementById('role').value;
     if (role === '') {
         document.getElementById('roleError').textContent = 'Please select a role';
-        document.getElementById('roleError').style.display = 'block';
         isValid = false;
     }
     
@@ -63,11 +61,9 @@ function validateForm(event) {
     const password = document.getElementById('password').value;
     if (password === '') {
         document.getElementById('passwordError').textContent = 'Password is required';
-        document.getElementById('passwordError').style.display = 'block';
         isValid = false;
     } else if (password.length < 8) {
-        document.getElementById('passwordError').textContent = 'Password must be at least 8 characters long';
-        document.getElementById('passwordError').style.display = 'block';
+        document.getElementById('passwordError').textContent = 'Password must be at least 8 characters';
         isValid = false;
     }
     
@@ -75,24 +71,88 @@ function validateForm(event) {
     const confirmPassword = document.getElementById('confirmPassword').value;
     if (confirmPassword === '') {
         document.getElementById('confirmPasswordError').textContent = 'Please confirm your password';
-        document.getElementById('confirmPasswordError').style.display = 'block';
         isValid = false;
-    } else if (confirmPassword !== password) {
+    } else if (password !== confirmPassword) {
         document.getElementById('confirmPasswordError').textContent = 'Passwords do not match';
-        document.getElementById('confirmPasswordError').style.display = 'block';
         isValid = false;
     }
     
-    // If form is valid, show success message
-    if (isValid) {
-        document.getElementById('successMessage').style.display = 'block';
-        document.getElementById('registrationForm').reset();
-        
-        // Simulate redirect after 3 seconds
-        setTimeout(() => {
-            window.location.href = 'dashboard.php';
-        }, 3000);
+    // Validate terms checkbox
+    const termsCheckbox = document.getElementById('termsCheckbox');
+    if (!termsCheckbox.checked) {
+        isValid = false;
+        // You can add an error message for terms if needed
     }
     
-    return false;
+    return isValid;
+}
+
+function isValidEmail(email) {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+}
+
+function submitForm() {
+    const formData = new FormData();
+    formData.append('firstName', document.getElementById('firstName').value.trim());
+    formData.append('lastName', document.getElementById('lastName').value.trim());
+    formData.append('email', document.getElementById('email').value.trim());
+    formData.append('phone', document.getElementById('phone').value.trim());
+    formData.append('role', document.getElementById('role').value);
+    formData.append('password', document.getElementById('password').value);
+    formData.append('confirmPassword', document.getElementById('confirmPassword').value);
+    
+    // Show loading state
+    const submitButton = document.querySelector('button[type="submit"]');
+    const originalButtonText = submitButton.textContent;
+    submitButton.textContent = 'Processing...';
+    submitButton.disabled = true;
+    
+    fetch('register_process.php', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Show success message
+            const successMessage = document.getElementById('successMessage');
+            successMessage.style.display = 'block';
+            
+            // Clear form
+            document.getElementById('registrationForm').reset();
+            
+            // Redirect to login page after a delay
+            setTimeout(() => {
+                window.location.href = '../login/login.php';
+            }, 2000);
+        } else {
+            // Show error messages
+            if (data.errors) {
+                Object.keys(data.errors).forEach(field => {
+                    const errorElement = document.getElementById(`${field}Error`);
+                    if (errorElement) {
+                        errorElement.textContent = data.errors[field];
+                    }
+                });
+            }
+            
+            // Show general error message if provided
+            if (data.message) {
+                alert(data.message);
+            }
+            
+            // Reset button
+            submitButton.textContent = originalButtonText;
+            submitButton.disabled = false;
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('An error occurred. Please try again.');
+        
+        // Reset button
+        submitButton.textContent = originalButtonText;
+        submitButton.disabled = false;
+    });
 }

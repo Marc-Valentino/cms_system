@@ -2,31 +2,8 @@
 session_start();
 $error = '';
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $username = $_POST['username'];
+    $email = $_POST['email'];
     $password = $_POST['password'];
-    
-    // This is a simple authentication check - in a real system, you'd check against a database
-    if ($username == 'doctor' && $password == 'clinic123') {
-        $_SESSION['loggedin'] = true;
-        $_SESSION['username'] = $username;
-        $_SESSION['role'] = 'doctor';
-        header("location: dashboard.php");
-        exit;
-    } elseif ($username == 'nurse' && $password == 'clinic123') {
-        $_SESSION['loggedin'] = true;
-        $_SESSION['username'] = $username;
-        $_SESSION['role'] = 'nurse';
-        header("location: dashboard.php");
-        exit;
-    } elseif ($username == 'admin' && $password == 'clinic123') {
-        $_SESSION['loggedin'] = true;
-        $_SESSION['username'] = $username;
-        $_SESSION['role'] = 'admin';
-        header("location: dashboard.php");
-        exit;
-    } else {
-        $error = "Invalid username or password";
-    }
 }
 ?>
 <!DOCTYPE html>
@@ -88,10 +65,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             
             <form action="" method="post" class="login-form">
                 <div class="form-group">
-                    <label for="username">Username</label>
+                    <label for="username">Email</label>
                     <div class="input-group">
                         <i class="fas fa-user"></i>
-                        <input type="text" id="username" name="username" placeholder="Enter your username" required>
+                        <input type="text" id="email" name="email" placeholder="Enter your email" required>
                     </div>
                 </div>
                 

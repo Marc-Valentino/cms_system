@@ -18,16 +18,16 @@
     <div class="sidebar-menu">
         <ul>
             <li><a href="doctor.php" <?php echo basename($_SERVER['PHP_SELF']) == 'doctor.php' ? 'class="active"' : ''; ?>><i class="bi bi-speedometer2"></i> <span>Dashboard</span></a></li>
-            <li><a href="appointments.php" <?php echo basename($_SERVER['PHP_SELF']) == 'appointments.php' ? 'class="active"' : ''; ?>><i class="bi bi-calendar-check"></i> <span>Appointments</span></a></li>
-            <li><a href="patients.php" <?php echo basename($_SERVER['PHP_SELF']) == 'patients.php' ? 'class="active"' : ''; ?>><i class="bi bi-people"></i> <span>Patients</span></a></li>
-            <li><a href="medical-notes.php" <?php echo basename($_SERVER['PHP_SELF']) == 'medical-notes.php' ? 'class="active"' : ''; ?>><i class="bi bi-journal-medical"></i> <span>Medical Notes</span></a></li>
-            <li><a href="notifications.php" <?php echo basename($_SERVER['PHP_SELF']) == 'notifications.php' ? 'class="active"' : ''; ?>><i class="bi bi-bell"></i> <span>Notifications</span></a></li>
+            <!-- Removed appointments.php link -->
+            <!-- Removed patients.php link -->
+            <!-- Removed medical-notes.php link -->
+            <!-- Removed notifications.php link -->
             <li><a href="settings.php" <?php echo basename($_SERVER['PHP_SELF']) == 'settings.php' ? 'class="active"' : ''; ?>><i class="bi bi-gear"></i> <span>Settings</span></a></li>
-            <li><a href="#" id="logout-link"><i class="bi bi-box-arrow-right"></i> <span>Logout</span></a></li>
+            <li><a href="logout.php"><i class="bi bi-box-arrow-right"></i> <span>Logout</span></a></li>
         </ul>
     </div>
     <div class="sidebar-footer">
-        <p>&copy; 2025 Clinic Management System</p>
+        &copy; <?php echo date('Y'); ?> MediCare Clinic
     </div>
 </div>
 
