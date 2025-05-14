@@ -1,0 +1,278 @@
+:root {
+  --primary-color: #0077cc;
+  --primary-light: #e6f0ff;
+  --secondary-color: #6c757d;
+  --success-color: #28a745;
+  --danger-color: #dc3545;
+  --warning-color: #ffc107;
+  --info-color: #17a2b8;
+  --light-color: #f8f9fa;
+  --dark-color: #343a40;
+  --border-color: #dee2e6;
+  --hover-color: #f1f8ff;
+}
+
+/* General Styles */
+body {
+  font-family: 'Poppins', sans-serif;
+  background-color: #f5f8fa;
+}
+
+.card {
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  border: none;
+  margin-bottom: 24px;
+}
+
+.card-header {
+  border-bottom: 1px solid var(--border-color);
+  padding: 16px 20px;
+}
+
+.card-body {
+  padding: 20px;
+}
+
+/* Current Shift Card */
+.current-shift-card {
+  background-color: var(--primary-light);
+  border-left: 4px solid var(--primary-color);
+}
+
+.shift-icon-container {
+  width: 50px;
+  height: 50px;
+  background-color: var(--primary-color);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.shift-icon-container i {
+  color: white;
+  font-size: 24px;
+}
+
+.current-date {
+  color: var(--secondary-color);
+}
+
+.current-day {
+  font-weight: 500;
+}
+
+.current-time {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--dark-color);
+}
+
+/* Search and Filter Section */
+.search-filter-container {
+  background-color: white;
+  border-radius: 10px;
+  padding: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.input-group-text {
+  background-color: transparent;
+  border-right: none;
+}
+
+.form-control {
+  border-left: none;
+}
+
+.form-control:focus, .input-group-text:focus {
+  box-shadow: none;
+  border-color: var(--border-color);
+}
+
+/* Upcoming Shifts */
+.upcoming-shifts {
+  max-height: 600px;
+  overflow-y: auto;
+}
+
+.shift-item {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border-color);
+  transition: background-color 0.2s ease;
+}
+
+.shift-item:hover {
+  background-color: var(--hover-color);
+}
+
+.shift-date {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--light-color);
+  border-radius: 8px;
+  padding: 8px 12px;
+  width: 80px;
+}
+
+.day-name {
+  font-size: 0.8rem;
+  color: var(--secondary-color);
+  text-transform: uppercase;
+}
+
+.date-number {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--primary-color);
+}
+
+.month-name {
+  font-size: 0.8rem;
+  color: var(--secondary-color);
+  text-transform: uppercase;
+}
+
+.shift-time, .shift-department {
+  font-size: 0.95rem;
+  color: var(--dark-color);
+}
+
+.shift-time i, .shift-department i {
+  color: var(--primary-color);
+}
+
+/* Action Buttons */
+.btn-sm {
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 3px;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.btn-sm i {
+  font-size: 16px;
+  margin: 0;
+}
+
+.btn-sm:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Toast Notification Styles */
+.toast-container {
+  z-index: 1100;
+}
+
+.toast {
+  min-width: 250px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  border-radius: 8px;
+}
+
+.toast-body {
+  padding: 12px 15px;
+  font-weight: 500;
+}
+
+/* Modal Styles */
+/* Shift Detail Modal Styles */
+.shift-detail-card {
+  padding: 10px;
+  border-radius: 8px;
+}
+
+.shift-detail-header h5 {
+  font-weight: 600;
+  color: var(--primary-color);
+}
+
+.shift-detail-body p {
+  margin-bottom: 12px;
+  font-size: 0.95rem;
+}
+
+.shift-detail-body i {
+  color: var(--primary-color);
+}
+
+/* Modal Styles Enhancement */
+.modal-content {
+  border-radius: 10px;
+  border: none;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.modal-header {
+  border-bottom: 1px solid var(--border-color);
+  background-color: var(--light-color);
+  padding: 15px 20px;
+}
+
+.modal-header .modal-title {
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+}
+
+.modal-header .modal-title i {
+  color: var(--primary-color);
+}
+
+.modal-body {
+  padding: 20px;
+}
+
+.modal-footer {
+  border-top: 1px solid var(--border-color);
+  padding: 15px 20px;
+}
+
+/* Responsive adjustments for modals */
+@media (max-width: 576px) {
+  .modal-dialog {
+    margin: 0.5rem;
+  }
+  
+  .modal-body {
+    padding: 15px;
+  }
+  
+  .shift-detail-body p {
+    font-size: 0.9rem;
+  }
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .shift-date {
+    width: 70px;
+    padding: 6px 8px;
+    margin-bottom: 10px;
+  }
+  
+  .shift-item {
+    padding: 12px;
+  }
+  
+  .shift-time, .shift-department {
+    margin-bottom: 8px;
+  }
+  
+  .btn-sm {
+    margin-top: 8px;
+  }
+  
+  .current-shift-card .col-md-6:last-child {
+    text-align: left !important;
+  }
+}
