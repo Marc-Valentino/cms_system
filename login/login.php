@@ -63,7 +63,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <div class="role-option" data-role="admin">Admin</div>
             </div>
             
-            <form action="" method="post" class="login-form">
+            <form id="loginForm" action="login_process.php" method="post" class="login-form">
                 <div class="form-group">
                     <label for="username">Email</label>
                     <div class="input-group">
@@ -100,5 +100,46 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </div>
     
 <script src="login.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const loginForm = document.getElementById('loginForm');
+    
+    if (loginForm) {
+        loginForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(loginForm);
+            
+            fetch('login_process.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    window.location.href = data.redirect;
+                } else {
+                    // Show error message
+                    const errorDiv = document.createElement('div');
+                    errorDiv.className = 'error-message';
+                    errorDiv.innerHTML = `<i class="fas fa-exclamation-circle"></i> ${data.message}`;
+                    
+                    // Remove any existing error message
+                    const existingError = document.querySelector('.error-message');
+                    if (existingError) {
+                        existingError.remove();
+                    }
+                    
+                    // Insert error before the form
+                    loginForm.parentNode.insertBefore(errorDiv, loginForm);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        });
+    }
+});
+</script>
 </body>
 </html>

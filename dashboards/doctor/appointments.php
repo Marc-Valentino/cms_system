@@ -10,64 +10,46 @@ if (session_status() == PHP_SESSION_NONE) {
 //     exit();
 // }
 
-// Placeholder doctor data - replace with actual data from your database
-$doctor = [
-    'id' => 1,
-    'name' => 'Dr. Sarah Johnson',
-    'profile_pic' => '../assets/img/doctor-profile.jpg',
-    'specialty' => 'Cardiologist'
-];
+// Include database connection and functions
+include_once '../../includes/db_connection.php';
+include_once '../../includes/appointment_functions.php';
+include_once '../../includes/patient_functions.php';
+include_once '../../includes/user_functions.php';
 
-// Placeholder for appointments - replace with actual data
-$appointments = [
-    ['patient' => 'John Smith', 'date' => '2023-07-15', 'time' => '09:00 AM', 'doctor' => 'Dr. Sarah Johnson', 'status' => 'Pending'],
-    ['patient' => 'Emily Davis', 'date' => '2023-07-16', 'time' => '10:30 AM', 'doctor' => 'Dr. Sarah Johnson', 'status' => 'Confirmed'],
-    ['patient' => 'Michael Brown', 'date' => '2023-07-14', 'time' => '01:15 PM', 'doctor' => 'Dr. Robert Wilson', 'status' => 'Completed'],
-    ['patient' => 'Jessica Wilson', 'date' => '2023-07-13', 'time' => '03:45 PM', 'doctor' => 'Dr. Sarah Johnson', 'status' => 'Canceled']
-];
-
-// Placeholder for notifications - replace with actual data
-$notifications = [
-    ['type' => 'Lab Result', 'message' => 'New lab results for patient Emily Davis', 'time' => '2 hours ago'],
-    ['type' => 'Reminder', 'message' => 'Follow-up call with John Smith', 'time' => '1 day ago'],
-    ['type' => 'System', 'message' => 'System maintenance scheduled for tonight', 'time' => '3 days ago']
-];
+// Initialize empty arrays for data that will be populated from the database
+$user = get_user_by_id($_SESSION['user_id']);
+$appointments = get_doctor_appointments($_SESSION['user_id']);
+$notifications = supabase_query('notifications', 'GET', null, [
+    'user_id' => 'eq.' . $_SESSION['user_id'],
+    'order' => 'created_at.desc',
+    'limit' => 5
+]);
 
 // Format appointments for FullCalendar
 $calendarEvents = [];
-foreach ($appointments as $appointment) {
-    // Convert date and time to FullCalendar format
-    $dateTime = date('Y-m-d', strtotime($appointment['date'])) . 'T' . date('H:i:s', strtotime($appointment['time']));
-    
-    // Set color based on status
-    $color = '';
-    switch ($appointment['status']) {
-        case 'Pending':
-            $color = '#ffc107'; // warning yellow
-            break;
-        case 'Confirmed':
-            $color = '#28a745'; // success green
-            break;
-        case 'Completed':
-            $color = '#6c757d'; // secondary gray
-            break;
-        case 'Canceled':
-            $color = '#dc3545'; // danger red
-            break;
-        default:
-            $color = '#3498db'; // primary blue
+if (!empty($appointments)) {
+    foreach ($appointments as $appointment) {
+        $patient_name = '';
+        if (isset($appointment['patients']) && is_array($appointment['patients'])) {
+            $patient_name = $appointment['patients']['first_name'] . ' ' . $appointment['patients']['last_name'];
+        }
+        
+        $calendarEvents[] = [
+            'id' => $appointment['id'],
+            'title' => $patient_name,
+            'start' => $appointment['appointment_date'] . 'T' . $appointment['appointment_time'],
+            'end' => $appointment['appointment_date'] . 'T' . date('H:i:s', strtotime($appointment['appointment_time'] . ' +30 minutes')),
+            'status' => $appointment['status'] ?? 'scheduled'
+        ];
     }
-    
-    $calendarEvents[] = [
-        'title' => $appointment['patient'],
-        'start' => $dateTime,
-        'color' => $color,
-        'extendedProps' => [
-            'doctor' => $appointment['doctor'],
-            'status' => $appointment['status']
-        ]
-    ];
 }
+
+// Here you would fetch actual appointments from your Supabase database
+// Example query (you'll need to implement this):
+// $appointments = supabase_query('appointments', 'GET', null, ['doctor_id' => $_SESSION['doctor_id']]);
+
+// Format appointments for FullCalendar (once you have real data)
+// This code will remain but will use real data instead of placeholder data
 ?>
 
 <!DOCTYPE html>
@@ -90,7 +72,7 @@ foreach ($appointments as $appointment) {
     <link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css" rel="stylesheet">
     
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="doctor.css">
+    <link rel="stylesheet" href="css/doctor.css">
     
 </head>
 <body>
@@ -115,7 +97,6 @@ foreach ($appointments as $appointment) {
                         <div class="card-header">
                             <h5>Manage Appointments</h5>
                             <div class="d-flex">
-
                                 <button class="btn btn-primary" data-action="schedule">
                                     <i class="bi bi-calendar-plus"></i> Schedule New Appointment
                                 </button>
@@ -135,6 +116,11 @@ foreach ($appointments as $appointment) {
                                         </tr>
                                     </thead>
                                     <tbody>
+                                        <?php if (empty($appointments)): ?>
+                                        <tr>
+                                            <td colspan="6" class="text-center">No appointments found</td>
+                                        </tr>
+                                        <?php else: ?>
                                         <?php foreach ($appointments as $index => $appointment): ?>
                                         <tr>
                                             <td><?php echo $appointment['patient']; ?></td>
@@ -190,6 +176,7 @@ foreach ($appointments as $appointment) {
                                             </td>
                                         </tr>
                                         <?php endforeach; ?>
+                                        <?php endif; ?>
                                     </tbody>
                                 </table>
                             </div>

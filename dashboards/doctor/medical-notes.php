@@ -10,59 +10,56 @@ if (session_status() == PHP_SESSION_NONE) {
 //     exit();
 // }
 
-// Placeholder user data - replace with actual data from your database
-$user = [
-    'id' => 1,
-    'name' => 'Dr. Sarah Johnson',
-    'profile_pic' => '../assets/img/doctor-profile.jpg',
-    'role' => 'Doctor - Cardiologist'
-];
+// Include database connection and functions
+include_once '../../includes/db_connection.php';
+include_once '../../includes/medical_records_functions.php';
+include_once '../../includes/patient_functions.php';
+include_once '../../includes/user_functions.php';
 
-// Placeholder for notifications - replace with actual data
-$notifications = [
-    ['type' => 'Lab Result', 'message' => 'New lab results for patient Emily Davis', 'time' => '2 hours ago'],
-    ['type' => 'Reminder', 'message' => 'Follow-up call with John Smith', 'time' => '1 day ago'],
-    ['type' => 'System', 'message' => 'System maintenance scheduled for tonight', 'time' => '3 days ago']
-];
+// Initialize empty arrays for data that will be populated from the database
+$user = get_user_by_id($_SESSION['user_id']);
+$notifications = supabase_query('notifications', 'GET', null, [
+    'user_id' => 'eq.' . $_SESSION['user_id'],
+    'order' => 'created_at.desc',
+    'limit' => 5
+]);
 
-// Placeholder for medical notes - replace with actual data from your database
-$medicalNotes = [
-    [
-        'id' => 'N10045', 
-        'patient' => 'Emily Davis', 
-        'date' => '2023-06-15',
-        'title' => 'Medication Change Follow-up', 
-        'summary' => 'Patient reported improvement in symptoms after medication change.'
-    ],
-    [
-        'id' => 'N10089', 
-        'patient' => 'John Smith', 
-        'date' => '2023-06-12',
-        'title' => 'Hypertension Treatment', 
-        'summary' => 'Prescribed new medication for hypertension. Follow-up in 2 weeks.'
-    ],
-    [
-        'id' => 'N10023', 
-        'patient' => 'Thomas Anderson', 
-        'date' => '2023-06-05',
-        'title' => 'Headache Investigation', 
-        'summary' => 'Patient complained of persistent headaches. Ordered additional tests.'
-    ],
-    [
-        'id' => 'N10067', 
-        'patient' => 'Linda Williams', 
-        'date' => '2023-06-18',
-        'title' => 'Post-Surgery Follow-up', 
-        'summary' => 'Post-surgery follow-up. Wound healing well, no signs of infection.'
-    ],
-    [
-        'id' => 'N10112', 
-        'patient' => 'Michael Brown', 
-        'date' => '2023-06-20',
-        'title' => 'Lab Results Review', 
-        'summary' => 'Reviewed lab results. All values within normal range.'
-    ]
-];
+// Get all medical notes for this doctor
+$medicalNotes = supabase_query('medical_notes', 'GET', null, [
+    'select' => '*, patients(first_name, last_name, patient_id)',
+    'doctor_id' => 'eq.' . $_SESSION['user_id'],
+    'order' => 'note_date.desc'
+]);
+
+// Format the medical notes for display
+$formattedNotes = [];
+if (!empty($medicalNotes)) {
+    foreach ($medicalNotes as $note) {
+        $patient_name = '';
+        if (isset($note['patients']) && is_array($note['patients'])) {
+            $patient_name = $note['patients']['first_name'] . ' ' . $note['patients']['last_name'];
+        }
+        
+        $formattedNotes[] = [
+            'id' => $note['id'],
+            'patient' => $patient_name,
+            'date' => $note['note_date'],
+            'summary' => $note['summary'] ?? 'No summary available',
+            'title' => $note['title'] ?? 'Medical Note'
+        ];
+    }
+}
+$medicalNotes = $formattedNotes;
+
+// Get all patients for the dropdown
+$patients = get_all_patients();
+
+// Here you would fetch actual data from your Supabase database
+// Example queries (you'll need to implement these):
+// $user = supabase_query('users', 'GET', null, ['id' => $_SESSION['user_id']]);
+// $notifications = supabase_query('notifications', 'GET', null, ['user_id' => $_SESSION['user_id']]);
+// $medicalNotes = supabase_query('medical_notes', 'GET', null, ['doctor_id' => $_SESSION['user_id']]);
+// $patients = supabase_query('patients', 'GET', null, []);
 ?>
 
 <!DOCTYPE html>
@@ -123,6 +120,11 @@ $medicalNotes = [
                                         </tr>
                                     </thead>
                                     <tbody>
+                                        <?php if (empty($medicalNotes)): ?>
+                                        <tr>
+                                            <td colspan="5" class="text-center">No medical notes found</td>
+                                        </tr>
+                                        <?php else: ?>
                                         <?php foreach ($medicalNotes as $note): ?>
                                         <tr>
                                             <td><?php echo $note['id']; ?></td>
@@ -142,6 +144,7 @@ $medicalNotes = [
                                             </td>
                                         </tr>
                                         <?php endforeach; ?>
+                                        <?php endif; ?>
                                     </tbody>
                                 </table>
                             </div>

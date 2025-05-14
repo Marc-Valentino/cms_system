@@ -6,25 +6,24 @@
 }
 
 .heart {
-    animation: pulse 1.5s ease-in-out infinite;
+    animation: pulse 2s ease-in-out infinite;
     transform-origin: center;
+    will-change: transform;
 }
 
 .heartbeat-line {
     stroke-dasharray: 400;
     stroke-dashoffset: 400;
-    animation: dash 3s linear infinite;
+    animation: dash 4s linear infinite;
+    will-change: stroke-dashoffset;
 }
 
 @keyframes pulse {
-    0% {
+    0%, 100% {
         transform: scale(1);
     }
     50% {
-        transform: scale(1.1);
-    }
-    100% {
-        transform: scale(1);
+        transform: scale(1.05);
     }
 }
 

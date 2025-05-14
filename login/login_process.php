@@ -52,7 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         
         $response['success'] = true;
         $response['message'] = 'Login successful!';
-        $response['redirect'] = '../dashboard/index.php';
+        $response['redirect'] = '../dashboards/doctor/doctor.php';
     } else {
         $response['message'] = 'Invalid email or password';
     }

@@ -1,28 +1,35 @@
 <?php
 // This file contains the header/navbar component for the CMS system
 // It should be included in all dashboard pages
+
+// Initialize the unread_count variable
+$unread_count = 0; // You can replace this with actual notification count logic later
+
 ?>
 
 <!-- Header -->
-<!-- Add this style section if you don't have these styles in your styles.css -->
-
 <link rel="stylesheet" href="css/navbar.css">
 <div class="header">
-    <button class="btn d-lg-none" id="toggle-sidebar">
-        <i class="bi bi-list"></i>
-    </button>
+    <!-- Burger icon removed as requested -->
     <div class="doctor-info">
-        <img src="<?php echo isset($doctor['profile_pic']) ? $doctor['profile_pic'] : (isset($user['profile_pic']) ? $user['profile_pic'] : 'https://via.placeholder.com/40'); ?>" 
-             alt="User Profile" 
-             onerror="this.src='https://via.placeholder.com/40'">
+        <i class="bi bi-person-circle user-icon"></i>
         <div>
-            <p class="doctor-name"><?php echo isset($doctor['name']) ? $doctor['name'] : (isset($user['name']) ? $user['name'] : 'User'); ?></p>
+            <p class="doctor-name">
+                <?php 
+                // Display user's name or username
+                if (!empty($user['first_name']) && !empty($user['last_name'])) {
+                    echo htmlspecialchars($user['first_name'] . ' ' . $user['last_name']);
+                } else {
+                    echo htmlspecialchars($user['username'] ?? $_SESSION['username'] ?? 'User');
+                }
+                ?>
+            </p>
             <p class="doctor-role">
                 <?php 
-                if (isset($doctor['specialty'])) {
-                    echo "Doctor - " . $doctor['specialty'];
-                } elseif (isset($user['role'])) {
-                    echo $user['role'];
+                if (isset($user['specialty'])) {
+                    echo "Doctor - " . htmlspecialchars($user['specialty']);
+                } elseif (isset($_SESSION['role'])) {
+                    echo htmlspecialchars($_SESSION['role']);
                 }
                 ?>
             </p>
@@ -30,74 +37,15 @@
     </div>
     <div class="notification-bell" id="notificationBell">
         <i class="bi bi-bell"></i>
-        <span class="notification-badge"><?php echo isset($notifications) ? count($notifications) : '0'; ?></span>
-        
-        <!-- Notification Panel -->
-        <div class="notification-panel" id="notificationPanel">
-            <div class="notification-panel-header">
-                <h6 class="mb-0">Notifications</h6>
-                <span class="mark-all-read">Mark all as read</span>
-            </div>
-            
-            <!-- Heartbeat Loader -->
-            <div class="heartbeat-loader" id="heartbeatLoader">
-                <div class="heartbeat-line">
-                    <svg viewBox="0 0 600 100" preserveAspectRatio="none">
-                        <path d="M0,50 L100,50 L120,30 L140,70 L160,30 L180,70 L200,30 L220,70 L240,50 L300,50 L320,30 L340,70 L360,30 L380,70 L400,30 L420,70 L440,50 L500,50 L520,30 L540,70 L560,30 L580,70 L600,50" />
-                    </svg>
-                </div>
-            </div>
-            
-            <!-- Notification Content -->
-            <div class="notification-panel-body" id="notificationContent" style="display: none;">
-                <?php if(isset($notifications)): ?>
-                    <?php foreach ($notifications as $notification): ?>
-                    <div class="notification-item">
-                        <div class="notification-icon">
-                            <?php 
-                            $icon = 'bi-bell';
-                            switch ($notification['type']) {
-                                case 'Lab Result':
-                                    $icon = 'bi-clipboard2-pulse';
-                                    break;
-                                case 'Reminder':
-                                    $icon = 'bi-alarm';
-                                    break;
-                                case 'System':
-                                    $icon = 'bi-gear';
-                                    break;
-                                case 'Appointment':
-                                    $icon = 'bi-calendar-check';
-                                    break;
-                                case 'Patient Feedback':
-                                    $icon = 'bi-chat-left-text';
-                                    break;
-                            }
-                            ?>
-                            <i class="bi <?php echo $icon; ?>"></i>
-                        </div>
-                        <div class="notification-details">
-                            <p class="notification-title"><?php echo $notification['type']; ?></p>
-                            <p class="notification-message"><?php echo $notification['message']; ?></p>
-                            <p class="notification-time"><?php echo $notification['time']; ?></p>
-                        </div>
-                    </div>
-                    <?php endforeach; ?>
-                <?php else: ?>
-                    <div class="notification-item">
-                        <div class="notification-icon">
-                            <i class="bi bi-info-circle"></i>
-                        </div>
-                        <div class="notification-details">
-                            <p class="notification-title">No Notifications</p>
-                            <p class="notification-message">You have no new notifications</p>
-                            <p class="notification-time">Just now</p>
-                        </div>
-                    </div>
-                <?php endif; ?>
-            </div>
+        <?php if ($unread_count > 0): ?>
+            <span class="badge bg-danger"><?php echo $unread_count; ?></span>
+        <?php endif; ?>
+        <div class="notification-dropdown">
+            <!-- Notification content here -->
         </div>
     </div>
+    
+    <!-- Dropdown menu removed as requested -->
 </div>
 
 <!-- Add this script to fix the sidebar toggle functionality -->
@@ -136,6 +84,13 @@
     .notification-bell {
         position: relative;
         cursor: pointer;
+    }
+    
+    /* User Icon Styles */
+    .user-icon {
+        font-size: 2.2rem;
+        color: #0d6efd;
+        margin-right: 15px;
     }
     
     .notification-panel {
@@ -345,3 +300,8 @@
         });
     });
 </script>
+
+<nav class="navbar navbar-expand-lg">
+    <div class="container-fluid">
+    </div>
+</nav>

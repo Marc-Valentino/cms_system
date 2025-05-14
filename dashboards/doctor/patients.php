@@ -10,64 +10,19 @@ if (session_status() == PHP_SESSION_NONE) {
 //     exit();
 // }
 
-// Placeholder user data - replace with actual data from your database
-$user = [
-    'id' => 1,
-    'name' => 'Dr. Sarah Johnson',
-    'profile_pic' => '../assets/img/doctor-profile.jpg',
-    'role' => 'Doctor - Cardiologist'
-];
+// Include database connection and functions
+include_once '../../includes/db_connection.php';
+include_once '../../includes/patient_functions.php';
+include_once '../../includes/user_functions.php';
 
-// Placeholder for patient data - replace with actual data from your database
-$patients = [
-    [
-        'id' => 'P10045', 
-        'name' => 'Robert Johnson', 
-        'age' => 45, 
-        'gender' => 'Male', 
-        'contact' => '(555) 123-4567', 
-        'last_visit' => '2023-06-15'
-    ],
-    [
-        'id' => 'P10089', 
-        'name' => 'Linda Williams', 
-        'age' => 38, 
-        'gender' => 'Female', 
-        'contact' => '(555) 987-6543', 
-        'last_visit' => '2023-06-10'
-    ],
-    [
-        'id' => 'P10023', 
-        'name' => 'Thomas Anderson', 
-        'age' => 52, 
-        'gender' => 'Male', 
-        'contact' => '(555) 456-7890', 
-        'last_visit' => '2023-06-05'
-    ],
-    [
-        'id' => 'P10067', 
-        'name' => 'Emily Davis', 
-        'age' => 29, 
-        'gender' => 'Female', 
-        'contact' => '(555) 234-5678', 
-        'last_visit' => '2023-06-18'
-    ],
-    [
-        'id' => 'P10112', 
-        'name' => 'Michael Brown', 
-        'age' => 41, 
-        'gender' => 'Male', 
-        'contact' => '(555) 876-5432', 
-        'last_visit' => '2023-06-20'
-    ]
-];
-
-// Placeholder for notifications - replace with actual data
-$notifications = [
-    ['type' => 'Lab Result', 'message' => 'New lab results for patient Emily Davis', 'time' => '2 hours ago'],
-    ['type' => 'Reminder', 'message' => 'Follow-up call with John Smith', 'time' => '1 day ago'],
-    ['type' => 'System', 'message' => 'System maintenance scheduled for tonight', 'time' => '3 days ago']
-];
+// Initialize empty arrays for data that will be populated from the database
+$user = get_user_by_id($_SESSION['user_id']);
+$patients = get_all_patients();
+$notifications = supabase_query('notifications', 'GET', null, [
+    'user_id' => 'eq.' . $_SESSION['user_id'],
+    'order' => 'created_at.desc',
+    'limit' => 5
+]);
 ?>
 
 <!DOCTYPE html>
@@ -106,6 +61,13 @@ $notifications = [
                     <a href="#" class="mark-all-read">Mark all as read</a>
                 </div>
                 <div class="notification-body">
+                    <?php if (empty($notifications)): ?>
+                    <div class="notification-item">
+                        <div class="notification-content">
+                            <p class="notification-text">No notifications available</p>
+                        </div>
+                    </div>
+                    <?php else: ?>
                     <?php foreach ($notifications as $notification): ?>
                     <div class="notification-item">
                         <div class="notification-icon <?php echo strtolower($notification['type']); ?>">
@@ -117,6 +79,7 @@ $notifications = [
                         </div>
                     </div>
                     <?php endforeach; ?>
+                    <?php endif; ?>
                 </div>
                 <div class="notification-footer">
                     <a href="notifications.php">View all notifications</a>
@@ -154,6 +117,11 @@ $notifications = [
                                         </tr>
                                     </thead>
                                     <tbody>
+                                        <?php if (empty($patients)): ?>
+                                        <tr>
+                                            <td colspan="7" class="text-center">No patient records found</td>
+                                        </tr>
+                                        <?php else: ?>
                                         <?php foreach ($patients as $patient): ?>
                                         <tr>
                                             <td><?php echo $patient['id']; ?></td>
@@ -175,6 +143,7 @@ $notifications = [
                                             </td>
                                         </tr>
                                         <?php endforeach; ?>
+                                        <?php endif; ?>
                                     </tbody>
                                 </table>
                             </div>

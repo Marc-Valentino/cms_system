@@ -1,82 +1,4 @@
-<?php
-// Start session if not already started
-if (session_status() == PHP_SESSION_NONE) {
-    session_start();
-}
-
-// Check if user is logged in
-if (!isset($_SESSION['user_id'])) {
-    header("Location: ../../login/login.php");
-    exit();
-}
-
-// Include database connection and functions
-include_once '../../includes/db_connection.php';
-include_once '../../includes/user_functions.php';
-include_once '../../includes/appointment_functions.php';
-include_once '../../includes/cache_config.php';
-
-// Generate a unique cache key for this user's dashboard
-$cache = Cache::getInstance();
-$page_cache_key = $cache->generateKey('doctor_dashboard_' . $_SESSION['user_id']);
-
-// Try to serve from cache first
-if (!$cache->startPageCache($page_cache_key)) {
-    // If not cached or cache expired, generate the page
-    
-    // Initialize empty arrays for data that will be populated from the database
-    $doctor = [];
-    $todaysAppointments = [];
-    $recentPatients = [];
-    $notifications = [];
-    $medicalNotes = [];
-
-    // Fetch doctor data from the database
-    $doctor = get_user_by_id($_SESSION['user_id']);
-
-    // If doctor data is not found, use session data
-    if (empty($doctor)) {
-        $doctor = [
-            'id' => $_SESSION['user_id'] ?? '',
-            'username' => $_SESSION['username'] ?? '',
-            'email' => $_SESSION['email'] ?? '',
-            'first_name' => $_SESSION['first_name'] ?? '',
-            'last_name' => $_SESSION['last_name'] ?? '',
-            'role_id' => $_SESSION['role_id'] ?? '',
-            'profile_pic_url' => $_SESSION['profile_pic_url'] ?? '../assets/img/default-profile.jpg',
-            'phone' => $_SESSION['phone'] ?? '',
-            'address' => $_SESSION['address'] ?? '',
-            'created_at' => $_SESSION['created_at'] ?? '',
-            'updated_at' => $_SESSION['updated_at'] ?? ''
-        ];
-    }
-
-    // Fetch today's appointments
-    $todaysAppointments = get_appointments_by_date(date('Y-m-d'), $_SESSION['user_id']);
-
-    // Fetch recent patients
-    $recentPatients = supabase_query('patients', 'GET', null, [
-        'select' => '*',
-        'doctor_id' => 'eq.' . $_SESSION['user_id'],
-        'order' => 'created_at.desc',
-        'limit' => 5
-    ]);
-
-    // Fetch notifications
-    $notifications = supabase_query('notifications', 'GET', null, [
-        'user_id' => 'eq.' . $_SESSION['user_id'],
-        'order' => 'created_at.desc',
-        'limit' => 5
-    ]);
-
-    // Fetch medical notes
-    $medicalNotes = supabase_query('medical_notes', 'GET', null, [
-        'doctor_id' => 'eq.' . $_SESSION['user_id'],
-        'order' => 'note_date.desc',
-        'limit' => 5
-    ]);
-?>
-
+s:33146:"
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -100,11 +22,364 @@ if (!$cache->startPageCache($page_cache_key)) {
 <body>
     <div class="dashboard-container">
         <!-- Include the sidebar -->
-        <?php include('sidebar.php'); ?>
+        <link rel="stylesheet" href="css/sidebar.css">
+<div class="sidebar">
+    <div class="sidebar-header">
+        <div class="logo-container">
+            <div class="heart-logo">
+                <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Heart shape -->
+                    <path class="heart" d="M50,30 C50,30 65,10 80,20 C95,30 95,50 80,65 C65,80 50,90 50,90 C50,90 35,80 20,65 C5,50 5,30 20,20 C35,10 50,30 50,30 Z" fill="#e74c3c" />
+                    
+                    <!-- Heart rate line -->
+                    <path class="heartbeat-line" d="M10,50 L30,50 L40,30 L50,70 L60,30 L70,70 L80,50 L90,50" fill="none" stroke="#fff" stroke-width="3" />
+                </svg>
+            </div>
+            <h3>MediCare Clinic</h3>
+        </div>
+        <!-- Removed the X button here -->
+    </div>
+    <div class="sidebar-menu">
+        <ul>
+            <li><a href="doctor.php" class="active"><i class="bi bi-speedometer2"></i> <span>Dashboard</span></a></li>
+            <li><a href="appointments.php" ><i class="bi bi-calendar-check"></i> <span>Appointments</span></a></li>
+            <li><a href="patients.php" ><i class="bi bi-people"></i> <span>Patients</span></a></li>
+            <li><a href="medical-notes.php" ><i class="bi bi-journal-medical"></i> <span>Medical Notes</span></a></li>
+            <li><a href="notifications.php" ><i class="bi bi-bell"></i> <span>Notifications</span></a></li>
+            <li><a href="settings.php" ><i class="bi bi-gear"></i> <span>Settings</span></a></li>
+            <li><a href="logout.php"><i class="bi bi-box-arrow-right"></i> <span>Logout</span></a></li>
+        </ul>
+    </div>
+    <div class="sidebar-footer">
+        <p>&copy; 2025 Clinic Management System</p>
+    </div>
+</div>
+
+<!-- Logout Confirmation Modal -->
+<div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="logoutModalLabel">
+                    <i class="bi bi-exclamation-triangle-fill text-warning me-2"></i>
+                    Confirm Logout
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to log out of your session?</p>
+                <p class="text-muted small">Any unsaved changes will be lost.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="bi bi-x-circle me-1"></i> Cancel
+                </button>
+                <a href="logout.php" class="btn btn-primary">
+                    <i class="bi bi-box-arrow-right me-1"></i> Yes, Logout
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Add event listener to logout link
+    document.addEventListener('DOMContentLoaded', function() {
+        const logoutLink = document.getElementById('logout-link');
+        if (logoutLink) {
+            logoutLink.addEventListener('click', function(e) {
+                e.preventDefault();
+                const logoutModal = new bootstrap.Modal(document.getElementById('logoutModal'));
+                logoutModal.show();
+            });
+        }
+    });
+</script>
+
         
         <div class="main-content">
             <!-- Include the navbar/header -->
-            <?php include('navbar.php'); ?>
+            
+<!-- Header -->
+<link rel="stylesheet" href="css/navbar.css">
+<div class="header">
+    <!-- Burger icon removed as requested -->
+    <div class="doctor-info">
+        <i class="bi bi-person-circle user-icon"></i>
+        <div>
+            <p class="doctor-name">
+                testuser1            </p>
+            <p class="doctor-role">
+                doctor            </p>
+        </div>
+    </div>
+    <div class="notification-bell" id="notificationBell">
+        <i class="bi bi-bell"></i>
+                <div class="notification-dropdown">
+            <!-- Notification content here -->
+        </div>
+    </div>
+    
+    <!-- Dropdown menu removed as requested -->
+</div>
+
+<!-- Add this script to fix the sidebar toggle functionality -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const toggleButton = document.getElementById('toggle-sidebar');
+        const sidebar = document.querySelector('.sidebar');
+        const mainContent = document.querySelector('.main-content');
+        
+        // Create overlay element
+        const overlay = document.createElement('div');
+        overlay.className = 'sidebar-overlay';
+        document.body.appendChild(overlay);
+        
+        if (toggleButton && sidebar && mainContent) {
+            toggleButton.addEventListener('click', function(e) {
+                e.preventDefault();
+                sidebar.classList.toggle('active');
+                mainContent.classList.toggle('active');
+                overlay.classList.toggle('active');
+            });
+            
+            // Close sidebar when clicking on overlay
+            overlay.addEventListener('click', function() {
+                sidebar.classList.remove('active');
+                mainContent.classList.remove('active');
+                overlay.classList.remove('active');
+            });
+        }
+    });
+</script>
+
+<!-- Add notification panel styles and script -->
+<style>
+    /* Notification Panel Styles */
+    .notification-bell {
+        position: relative;
+        cursor: pointer;
+    }
+    
+    /* User Icon Styles */
+    .user-icon {
+        font-size: 2.2rem;
+        color: #0d6efd;
+        margin-right: 15px;
+    }
+    
+    .notification-panel {
+        position: absolute;
+        top: 100%;
+        right: 0;
+        width: 320px;
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        z-index: 1000;
+        display: none;
+        overflow: hidden;
+    }
+    
+    .notification-panel-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px;
+        border-bottom: 1px solid #f0f0f0;
+    }
+    
+    .mark-all-read {
+        color: #0d6efd;
+        font-size: 0.8rem;
+        cursor: pointer;
+    }
+    
+    .notification-panel-body {
+        max-height: 350px;
+        overflow-y: auto;
+    }
+    
+    .notification-item {
+        display: flex;
+        padding: 12px 15px;
+        border-bottom: 1px solid #f0f0f0;
+        transition: background-color 0.2s;
+    }
+    
+    .notification-item:hover {
+        background-color: #f8f9fa;
+    }
+    
+    .notification-icon {
+        margin-right: 15px;
+        color: #0d6efd;
+    }
+    
+    .notification-details {
+        flex: 1;
+    }
+    
+    .notification-title {
+        font-weight: 600;
+        margin-bottom: 3px;
+    }
+    
+    .notification-message {
+        font-size: 0.9rem;
+        margin-bottom: 5px;
+    }
+    
+    .notification-time {
+        font-size: 0.8rem;
+        color: #6c757d;
+        margin-bottom: 0;
+    }
+    
+    /* Heartbeat Loader Styles */
+    .heartbeat-loader {
+        padding: 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    
+    .heartbeat-line {
+        width: 100%;
+        height: 40px;
+    }
+    
+    .heartbeat-line svg {
+        width: 100%;
+        height: 100%;
+    }
+    
+    .heartbeat-line svg path {
+        fill: none;
+        stroke: #0d6efd;
+        stroke-width: 2;
+        stroke-linecap: round;
+        animation: pulse 1.5s infinite ease-in-out;
+    }
+    
+    @keyframes pulse {
+        0% {
+            stroke-dasharray: 0 1000;
+            stroke-dashoffset: 0;
+        }
+        50% {
+            stroke-dasharray: 1000 1000;
+            stroke-dashoffset: 0;
+        }
+        100% {
+            stroke-dasharray: 1000 1000;
+            stroke-dashoffset: -1000;
+        }
+    }
+</style>
+
+<!-- Add notification panel script -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const notificationBell = document.getElementById('notificationBell');
+        const notificationPanel = document.getElementById('notificationPanel');
+        const heartbeatLoader = document.getElementById('heartbeatLoader');
+        const notificationContent = document.getElementById('notificationContent');
+        
+        // Toggle notification panel
+        if (notificationBell) {
+            notificationBell.addEventListener('click', function(e) {
+                e.stopPropagation();
+                
+                if (notificationPanel.style.display === 'block') {
+                    notificationPanel.style.display = 'none';
+                } else {
+                    notificationPanel.style.display = 'block';
+                    heartbeatLoader.style.display = 'flex';
+                    notificationContent.style.display = 'none';
+                    
+                    // Show content after animation (500ms)
+                    setTimeout(function() {
+                        heartbeatLoader.style.display = 'none';
+                        notificationContent.style.display = 'block';
+                    }, 500);
+                }
+            });
+        }
+        
+        // Close panel when clicking outside
+        document.addEventListener('click', function(e) {
+            if (notificationBell && notificationPanel && !notificationBell.contains(e.target) && !notificationPanel.contains(e.target)) {
+                notificationPanel.style.display = 'none';
+            }
+        });
+        
+        // Mark all as read functionality
+        const markAllRead = document.querySelector('.mark-all-read');
+        if (markAllRead) {
+            markAllRead.addEventListener('click', function(e) {
+                e.stopPropagation();
+                const badge = document.querySelector('.notification-badge');
+                if (badge) {
+                    badge.textContent = '0';
+                }
+                // Here you would also make an AJAX call to update the notification status in the database
+            });
+        }
+    });
+</script>
+
+<!-- Add sidebar script -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Get the toggle button and sidebar elements
+        const toggleButton = document.getElementById('toggle-sidebar');
+        const sidebar = document.querySelector('.sidebar');
+        const mainContent = document.querySelector('.main-content');
+        const closeButton = document.getElementById('close-sidebar');
+        
+        // Toggle sidebar when burger icon is clicked
+        if (toggleButton) {
+            toggleButton.addEventListener('click', function() {
+                if (sidebar) {
+                    sidebar.classList.toggle('active');
+                }
+                if (mainContent) {
+                    mainContent.classList.toggle('active');
+                }
+            });
+        }
+        
+        // Close sidebar when X button is clicked
+        if (closeButton) {
+            closeButton.addEventListener('click', function() {
+                if (sidebar) {
+                    sidebar.classList.remove('active');
+                }
+                if (mainContent) {
+                    mainContent.classList.remove('active');
+                }
+            });
+        }
+        
+        // Close sidebar when clicking outside on mobile
+        document.addEventListener('click', function(event) {
+            const isClickInsideSidebar = sidebar.contains(event.target);
+            const isClickOnToggleButton = toggleButton.contains(event.target);
+            
+            // Only apply this behavior on mobile screens
+            if (window.innerWidth < 992 && !isClickInsideSidebar && !isClickOnToggleButton && sidebar.classList.contains('active')) {
+                sidebar.classList.remove('active');
+                mainContent.classList.remove('active');
+            }
+        });
+    });
+</script>
+
+<nav class="navbar navbar-expand-lg">
+    <div class="container-fluid">
+    </div>
+</nav>
 
             <!-- Search Bar -->
             <div class="search-bar">
@@ -133,24 +408,10 @@ if (!$cache->startPageCache($page_cache_key)) {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <?php if (empty($todaysAppointments)): ?>
-                                        <tr>
+                                                                                <tr>
                                             <td colspan="4" class="text-center">No appointments scheduled for today</td>
                                         </tr>
-                                        <?php else: ?>
-                                        <?php foreach ($todaysAppointments as $appointment): ?>
-                                        <tr>
-                                            <td><span class="badge bg-light text-dark"><?php echo $appointment['time']; ?></span></td>
-                                            <td><strong><?php echo $appointment['patient']; ?></strong></td>
-                                            <td><?php echo $appointment['purpose']; ?></td>
-                                            <td class="text-center">
-                                                <button class="btn btn-sm btn-outline-primary me-1"><i class="bi bi-eye"></i> View</button>
-                                                <button class="btn btn-sm btn-outline-success"><i class="bi bi-check-circle"></i> Complete</button>
-                                            </td>
-                                        </tr>
-                                        <?php endforeach; ?>
-                                        <?php endif; ?>
-                                    </tbody>
+                                                                            </tbody>
                                 </table>
                             </div>
                         </div>
@@ -167,28 +428,55 @@ if (!$cache->startPageCache($page_cache_key)) {
                             <a href="patients.php" class="btn btn-sm btn-primary">View All Patients</a>
                         </div>
                         <div class="card-body p-0">
-                            <?php if (empty($recentPatients)): ?>
-                            <div class="text-center py-4">
-                                <p>No recent patients found</p>
-                            </div>
-                            <?php else: ?>
-                            <?php foreach ($recentPatients as $patient): ?>
-                            <div class="patient-card">
+                                                                                    <div class="patient-card">
                                 <div class="patient-avatar">
-                                    <?php echo substr($patient['first_name'] ?? '', 0, 1); ?>
-                                </div>
+                                                                    </div>
                                 <div class="patient-info">
-                                    <p class="patient-name"><?php echo ($patient['first_name'] ?? '') . ' ' . ($patient['last_name'] ?? ''); ?></p>
-                                    <p class="patient-details">ID: <?php echo $patient['patient_id'] ?? $patient['id'] ?? 'N/A'; ?> | Last Visit: <?php echo isset($patient['created_at']) ? date('Y-m-d', strtotime($patient['created_at'])) : 'N/A'; ?></p>
+                                    <p class="patient-name"> </p>
+                                    <p class="patient-details">ID: N/A | Last Visit: N/A</p>
                                 </div>
                                 <div class="patient-actions">
                                     <button class="btn btn-sm btn-outline-primary"><i class="bi bi-eye"></i></button>
                                     <button class="btn btn-sm btn-outline-success"><i class="bi bi-journal-plus"></i></button>
                                 </div>
                             </div>
-                            <?php endforeach; ?>
-                            <?php endif; ?>
-                        </div>
+                                                        <div class="patient-card">
+                                <div class="patient-avatar">
+                                                                    </div>
+                                <div class="patient-info">
+                                    <p class="patient-name"> </p>
+                                    <p class="patient-details">ID: N/A | Last Visit: N/A</p>
+                                </div>
+                                <div class="patient-actions">
+                                    <button class="btn btn-sm btn-outline-primary"><i class="bi bi-eye"></i></button>
+                                    <button class="btn btn-sm btn-outline-success"><i class="bi bi-journal-plus"></i></button>
+                                </div>
+                            </div>
+                                                        <div class="patient-card">
+                                <div class="patient-avatar">
+                                                                    </div>
+                                <div class="patient-info">
+                                    <p class="patient-name"> </p>
+                                    <p class="patient-details">ID: N/A | Last Visit: N/A</p>
+                                </div>
+                                <div class="patient-actions">
+                                    <button class="btn btn-sm btn-outline-primary"><i class="bi bi-eye"></i></button>
+                                    <button class="btn btn-sm btn-outline-success"><i class="bi bi-journal-plus"></i></button>
+                                </div>
+                            </div>
+                                                        <div class="patient-card">
+                                <div class="patient-avatar">
+                                                                    </div>
+                                <div class="patient-info">
+                                    <p class="patient-name"> </p>
+                                    <p class="patient-details">ID: N/A | Last Visit: N/A</p>
+                                </div>
+                                <div class="patient-actions">
+                                    <button class="btn btn-sm btn-outline-primary"><i class="bi bi-eye"></i></button>
+                                    <button class="btn btn-sm btn-outline-success"><i class="bi bi-journal-plus"></i></button>
+                                </div>
+                            </div>
+                                                                                </div>
                     </div>
                 </div>
             </div>
@@ -470,8 +758,4 @@ if (!$cache->startPageCache($page_cache_key)) {
         });
         </script>
         
-        <?php
-            // End the cache block and save the generated content
-            $cache->endPageCache($page_cache_key);
-        }
-        ?>
+        ";

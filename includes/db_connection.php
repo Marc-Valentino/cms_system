@@ -12,7 +12,31 @@ define('SUPABASE_KEY', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmF
  * @param array|null $params Query parameters
  * @return array|bool Response data or false on error
  */
-function supabase_query($table, $method, $data = null, $params = null) {
+// Include cache class
+require_once 'cache.php';
+
+function supabase_query($table, $method = 'GET', $data = null, $params = []) {
+    global $supabase_url, $supabase_key;
+    
+    // Get cache instance
+    $cache = Cache::getInstance();
+    
+    // Only cache GET requests
+    $use_cache = ($method === 'GET');
+    
+    // Generate cache key
+    if ($use_cache) {
+        $cache_key = $cache->generateKey("query_{$table}", [
+            'method' => $method,
+            'params' => $params
+        ]);
+        
+        // Check if we have a cached result
+        if ($cache->exists($cache_key)) {
+            return $cache->get($cache_key);
+        }
+    }
+    
     $url = SUPABASE_URL . '/rest/v1/' . $table;
     
     // Add query parameters if provided
@@ -70,7 +94,11 @@ function supabase_query($table, $method, $data = null, $params = null) {
     // Parse response
     $result = json_decode($response, true);
     
-    // Return result
+    // Store result in cache if it's a GET request
+    if ($use_cache && $result !== false) {
+        $cache->set($cache_key, $result);
+    }
+    
     return $result;
 }
 

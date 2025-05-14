@@ -35,17 +35,39 @@ function get_patient_appointments($patient_id, $limit = 100, $offset = 0) {
 
 // Function to get appointments for a specific date
 function get_appointments_by_date($date, $doctor_id = null) {
-    $params = [
+    $query_params = [
         'select' => '*, patients(first_name, last_name, patient_id)',
         'appointment_date' => 'eq.' . $date,
         'order' => 'appointment_time.asc'
     ];
     
+    // Add doctor_id filter if provided
     if ($doctor_id) {
-        $params['doctor_id'] = 'eq.' . $doctor_id;
+        $query_params['doctor_id'] = 'eq.' . $doctor_id;
     }
     
-    return supabase_query('appointments', 'GET', null, $params);
+    $appointments = supabase_query('appointments', 'GET', null, $query_params);
+    
+    // Format the appointments for display
+    $formatted_appointments = [];
+    if (!empty($appointments)) {
+        foreach ($appointments as $appointment) {
+            $patient_name = '';
+            if (isset($appointment['patients']) && is_array($appointment['patients'])) {
+                $patient_name = $appointment['patients']['first_name'] . ' ' . $appointment['patients']['last_name'];
+            }
+            
+            $formatted_appointments[] = [
+                'id' => $appointment['id'],
+                'time' => $appointment['appointment_time'],
+                'patient' => $patient_name,
+                'purpose' => $appointment['purpose'] ?? 'General Checkup',
+                'status' => $appointment['status'] ?? 'scheduled'
+            ];
+        }
+    }
+    
+    return $formatted_appointments;
 }
 
 // Function to get a specific appointment by ID

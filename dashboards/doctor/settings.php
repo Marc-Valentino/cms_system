@@ -5,30 +5,83 @@ if (session_status() == PHP_SESSION_NONE) {
 }
 
 // Check if user is logged in
-// if (!isset($_SESSION['user_id'])) {
-//     header("Location: ../login.php");
-//     exit();
-// }
+if (!isset($_SESSION['user_id'])) {
+    header("Location: ../../login/login.php");
+    exit();
+}
 
-// Placeholder user data - replace with actual data from your database
-$user = [
-    'id' => 1,
-    'name' => 'Dr. Sarah Johnson',
-    'email' => 'sarah.johnson@example.com',
-    'profile_pic' => '../assets/img/doctor-profile.jpg',
-    'role' => 'Doctor', // Changed to 'Doctor' for doctor view
-    'specialty' => 'Cardiologist',
-    'phone' => '(555) 123-4567',
-    'address' => '123 Medical Center Dr, Healthcare City, HC 12345'
-];
+// Include database connection and functions
+include_once '../../includes/db_connection.php';
+include_once '../../includes/user_functions.php';
+include_once '../../includes/cache_config.php';
 
-// Placeholder for notifications - replace with actual data
-$notifications = [
-    ['type' => 'Lab Result', 'message' => 'New lab results for patient Emily Davis', 'time' => '2 hours ago'],
-    ['type' => 'Reminder', 'message' => 'Follow-up call with John Smith', 'time' => '1 day ago'],
-    ['type' => 'System', 'message' => 'System maintenance scheduled for tonight', 'time' => '3 days ago']
-];
+// Handle cache clear request
+$cache_message = '';
+if (isset($_POST['clear_cache']) && $_POST['clear_cache'] == 1) {
+    if (clear_all_cache()) {
+        $cache_message = 'Cache cleared successfully!';
+    } else {
+        $cache_message = 'Failed to clear cache.';
+    }
+}
 
+// Get user data with error handling
+try {
+    $user_result = cached_supabase_query('users', 'GET', null, [
+        'select' => '*', 
+        'id' => 'eq.' . $_SESSION['user_id']
+    ], 600); // Cache for 10 minutes
+    
+    if (!empty($user_result) && isset($user_result[0])) {
+        $user = $user_result[0];
+    } else {
+        // Log the error
+        error_log("Failed to fetch user data for ID: " . $_SESSION['user_id']);
+        $user = [];
+    }
+} catch (Exception $e) {
+    error_log("Database error: " . $e->getMessage());
+    $user = [];
+}
+
+// Get notifications with error handling
+try {
+    $notifications = cached_supabase_query('notifications', 'GET', null, [
+        'user_id' => 'eq.' . $_SESSION['user_id'],
+        'order' => 'created_at.desc',
+        'limit' => 5
+    ], 60); // Cache for 1 minute
+    
+    if (!is_array($notifications)) {
+        $notifications = [];
+        error_log("Failed to fetch notifications for user ID: " . $_SESSION['user_id']);
+    }
+} catch (Exception $e) {
+    error_log("Notification fetch error: " . $e->getMessage());
+    $notifications = [];
+}
+
+// Set default values for user if not found
+if (empty($user)) {
+    $user = [
+        'id' => $_SESSION['user_id'] ?? '',
+        'username' => $_SESSION['username'] ?? '',
+        'email' => $_SESSION['email'] ?? '',
+        'first_name' => $_SESSION['first_name'] ?? '',
+        'last_name' => $_SESSION['last_name'] ?? '',
+        'profile_pic_url' => $_SESSION['profile_pic_url'] ?? '../assets/img/default-profile.jpg',
+        'phone' => $_SESSION['phone'] ?? '',
+        'address' => $_SESSION['address'] ?? '',
+        'specialty' => $_SESSION['specialty'] ?? '',
+        'created_at' => $_SESSION['created_at'] ?? '',
+        'updated_at' => $_SESSION['updated_at'] ?? ''
+    ];
+}
+
+// Prepare user display name
+$user_name = (!empty($user['first_name']) && !empty($user['last_name'])) 
+    ? $user['first_name'] . ' ' . $user['last_name'] 
+    : ($user['username'] ?? 'User');
 ?>
 
 <!DOCTYPE html>
@@ -42,6 +95,7 @@ $notifications = [
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     
     <!-- Bootstrap Icons -->
+    <!-- In the head section of your document -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
     
     <!-- Google Fonts - Poppins -->
@@ -82,6 +136,11 @@ $notifications = [
                                             <i class="bi bi-shield-lock"></i> Security
                                         </button>
                                     </li>
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link" id="system-tab" data-bs-toggle="tab" data-bs-target="#system" type="button" role="tab" aria-controls="system" aria-selected="false">
+                                            <i class="bi bi-hdd-stack"></i> System
+                                        </button>
+                                    </li>
                                 </ul>
                                 
                                 <!-- Tab Content -->
@@ -90,41 +149,54 @@ $notifications = [
                                     <div class="tab-pane fade show active" id="profile" role="tabpanel" aria-labelledby="profile-tab">
                                         <div class="row">
                                             <div class="col-md-4 mb-4">
+                                                <!-- Replace this profile picture section -->
                                                 <div class="profile-pic-container">
-                                                    <img src="<?php echo $user['profile_pic']; ?>" alt="Profile Picture" class="profile-pic" onerror="this.src='https://via.placeholder.com/150'">
-                                                    <div class="profile-pic-edit" title="Change Profile Picture">
-                                                        <i class="bi bi-camera"></i>
-                                                    </div>
+                                                    <i class="bi bi-person-circle profile-icon"></i>
+                                                    <h4 class="mt-3"><?php echo htmlspecialchars($user_name); ?></h4>
+                                                    <p class="text-muted"><?php echo htmlspecialchars($user['specialty'] ?? 'doctor'); ?></p>
                                                 </div>
-                                                <div class="text-center">
-                                                    <h5 class="mb-1"><?php echo $user['name']; ?></h5>
-                                                    <p class="text-muted"><?php echo $user['role']; ?> - <?php echo $user['specialty']; ?></p>
+                                                <!-- Remove the profile-pic-edit div since we're not using profile pictures anymore -->
+                                                <!-- Removing this unnecessary div that's causing confusion -->
+                                                <div class="profile-pic-edit" title="Change Profile Picture">
+                                                    <i class="bi bi-camera"></i>
                                                 </div>
-                                                <input type="file" id="profile-pic-input" class="d-none">
                                             </div>
                                             <div class="col-md-8">
-                                                <form>
+                                                <form id="profile-form" method="post" action="update_profile.php">
                                                     <div class="mb-3">
                                                         <label for="fullName" class="form-label">Full Name</label>
-                                                        <input type="text" class="form-control" id="fullName" value="<?php echo $user['name']; ?>">
+                                                        <div class="row">
+                                                            <div class="col">
+                                                                <input type="text" class="form-control" id="firstName" name="first_name" 
+                                                                       value="<?php echo htmlspecialchars($user['first_name'] ?? ''); ?>" placeholder="First Name">
+                                                            </div>
+                                                            <div class="col">
+                                                                <input type="text" class="form-control" id="lastName" name="last_name" 
+                                                                       value="<?php echo htmlspecialchars($user['last_name'] ?? ''); ?>" placeholder="Last Name">
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                     <div class="mb-3">
                                                         <label for="email" class="form-label">Email Address</label>
-                                                        <input type="email" class="form-control" id="email" value="<?php echo $user['email']; ?>">
+                                                        <input type="email" class="form-control" id="email" name="email" 
+                                                               value="<?php echo htmlspecialchars($user['email'] ?? ''); ?>">
                                                     </div>
                                                     <div class="mb-3">
                                                         <label for="specialty" class="form-label">Specialty</label>
-                                                        <input type="text" class="form-control" id="specialty" value="<?php echo $user['specialty']; ?>" readonly>
+                                                        <input type="text" class="form-control" id="specialty" 
+                                                               value="<?php echo htmlspecialchars($user['specialty'] ?? ''); ?>" readonly>
                                                         <small class="text-muted">Contact administration to update specialty information.</small>
                                                     </div>
                                                     <div class="mb-3">
                                                         <label for="phone" class="form-label">Phone Number</label>
-                                                        <input type="text" class="form-control" id="phone" value="<?php echo $user['phone']; ?>">
+                                                        <input type="text" class="form-control" id="phone" name="phone" 
+                                                               value="<?php echo htmlspecialchars($user['phone'] ?? ''); ?>">
                                                     </div>
                                                     <div class="mb-3">
                                                         <label for="address" class="form-label">Address</label>
-                                                        <textarea class="form-control" id="address" rows="3"><?php echo $user['address']; ?></textarea>
+                                                        <textarea class="form-control" id="address" name="address" rows="3"><?php echo htmlspecialchars($user['address'] ?? ''); ?></textarea>
                                                     </div>
+                                                    <div id="profile-update-message"></div>
                                                     <button type="submit" class="btn btn-primary">Save Changes</button>
                                                 </form>
                                             </div>
@@ -134,11 +206,11 @@ $notifications = [
                                     <!-- Security Tab -->
                                     <div class="tab-pane fade" id="security" role="tabpanel" aria-labelledby="security-tab">
                                         <h4 class="mb-4">Change Password</h4>
-                                        <form>
+                                        <form id="password-form" method="post" action="update_password.php">
                                             <div class="mb-3">
                                                 <label for="currentPassword" class="form-label">Current Password</label>
                                                 <div class="input-group">
-                                                    <input type="password" class="form-control" id="currentPassword">
+                                                    <input type="password" class="form-control" id="currentPassword" name="current_password" required>
                                                     <button class="btn btn-outline-secondary toggle-password" type="button">
                                                         <i class="bi bi-eye"></i>
                                                     </button>
@@ -147,7 +219,7 @@ $notifications = [
                                             <div class="mb-3">
                                                 <label for="newPassword" class="form-label">New Password</label>
                                                 <div class="input-group">
-                                                    <input type="password" class="form-control" id="newPassword">
+                                                    <input type="password" class="form-control" id="newPassword" name="new_password" required>
                                                     <button class="btn btn-outline-secondary toggle-password" type="button">
                                                         <i class="bi bi-eye"></i>
                                                     </button>
@@ -162,12 +234,13 @@ $notifications = [
                                             <div class="mb-3">
                                                 <label for="confirmPassword" class="form-label">Confirm New Password</label>
                                                 <div class="input-group">
-                                                    <input type="password" class="form-control" id="confirmPassword">
+                                                    <input type="password" class="form-control" id="confirmPassword" name="confirm_password" required>
                                                     <button class="btn btn-outline-secondary toggle-password" type="button">
                                                         <i class="bi bi-eye"></i>
                                                     </button>
                                                 </div>
                                             </div>
+                                            <div id="password-update-message"></div>
                                             <button type="submit" class="btn btn-primary">Update Password</button>
                                         </form>
                                     </div>
@@ -209,8 +282,8 @@ $notifications = [
         });
         
         // Password visibility toggle
-        const toggleButtons = document.querySelectorAll('.toggle-password');
-        toggleButtons.forEach(button => {
+        const passwordVisibilityButtons = document.querySelectorAll('.toggle-password');
+        passwordVisibilityButtons.forEach(button => {
             button.addEventListener('click', function() {
                 const input = this.previousElementSibling;
                 const icon = this.querySelector('i');
@@ -227,35 +300,159 @@ $notifications = [
             });
         });
         
+        // Profile form submission with error handling
+        document.getElementById('profile-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+            const messageDiv = document.getElementById('profile-update-message');
+            
+            // Show loading state
+            messageDiv.innerHTML = '<div class="alert alert-info">Updating profile...</div>';
+            
+            fetch('update_profile.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.success) {
+                    messageDiv.innerHTML = '<div class="alert alert-success">' + data.message + '</div>';
+                    // Refresh page after 2 seconds to show updated data
+                    setTimeout(() => window.location.reload(), 2000);
+                } else {
+                    messageDiv.innerHTML = '<div class="alert alert-danger">' + data.message + '</div>';
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                messageDiv.innerHTML = '<div class="alert alert-danger">An error occurred. Please try again later.</div>';
+            });
+        });
+        
         // Simple password strength meter
         document.getElementById('newPassword').addEventListener('input', function() {
             const password = this.value;
             const progressBar = document.querySelector('.password-strength .progress-bar');
             const strengthText = document.getElementById('password-strength-text');
             
+            // Password strength logic
             let strength = 0;
-            
             if (password.length >= 8) strength += 25;
             if (password.match(/[A-Z]/)) strength += 25;
             if (password.match(/[0-9]/)) strength += 25;
             if (password.match(/[^A-Za-z0-9]/)) strength += 25;
             
+            // Update UI
             progressBar.style.width = strength + '%';
             
-            if (strength <= 25) {
+            // Update color based on strength
+            if (strength < 25) {
                 progressBar.className = 'progress-bar bg-danger';
                 strengthText.textContent = 'Too weak';
-            } else if (strength <= 50) {
+            } else if (strength < 50) {
                 progressBar.className = 'progress-bar bg-warning';
-                strengthText.textContent = 'Could be stronger';
-            } else if (strength <= 75) {
+                strengthText.textContent = 'Weak';
+            } else if (strength < 75) {
                 progressBar.className = 'progress-bar bg-info';
-                strengthText.textContent = 'Good';
+                strengthText.textContent = 'Medium';
             } else {
                 progressBar.className = 'progress-bar bg-success';
                 strengthText.textContent = 'Strong';
             }
         });
+        
+        // Password form submission with error handling
+        document.getElementById('password-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+            const messageDiv = document.getElementById('password-update-message');
+            
+            // Show loading state
+            messageDiv.innerHTML = '<div class="alert alert-info">Updating password...</div>';
+            
+            fetch('update_password.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.success) {
+                    messageDiv.innerHTML = '<div class="alert alert-success">' + data.message + '</div>';
+                    // Clear form
+                    this.reset();
+                } else {
+                    messageDiv.innerHTML = '<div class="alert alert-danger">' + data.message + '</div>';
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                messageDiv.innerHTML = '<div class="alert alert-danger">An error occurred. Please try again later.</div>';
+            });
+        });
     </script>
 </body>
 </html>
+
+<div class="tab-pane fade" id="system" role="tabpanel" aria-labelledby="system-tab">
+    <h4 class="mb-4">System Settings</h4>
+    
+    <!-- Cache Management -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5 class="mb-0">Cache Management</h5>
+        </div>
+        <div class="card-body">
+            <p>Clearing the cache can help resolve display issues and ensure you're seeing the most up-to-date information.</p>
+            
+            <?php if (!empty($cache_message)): ?>
+            <div class="alert alert-info"><?php echo htmlspecialchars($cache_message); ?></div>
+            <?php endif; ?>
+            
+            <form method="post" action="">
+                <input type="hidden" name="clear_cache" value="1">
+                <button type="submit" class="btn btn-warning">
+                    <i class="bi bi-trash"></i> Clear System Cache
+                </button>
+            </form>
+        </div>
+    </div>
+    
+    <!-- System Information -->
+    <div class="card">
+        <div class="card-header">
+            <h5 class="mb-0">System Information</h5>
+        </div>
+        <div class="card-body">
+            <table class="table">
+                <tbody>
+                    <tr>
+                        <th>PHP Version</th>
+                        <td><?php echo phpversion(); ?></td>
+                    </tr>
+                    <tr>
+                        <th>Server Software</th>
+                        <td><?php echo $_SERVER['SERVER_SOFTWARE']; ?></td>
+                    </tr>
+                    <tr>
+                        <th>Cache Status</th>
+                        <td><?php echo CACHE_ENABLED ? 'Enabled' : 'Disabled'; ?></td>
+                    </tr>
+                    <tr>
+                        <th>Cache Lifetime</th>
+                        <td><?php echo CACHE_LIFETIME; ?> seconds (<?php echo CACHE_LIFETIME / 60; ?> minutes)</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

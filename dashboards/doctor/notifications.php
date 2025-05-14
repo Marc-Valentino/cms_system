@@ -10,24 +10,16 @@ if (session_status() == PHP_SESSION_NONE) {
 //     exit();
 // }
 
-// Placeholder user data - replace with actual data from your database
-$user = [
-    'id' => 1,
-    'name' => 'Dr. Sarah Johnson',
-    'profile_pic' => '../assets/img/doctor-profile.jpg',
-    'role' => 'Doctor - Cardiologist'
-];
+// Include database connection and functions
+include_once '../../includes/db_connection.php';
+include_once '../../includes/user_functions.php';
 
-// Placeholder for notifications - replace with actual data
-$notifications = [
-    ['type' => 'Lab Result', 'message' => 'New lab results for patient Emily Davis', 'time' => '2 hours ago', 'read' => false],
-    ['type' => 'Appointment', 'message' => 'New appointment request from John Smith', 'time' => '3 hours ago', 'read' => false],
-    ['type' => 'Reminder', 'message' => 'Follow-up call with John Smith', 'time' => '1 day ago', 'read' => true],
-    ['type' => 'System', 'message' => 'System maintenance scheduled for tonight', 'time' => '3 days ago', 'read' => true],
-    ['type' => 'Patient Feedback', 'message' => 'New feedback submitted by Linda Williams', 'time' => '4 days ago', 'read' => true],
-    ['type' => 'Lab Result', 'message' => 'Lab results available for Thomas Anderson', 'time' => '1 week ago', 'read' => true],
-    ['type' => 'Appointment', 'message' => 'Appointment rescheduled by Michael Brown', 'time' => '1 week ago', 'read' => true]
-];
+// Initialize empty arrays for data that will be populated from the database
+$user = get_user_by_id($_SESSION['user_id']);
+$notifications = supabase_query('notifications', 'GET', null, [
+    'user_id' => 'eq.' . $_SESSION['user_id'],
+    'order' => 'created_at.desc'
+]);
 ?>
 
 <!DOCTYPE html>
@@ -61,8 +53,6 @@ $notifications = [
             <!-- Include the navbar/header -->
             <?php include('navbar.php'); ?>
 
-            <!-- REMOVED DUPLICATED HEADER SECTION -->
-
             <!-- Loader Container -->
             <div class="loader-container" id="loader">
                 <div class="lifeline-loader">
@@ -93,6 +83,13 @@ $notifications = [
                     <div class="row">
                         <div class="col-12">
                             <div class="notification-list">
+                                <?php if (empty($notifications)): ?>
+                                <div class="card notification-card">
+                                    <div class="card-body">
+                                        <div class="notification-message text-center">No notifications available</div>
+                                    </div>
+                                </div>
+                                <?php else: ?>
                                 <!-- Loop through notifications -->
                                 <?php foreach ($notifications as $index => $notification): ?>
                                 <div class="card notification-card <?php echo $notification['read'] ? '' : 'unread'; ?>" data-notification-id="<?php echo $index; ?>">
@@ -130,6 +127,7 @@ $notifications = [
                                     </div>
                                 </div>
                                 <?php endforeach; ?>
+                                <?php endif; ?>
                             </div>
                         </div>
                     </div>

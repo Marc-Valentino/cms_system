@@ -194,4 +194,9 @@ function has_role($role_id) {
     $user_role = get_user_role();
     return $user_role == $role_id;
 }
+
+// Function to verify password
+function verify_password($password, $hash) {
+    return password_verify($password, $hash);
+}
 ?>

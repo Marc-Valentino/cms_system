@@ -1,8 +1,6 @@
 /* Additional styles for settings page */
 .profile-pic-container {
-    position: relative;
-    width: 150px;
-    height: 150px;
+    text-align: center;
     margin: 0 auto 20px;
 }
 
@@ -75,5 +73,12 @@
 .btn-primary:hover {
     background: #2980b9;
     border-color: #2980b9;
+}
+
+.profile-icon {
+    font-size: 8rem;  /* Increased from 5rem to 8rem */
+    color: #3498db;
+    display: inline-block;
+    margin-bottom: 10px;
 }
   
