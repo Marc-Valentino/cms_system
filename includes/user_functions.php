@@ -127,40 +127,56 @@ function get_role_name_by_id($role_id) {
 }
 
 // Function to authenticate user
+// Function to authenticate user
 function authenticate_user($email, $password) {
-    // For testing purposes - if you're using testuser1@gmail.com
-    if ($email === 'testuser1@gmail.com') {
-        // For testing, accept any password for this test user
-        // In production, you should NEVER do this
-        return [
-            'id' => '00000000-0000-0000-0000-000000000001', // Dummy UUID
-            'email' => 'testuser1@gmail.com',
-            'username' => 'testuser1',
-            'first_name' => 'Test',
-            'last_name' => 'User',
-            'role_id' => 1, // Assuming 1 is doctor role
-            'password_hash' => 'dummy_hash' // Not used but included for completeness
-        ];
+    global $conn;
+    
+    try {
+        // Add debugging at the start
+        error_log("Attempting to authenticate user: $email");
+        
+        // Prepare statement to prevent SQL injection
+        $stmt = $conn->prepare("SELECT id, username, email, password_hash, first_name, last_name, role_id FROM users WHERE email = ?");
+        if (!$stmt) {
+            error_log("Prepare failed: " . $conn->error);
+            return false;
+        }
+        
+        $stmt->bind_param("s", $email);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        
+        if ($result->num_rows === 1) {
+            $user = $result->fetch_assoc();
+            
+            // For debugging
+            error_log("User found: " . json_encode($user));
+            
+            // Verify password - only use password_verify for security
+            if (password_verify($password, $user['password_hash'])) {
+                // Return user data with role mapped correctly
+                return [
+                    'id' => $user['id'],
+                    'username' => $user['username'],
+                    'email' => $user['email'],
+                    'first_name' => $user['first_name'],
+                    'last_name' => $user['last_name'],
+                    'role' => $user['role_id']
+                ];
+            } else {
+                error_log("Password verification failed for user: " . $email);
+                error_log("Provided password length: " . strlen($password));
+                error_log("Stored hash: " . substr($user['password_hash'], 0, 10) . "...");
+            }
+        } else {
+            error_log("No user found with email: " . $email);
+        }
+        
+        $stmt->close();
+    } catch (Exception $e) {
+        error_log("Exception in authenticate_user: " . $e->getMessage());
     }
     
-    $users = get_user_by_email($email);
-    
-    if (empty($users)) {
-        error_log("No user found with email: $email");
-        return false;
-    }
-    
-    $user = $users[0];
-    
-    // For debugging
-    error_log("User found: " . json_encode($user));
-    
-    // Check password
-    if (password_verify($password, $user['password_hash'])) {
-        return $user;
-    } else {
-        error_log("Password verification failed for user: $email");
-        return false;
-    }
+    return false;
 }
 ?>

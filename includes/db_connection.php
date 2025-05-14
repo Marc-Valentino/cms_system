@@ -15,6 +15,13 @@ define('SUPABASE_KEY', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmF
 // Include cache class
 require_once 'cache.php';
 
+// Update with your actual database credentials
+$conn = new mysqli('localhost', 'root', '', 'cms_system');
+if ($conn->connect_error) {
+    error_log("Database connection failed: " . $conn->connect_error);
+    die("Connection failed: " . $conn->connect_error);
+}
+
 function supabase_query($table, $method = 'GET', $data = null, $params = []) {
     global $supabase_url, $supabase_key;
     

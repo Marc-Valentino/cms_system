@@ -1,39 +1,98 @@
 <?php
 // Start session if not already started
-if (session_status() == PHP_SESSION_NONE) {
+if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-// Check if user is logged in
-// if (!isset($_SESSION['user_id'])) {
-//     header("Location: ../login.php");
-//     exit();
-// }
-
-// Placeholder user data - replace with actual data from your database
-$user = [
-    'id' => 1,
-    'name' => 'Nurse Johnny Sins',
-    'profile_pic' => '../assets/img/doctor-profile.jpg',
-    'role' => 'Nurse 1'
-];
-
-// Sample data for demonstration
-$current_shift = [
-    'start_time' => '07:00:00',
-    'end_time' => '15:00:00'
-];
-
-$next_shift = [
-    'date' => '2023-08-16',
-    'start_time' => '07:00:00',
-    'end_time' => '15:00:00'
-];
-
-// Format time function
-function formatTime($time) {
-    return date('h:i A', strtotime($time));
+// Check if user is logged in and has nurse role
+if (!isset($_SESSION['user_id']) || $_SESSION['role'] != 2) {
+    header("Location: ../../login/login.php");
+    exit();
 }
+
+// Include database connection
+require_once '../../includes/db_connection.php';
+
+// Get user information
+$user_id = $_SESSION['user_id'];
+$stmt = $conn->prepare("SELECT * FROM users WHERE id = ?");
+$stmt->bind_param("i", $user_id);
+$stmt->execute();
+$user = $stmt->get_result()->fetch_assoc();
+$stmt->close();
+
+// Get current date and time
+$current_date = date('Y-m-d');
+$current_time = date('H:i:s');
+$current_datetime = date('Y-m-d H:i:s');
+$day_of_week = date('l');
+
+// Initialize counters with real data from database
+$assigned_patients_count = 0;
+$medications_today_count = 0;
+$vitals_logged_count = 0;
+
+// Get assigned patients count
+$stmt = $conn->prepare("SELECT COUNT(*) as count FROM patient_assignments WHERE nurse_id = ?");
+$stmt->bind_param("i", $user_id);
+$stmt->execute();
+$result = $stmt->get_result();
+if ($row = $result->fetch_assoc()) {
+    $assigned_patients_count = $row['count'];
+}
+$stmt->close();
+
+// Get medications count for today
+$stmt = $conn->prepare("SELECT COUNT(*) as count FROM medication_schedules WHERE nurse_id = ? AND DATE(scheduled_time) = CURRENT_DATE()");
+$stmt->bind_param("i", $user_id);
+$stmt->execute();
+$result = $stmt->get_result();
+if ($row = $result->fetch_assoc()) {
+    $medications_today_count = $row['count'];
+}
+$stmt->close();
+
+// Get vitals logged count for today
+$stmt = $conn->prepare("SELECT COUNT(*) as count FROM vitals_records WHERE recorded_by = ? AND DATE(date_time) = CURRENT_DATE()");
+$stmt->bind_param("i", $user_id);
+$stmt->execute();
+$result = $stmt->get_result();
+if ($row = $result->fetch_assoc()) {
+    $vitals_logged_count = $row['count'];
+}
+$stmt->close();
+
+// Get nurse shift information
+$shift_start = "";
+$shift_end = "";
+$tomorrow_shift_start = "";
+$tomorrow_shift_end = "";
+$has_shift_today = false;
+$has_shift_tomorrow = false;
+
+$stmt = $conn->prepare("SELECT * FROM nurse_schedules WHERE nurse_id = ? AND date = CURRENT_DATE()");
+$stmt->bind_param("i", $user_id);
+$stmt->execute();
+$result = $stmt->get_result();
+if ($row = $result->fetch_assoc()) {
+    $shift_start = date('H:i A', strtotime($row['start_time']));
+    $shift_end = date('H:i A', strtotime($row['end_time']));
+    $has_shift_today = true;
+}
+$stmt->close();
+
+// Get tomorrow's shift
+$tomorrow = date('Y-m-d', strtotime('+1 day'));
+$stmt = $conn->prepare("SELECT * FROM nurse_schedules WHERE nurse_id = ? AND date = ?");
+$stmt->bind_param("is", $user_id, $tomorrow);
+$stmt->execute();
+$result = $stmt->get_result();
+if ($row = $result->fetch_assoc()) {
+    $tomorrow_shift_start = date('H:i A', strtotime($row['start_time']));
+    $tomorrow_shift_end = date('H:i A', strtotime($row['end_time']));
+    $has_shift_tomorrow = true;
+}
+$stmt->close();
 ?>
 
 <!DOCTYPE html>
@@ -53,7 +112,6 @@ function formatTime($time) {
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="css/doctor.css">
     <link rel="stylesheet" href="css/nurse.css">
 </head>
 <body>
@@ -67,153 +125,132 @@ function formatTime($time) {
 
             <!-- Main Content -->
             <div class="container-fluid py-4">
-                <div class="row mb-4">
-                    <div class="col-12">
-                        <h4 class="mb-0">
-                            Nurse Dashboard
-                        </h4>
-                    </div>
-                </div>
+                <h1 class="mb-4">Nurse Dashboard</h1>
                 
-                <!-- Current Shift Overview -->
-                <div class="card shift-info-card mb-4">
-                    <div class="card-body">
-                        <div class="row align-items-center">
-                            <div class="col-md-6">
-                                <div class="d-flex align-items-center">
-                                    <div class="shift-icon-container me-3">
-                                        <i class="bi bi-clock"></i>
-                                    </div>
-                                    <div>
-                                        <h5 class="mb-1">You're on shift</h5>
-                                        <h3 class="mb-0"><?php echo formatTime($current_shift['start_time']); ?> – <?php echo formatTime($current_shift['end_time']); ?></h3>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6 text-md-end mt-3 mt-md-0">
-                                <div class="current-date" id="currentDateTime">
-                                    <div class="current-day mb-1" id="currentDay"></div>
-                                    <div class="current-time" id="currentTime"></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Summary Cards -->
-                <div class="row">
-                    <!-- Total Assigned Patients Card -->
-                    <div class="col-md-4 mb-4">
-                        <div class="card summary-card h-100">
-                            <div class="card-body">
-                                <div class="summary-icon">
-                                    <i class="bi bi-person-lines-fill"></i>
-                                </div>
-                                <h5 class="card-title">Total Assigned Patients</h5>
-                                <h2 class="summary-value">12</h2>
-                                <p class="summary-label">Patients</p>
-                                <a href="nurse-patients.php" class="btn btn-outline-primary btn-sm mt-2">
-                                    <i class="bi bi-eye me-1"></i>View All
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Medications Today Card -->
-                    <div class="col-md-4 mb-4">
-                        <div class="card summary-card h-100">
-                            <div class="card-body">
-                                <div class="summary-icon">
-                                    <i class="bi bi-capsule"></i>
-                                </div>
-                                <h5 class="card-title">Medications Today</h5>
-                                <h2 class="summary-value">8</h2>
-                                <p class="summary-label">Tasks</p>
-                                <a href="medications.php" class="btn btn-outline-primary btn-sm mt-2">
-                                    <i class="bi bi-eye me-1"></i>View All
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Vitals Logged Card -->
-                    <div class="col-md-4 mb-4">
-                        <div class="card summary-card h-100">
-                            <div class="card-body">
-                                <div class="summary-icon">
-                                    <i class="bi bi-clipboard-pulse"></i>
-                                </div>
-                                <h5 class="card-title">Vitals Logged</h5>
-                                <h2 class="summary-value">5</h2>
-                                <p class="summary-label">Records Today</p>
-                                <a href="vitals.php" class="btn btn-outline-primary btn-sm mt-2">
-                                    <i class="bi bi-eye me-1"></i>View All
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Next Shift Preview -->
-                <div class="card next-shift-card mb-4">
-                    <div class="card-body">
+                <!-- Shift Information -->
+                <?php if ($has_shift_today): ?>
+                <div class="card mb-4 bg-light border-0">
+                    <div class="card-body p-4">
                         <div class="d-flex align-items-center">
-                            <div class="next-shift-icon me-3">
-                                <i class="bi bi-calendar-check"></i>
+                            <div class="rounded-circle bg-primary bg-opacity-10 p-3 me-3">
+                                <i class="bi bi-clock text-primary fs-4"></i>
                             </div>
                             <div>
-                                <h6 class="text-muted mb-1">Tomorrow's Shift</h6>
-                                <h5 class="mb-0"><?php echo formatTime($next_shift['start_time']); ?> – <?php echo formatTime($next_shift['end_time']); ?></h5>
+                                <h5 class="mb-1">You're on shift</h5>
+                                <h3 class="mb-0"><?php echo $shift_start; ?> — <?php echo $shift_end; ?></h3>
+                            </div>
+                            <div class="ms-auto text-end">
+                                <p class="text-muted mb-0"><?php echo date('l, F j, Y'); ?></p>
+                                <h5 class="mb-0"><?php echo date('h:i A'); ?></h5>
                             </div>
                         </div>
                     </div>
                 </div>
+                <?php else: ?>
+                <div class="card mb-4 bg-light border-0">
+                    <div class="card-body p-4">
+                        <div class="d-flex align-items-center">
+                            <div class="rounded-circle bg-secondary bg-opacity-10 p-3 me-3">
+                                <i class="bi bi-calendar-check text-secondary fs-4"></i>
+                            </div>
+                            <div>
+                                <h5 class="mb-1">No shift scheduled for today</h5>
+                                <p class="mb-0">Check your schedule for upcoming shifts</p>
+                            </div>
+                            <div class="ms-auto text-end">
+                                <p class="text-muted mb-0"><?php echo date('l, F j, Y'); ?></p>
+                                <h5 class="mb-0"><?php echo date('h:i A'); ?></h5>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <?php endif; ?>
+                
+                <!-- Dashboard Stats -->
+                <div class="row">
+                    <!-- Total Assigned Patients -->
+                    <div class="col-md-4 mb-4">
+                        <div class="card h-100 border-0">
+                            <div class="card-body">
+                                <h5 class="card-title">Total Assigned Patients</h5>
+                                <div class="d-flex align-items-center">
+                                    <h1 class="display-4 mb-0"><?php echo $assigned_patients_count; ?></h1>
+                                    <p class="ms-2 mb-0 text-muted">Patients</p>
+                                    <div class="ms-auto">
+                                        <i class="bi bi-people text-primary opacity-25 fs-1"></i>
+                                    </div>
+                                </div>
+                                <a href="patients.php" class="btn btn-outline-primary btn-sm mt-3">
+                                    <i class="bi bi-eye"></i> View All
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Medications Today -->
+                    <div class="col-md-4 mb-4">
+                        <div class="card h-100 border-0">
+                            <div class="card-body">
+                                <h5 class="card-title">Medications Today</h5>
+                                <div class="d-flex align-items-center">
+                                    <h1 class="display-4 mb-0"><?php echo $medications_today_count; ?></h1>
+                                    <p class="ms-2 mb-0 text-muted">Tasks</p>
+                                    <div class="ms-auto">
+                                        <i class="bi bi-capsule text-info opacity-25 fs-1"></i>
+                                    </div>
+                                </div>
+                                <a href="medications.php" class="btn btn-outline-primary btn-sm mt-3">
+                                    <i class="bi bi-eye"></i> View All
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Vitals Logged -->
+                    <div class="col-md-4 mb-4">
+                        <div class="card h-100 border-0">
+                            <div class="card-body">
+                                <h5 class="card-title">Vitals Logged</h5>
+                                <div class="d-flex align-items-center">
+                                    <h1 class="display-4 mb-0"><?php echo $vitals_logged_count; ?></h1>
+                                    <p class="ms-2 mb-0 text-muted">Records Today</p>
+                                    <div class="ms-auto">
+                                        <i class="bi bi-heart-pulse text-danger opacity-25 fs-1"></i>
+                                    </div>
+                                </div>
+                                <a href="vitals.php" class="btn btn-outline-primary btn-sm mt-3">
+                                    <i class="bi bi-eye"></i> View All
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Tomorrow's Shift -->
+                <?php if ($has_shift_tomorrow): ?>
+                <div class="card mb-4 border-0">
+                    <div class="card-body p-4">
+                        <div class="d-flex align-items-center">
+                            <div class="rounded-circle bg-success bg-opacity-10 p-3 me-3">
+                                <i class="bi bi-calendar-check text-success fs-4"></i>
+                            </div>
+                            <div>
+                                <h5 class="mb-1">Tomorrow's Shift</h5>
+                                <h3 class="mb-0"><?php echo $tomorrow_shift_start; ?> — <?php echo $tomorrow_shift_end; ?></h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <?php endif; ?>
+                
+                <!-- Additional content can be added here -->
+                
             </div>
         </div>
     </div>
 
-    <!-- Toast Container for Notifications -->
-    <div class="toast-container position-fixed bottom-0 end-0 p-3"></div>
-
     <!-- Bootstrap JS Bundle with Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Initialize tooltips
-            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-            var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-                return new bootstrap.Tooltip(tooltipTriggerEl, {
-                    trigger: 'hover'
-                });
-            });
-            
-            // Update current date and time
-            function updateDateTime() {
-                const now = new Date();
-                const dayElement = document.getElementById('currentDay');
-                const timeElement = document.getElementById('currentTime');
-                
-                dayElement.textContent = now.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
-                timeElement.textContent = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
-            }
-            
-            // Initial call and set interval
-            updateDateTime();
-            setInterval(updateDateTime, 60000); // Update every minute
-            
-            // Add hover animation to cards
-            const summaryCards = document.querySelectorAll('.summary-card');
-            summaryCards.forEach(card => {
-                card.addEventListener('mouseenter', function() {
-                    this.classList.add('card-hover');
-                });
-                card.addEventListener('mouseleave', function() {
-                    this.classList.remove('card-hover');
-                });
-            });
-        });
-    </script>
 </body>
 </html>
 
