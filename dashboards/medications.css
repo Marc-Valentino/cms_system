@@ -1,0 +1,376 @@
+/* Medication Management - Custom Styles */
+
+:root {
+  --primary-color: #0077cc;
+  --primary-light: #e6f0ff;
+  --secondary-color: #6c757d;
+  --success-color: #28a745;
+  --danger-color: #dc3545;
+  --warning-color: #ffc107;
+  --info-color: #17a2b8;
+  --light-color: #f8f9fa;
+  --dark-color: #343a40;
+  --border-color: #dee2e6;
+  --hover-color: #f1f8ff;
+}
+
+/* General Styles */
+body {
+  font-family: 'Poppins', sans-serif;
+  background-color: #f5f8fa;
+}
+
+.card {
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  border: none;
+  margin-bottom: 24px;
+}
+
+.card-body {
+  padding: 20px;
+}
+
+/* Table Styles */
+.medication-table {
+  margin-bottom: 0;
+}
+
+/* Table styling to match vitals.php */
+.table thead th {
+    font-weight: 600;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-top: none;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.table tbody td {
+    vertical-align: middle;
+    border-color: #f5f5f5;
+    padding: 0.75rem;
+}
+
+.medication-icon {
+    color: #4e73df;
+    font-size: 1.1rem;
+}
+
+.badge {
+    font-weight: 500;
+    padding: 0.35em 0.65em;
+}
+
+/* Search and Filter Section */
+.search-filter-container {
+  background-color: white;
+  border-radius: 10px;
+  padding: 16px;
+  margin-bottom: 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.search-input {
+  border-radius: 50px;
+  padding-left: 40px;
+  border: 1px solid var(--border-color);
+  background-color: var(--light-color);
+}
+
+.search-input:focus {
+  box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+  border-color: var(--primary-color);
+}
+
+/* Search bar styling */
+.input-group-text {
+    color: #6c757d;
+    background-color: #fff;
+    border-right: none;
+}
+
+.form-control:focus {
+    box-shadow: none;
+    border-color: #ced4da;
+}
+
+.form-select:focus {
+    box-shadow: none;
+    border-color: #ced4da;
+}
+
+/* Card styling */
+.card.shadow-sm {
+    border: none;
+    border-radius: 0.5rem;
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075) !important;
+}
+
+/* Button styling */
+.btn-add-medication {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background-color: #4e73df;
+    color: white;
+    font-size: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    z-index: 1000;
+    transition: all 0.2s;
+}
+
+.btn-add-medication:hover {
+    background-color: #3a5fc8;
+    transform: scale(1.05);
+    color: white;
+}
+
+.medication-table tbody tr:nth-child(odd) {
+  background-color: rgba(0, 0, 0, 0.02);
+}
+
+.medication-table tbody tr:hover {
+  background-color: var(--hover-color);
+  transition: background-color 0.2s ease;
+}
+
+.medication-table td {
+  vertical-align: middle;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+/* Medication Icon */
+.medication-icon {
+  color: var(--primary-color);
+  font-size: 1.1rem;
+}
+
+/* Action Buttons */
+/* Action Button Styles - Fixed to hide text */
+.btn-sm {
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 3px;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.btn-sm i {
+  font-size: 16px;
+  margin: 0;
+}
+
+/* Hide text in buttons but keep the tooltip functionality */
+.btn-sm span {
+  display: none;
+}
+
+/* Ensure the tooltip still works */
+.tooltip {
+  z-index: 1070;
+}
+
+/* Remove these rules if they exist as they may be hiding the icons */
+.btn-sm span, 
+.btn-sm:not(i) {
+  display: initial;
+}
+
+.btn-sm:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.btn-outline-success:hover {
+  background-color: var(--success-color);
+  color: white;
+}
+
+.btn-outline-info:hover {
+  background-color: var(--info-color);
+  color: white;
+}
+
+/* Add Medication Button */
+.btn-add-medication {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background-color: var(--primary-color);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(13, 110, 253, 0.3);
+  transition: all 0.3s ease;
+  z-index: 1000;
+}
+
+.btn-add-medication:hover {
+  transform: scale(1.1);
+  box-shadow: 0 6px 16px rgba(13, 110, 253, 0.4);
+}
+
+.btn-add-medication i {
+  font-size: 24px;
+}
+
+/* Search and Filter */
+.search-container {
+  position: relative;
+}
+
+.search-icon {
+  position: absolute;
+  left: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--secondary-color);
+}
+
+.search-input {
+  padding-left: 40px;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  background-color: white;
+}
+
+.search-input:focus {
+  box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+  border-color: var(--primary-color);
+}
+
+.form-select {
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  background-color: white;
+}
+
+.form-select:focus {
+  box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+  border-color: var(--primary-color);
+}
+
+/* Modal Styles */
+.modal-content {
+  border-radius: 12px;
+  border: none;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.modal-header {
+  border-bottom: 1px solid var(--border-color);
+  padding: 16px 24px;
+}
+
+.modal-body {
+  padding: 24px;
+}
+
+.modal-footer {
+  border-top: 1px solid var(--border-color);
+  padding: 16px 24px;
+}
+
+.form-label {
+  font-weight: 500;
+  color: var(--secondary-color);
+  margin-bottom: 8px;
+}
+
+.form-control {
+  border-radius: 8px;
+  padding: 10px 16px;
+  border: 1px solid var(--border-color);
+}
+
+.form-control:focus {
+  box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+  border-color: var(--primary-color);
+}
+
+/* Medication Details */
+.medication-detail-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.medication-detail-header h6 {
+  font-weight: 600;
+  margin-bottom: 0;
+}
+
+.medication-detail-body p {
+  margin-bottom: 10px;
+}
+
+/* Toast Notification Styles */
+.toast-container {
+  z-index: 1100;
+  position: fixed;
+  top: 20px;
+  right: 20px;
+}
+
+.toast {
+  min-width: 250px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  border-radius: 8px;
+  opacity: 1 !important;
+}
+
+.toast-body {
+  padding: 12px 15px;
+  font-weight: 500;
+}
+
+.btn-close-white {
+  opacity: 0.8;
+}
+
+.btn-close-white:hover {
+  opacity: 1;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+  .medication-table th, 
+  .medication-table td {
+    padding: 10px 12px;
+  }
+  
+  .btn-add-medication {
+    bottom: 20px;
+    right: 20px;
+    width: 50px;
+    height: 50px;
+  }
+  
+  .btn-add-medication i {
+    font-size: 20px;
+  }
+  
+  .search-input,
+  .form-select {
+    font-size: 14px;
+  }
+}
