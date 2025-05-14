@@ -136,11 +136,6 @@ $user_name = (!empty($user['first_name']) && !empty($user['last_name']))
                                             <i class="bi bi-shield-lock"></i> Security
                                         </button>
                                     </li>
-                                    <li class="nav-item" role="presentation">
-                                        <button class="nav-link" id="system-tab" data-bs-toggle="tab" data-bs-target="#system" type="button" role="tab" aria-controls="system" aria-selected="false">
-                                            <i class="bi bi-hdd-stack"></i> System
-                                        </button>
-                                    </li>
                                 </ul>
                                 
                                 <!-- Tab Content -->
@@ -157,9 +152,7 @@ $user_name = (!empty($user['first_name']) && !empty($user['last_name']))
                                                 </div>
                                                 <!-- Remove the profile-pic-edit div since we're not using profile pictures anymore -->
                                                 <!-- Removing this unnecessary div that's causing confusion -->
-                                                <div class="profile-pic-edit" title="Change Profile Picture">
-                                                    <i class="bi bi-camera"></i>
-                                                </div>
+                                                
                                             </div>
                                             <div class="col-md-8">
                                                 <form id="profile-form" method="post" action="update_profile.php">
@@ -388,8 +381,10 @@ $user_name = (!empty($user['first_name']) && !empty($user['last_name']))
             .then(data => {
                 if (data.success) {
                     messageDiv.innerHTML = '<div class="alert alert-success">' + data.message + '</div>';
-                    // Clear form
-                    this.reset();
+                    // Clear form fields
+                    document.getElementById('currentPassword').value = '';
+                    document.getElementById('newPassword').value = '';
+                    document.getElementById('confirmPassword').value = '';
                 } else {
                     messageDiv.innerHTML = '<div class="alert alert-danger">' + data.message + '</div>';
                 }

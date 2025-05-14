@@ -85,7 +85,7 @@ foreach ($notifications as $notification) {
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="css/doctor.css">
     <link rel="stylesheet" href="nurse.css">
     <link rel="stylesheet" href="nurse-notification.css">
 </head>
@@ -105,6 +105,64 @@ foreach ($notifications as $notification) {
                         <h4 class="mb-0">
                             Notifications
                         </h4>
+                    </div>
+                </div>
+                
+                <!-- Notification Demo Section -->
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title mb-4">Notification Panel Demo</h5>
+                                <p class="mb-4">Click the button below to see the notification panel with heartbeat loader animation:</p>
+                                
+                                <div class="position-relative d-inline-block">
+                                    <button id="demoNotificationBtn" class="btn btn-primary">
+                                        <i class="bi bi-bell me-2"></i>Show Notifications
+                                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                            <?php echo $unread_count; ?>
+                                        </span>
+                                    </button>
+                                    
+                                    <!-- Nurse Notification Panel -->
+                                    <div class="nurse-notification-panel" id="nurseNotificationPanel">
+                                        <div class="nurse-notification-header">
+                                            <h6 class="mb-0">Notifications</h6>
+                                            <span class="mark-all-read">Mark all as read</span>
+                                        </div>
+                                        
+                                        <!-- Heartbeat Loader -->
+                                        <div class="heartbeat-loader" id="heartbeatLoader">
+                                            <div class="heartbeat-line">
+                                                <svg viewBox="0 0 600 100" preserveAspectRatio="none">
+                                                    <path d="M0,50 L100,50 L120,30 L140,70 L160,30 L180,70 L200,30 L220,70 L240,50 L300,50 L320,30 L340,70 L360,30 L380,70 L400,30 L420,70 L440,50 L500,50 L520,30 L540,70 L560,30 L580,70 L600,50" />
+                                                </svg>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Notification Content -->
+                                        <div class="nurse-notification-body" id="notificationContent" style="display: none;">
+                                            <?php foreach ($notifications as $notification): ?>
+                                                <div class="notification-item <?php echo !$notification['read'] ? 'unread' : ''; ?>">
+                                                    <div class="notification-icon <?php echo $notification['type']; ?>">
+                                                        <i class="bi <?php echo $notification['icon']; ?>"></i>
+                                                    </div>
+                                                    <div class="notification-content">
+                                                        <div class="notification-title"><?php echo $notification['title']; ?></div>
+                                                        <div class="notification-text"><?php echo $notification['message']; ?></div>
+                                                        <div class="notification-time"><?php echo $notification['time']; ?></div>
+                                                    </div>
+                                                </div>
+                                            <?php endforeach; ?>
+                                        </div>
+                                        
+                                        <div class="nurse-notification-footer">
+                                            <a href="notifications.php">View all notifications</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 
@@ -161,47 +219,53 @@ foreach ($notifications as $notification) {
     
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // Notification panel toggle
+            const demoNotificationBtn = document.getElementById('demoNotificationBtn');
+            const nurseNotificationPanel = document.getElementById('nurseNotificationPanel');
+            const heartbeatLoader = document.getElementById('heartbeatLoader');
+            const notificationContent = document.getElementById('notificationContent');
+            
+            demoNotificationBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                nurseNotificationPanel.classList.toggle('show');
+                
+                // If panel is shown, simulate loading with heartbeat animation
+                if (nurseNotificationPanel.classList.contains('show')) {
+                    heartbeatLoader.style.display = 'flex';
+                    notificationContent.style.display = 'none';
+                    
+                    // After 0.8 seconds, hide loader and show content
+                    setTimeout(function() {
+                        heartbeatLoader.style.display = 'none';
+                        notificationContent.style.display = 'block';
+                    }, 800);
+                }
+            });
+            
+            // Close notification panel when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!nurseNotificationPanel.contains(e.target) && e.target !== demoNotificationBtn) {
+                    nurseNotificationPanel.classList.remove('show');
+                }
+            });
+            
+            // Mark all as read functionality
+            const markAllReadBtn = document.querySelector('.mark-all-read');
+            markAllReadBtn.addEventListener('click', function() {
+                const unreadItems = document.querySelectorAll('.notification-item.unread');
+                unreadItems.forEach(item => {
+                    item.classList.remove('unread');
+                });
+                
+                // Update badge count (in a real app, this would also update the database)
+                const badge = document.querySelector('.badge');
+                badge.textContent = '0';
+            });
+            
             // Initialize tooltips
             var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
             var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
                 return new bootstrap.Tooltip(tooltipTriggerEl);
-            });
-            
-            // Filter buttons functionality
-            const filterButtons = document.querySelectorAll('.btn-group .btn');
-            filterButtons.forEach(button => {
-                button.addEventListener('click', function() {
-                    // Remove active class from all buttons
-                    filterButtons.forEach(btn => btn.classList.remove('active'));
-                    
-                    // Add active class to clicked button
-                    this.classList.add('active');
-                    
-                    // Get filter type
-                    const filterType = this.textContent.trim().toLowerCase();
-                    
-                    // Filter notifications
-                    const notificationItems = document.querySelectorAll('.list-group-item');
-                    notificationItems.forEach(item => {
-                        if (filterType === 'all') {
-                            item.style.display = 'block';
-                        } else if (filterType === 'unread') {
-                            if (item.classList.contains('list-group-item-light')) {
-                                item.style.display = 'block';
-                            } else {
-                                item.style.display = 'none';
-                            }
-                        } else {
-                            // Filter by notification type
-                            const iconDiv = item.querySelector('.notification-icon');
-                            if (iconDiv && iconDiv.classList.contains(filterType)) {
-                                item.style.display = 'block';
-                            } else {
-                                item.style.display = 'none';
-                            }
-                        }
-                    });
-                });
             });
         });
     </script>

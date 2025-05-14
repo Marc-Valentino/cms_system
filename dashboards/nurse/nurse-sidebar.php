@@ -1,4 +1,4 @@
-<link rel="stylesheet" href="nurse-sidebar.css">
+<link rel="stylesheet" href="css/nurse-sidebar.css">
 <div class="sidebar">
     <div class="sidebar-header">
         <div class="logo-container">
