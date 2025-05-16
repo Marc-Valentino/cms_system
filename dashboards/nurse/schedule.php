@@ -77,7 +77,7 @@ function formatDate($date) {
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="css/nurse.css">
+    <link rel="stylesheet" href="css/doctor.css">
     <link rel="stylesheet" href="css/schedule.css">
 </head>
 <body>

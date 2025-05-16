@@ -86,6 +86,7 @@ foreach ($notifications as $notification) {
     
     <!-- Custom CSS -->
     <link rel="stylesheet" href="css/nurse.css">
+    <link rel="stylesheet" href="nurse.css">
     <link rel="stylesheet" href="nurse-notification.css">
 </head>
 <body>
