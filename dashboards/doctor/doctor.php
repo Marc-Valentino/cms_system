@@ -1,11 +1,11 @@
 <?php
 // Start session if not already started
-if (session_status() === PHP_SESSION_NONE) {
+if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }
 
 // Check if user is logged in and has doctor role
-if (!isset($_SESSION['user_id']) || $_SESSION['role'] != 1) {
+if (!isset($_SESSION['user_id']) || $_SESSION['role_id'] != 1) {
     header("Location: ../../login/login.php");
     exit();
 }

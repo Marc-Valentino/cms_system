@@ -103,14 +103,14 @@ function delete_user($user_id) {
     ]);
 }
 
-// Function to create doctor profile
-function create_doctor_profile($profile_data) {
-    return supabase_query('doctor_profiles', 'POST', $profile_data);
+// Function to create a doctor profile
+function create_doctor_profile($profileData) {
+    return supabase_query('doctor_profiles', 'POST', $profileData);
 }
 
-// Function to create nurse profile
-function create_nurse_profile($profile_data) {
-    return supabase_query('nurse_profiles', 'POST', $profile_data);
+// Function to create a nurse profile
+function create_nurse_profile($profileData) {
+    return supabase_query('nurse_profiles', 'POST', $profileData);
 }
 // Function to get role name by ID
 function get_role_name_by_id($role_id) {

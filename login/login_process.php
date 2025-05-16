@@ -1,86 +1,162 @@
 <?php
-// Start session if not already started
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
+session_start();
+header('Content-Type: application/json');
 
-// Include database connection and user functions
-require_once '../includes/db_connection.php';
-require_once '../includes/user_functions.php';
+// Include database connection
+include_once '../includes/db_connection.php';
+include_once '../includes/user_functions.php';
 
 // Initialize response array
-$response = [
-    'success' => false,
-    'message' => '',
-    'redirect' => ''
-];
+$response = ['success' => false, 'message' => '', 'redirect' => ''];
 
-// Check if form is submitted
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+// Enable error reporting for debugging
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
+// Log function for debugging
+function logDebug($message) {
+    error_log("[LOGIN DEBUG] " . $message);
+}
+
+logDebug("Login process started");
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Get form data
-    $email = trim($_POST['email'] ?? '');
+    $email = $_POST['email'] ?? '';
     $password = $_POST['password'] ?? '';
+    $role = $_POST['role'] ?? 'doctor'; // Default to doctor if not specified
     
-    // Validate inputs
+    // Log received data for debugging
+    logDebug("Login attempt - Email: $email, Role: $role");
+    
+    // Basic validation
     if (empty($email) || empty($password)) {
-        $response['message'] = 'Email and password are required';
+        $response['message'] = 'Please enter both email and password';
         echo json_encode($response);
         exit;
     }
     
+    // Map role names to role_id values
+    $role_map = [
+        'doctor' => 1,
+        'nurse' => 2,
+        'admin' => 3
+    ];
+    
+    $role_id = $role_map[$role] ?? 1; // Default to doctor (1) if role not found
+    
     try {
-        // Debug
-        error_log("Login attempt: Email = $email, Password length = " . strlen($password));
+        // First try to find the user by email only (without role restriction)
+        logDebug("Querying database for user with email: $email");
         
-        // Use the authenticate_user function
-        $user = authenticate_user($email, $password);
+        // Use direct SQL query for debugging
+        $stmt = $conn->prepare("SELECT * FROM users WHERE email = ?");
+        $stmt->bind_param("s", $email);
+        $stmt->execute();
+        $result = $stmt->get_result();
         
-        // Debug the user result
-        error_log("Authentication result: " . ($user ? "Success" : "Failed"));
-        if ($user) {
-            error_log("User data: " . json_encode($user));
+        if ($result->num_rows === 0) {
+            logDebug("No user found with email: $email");
+            $response['message'] = 'No account found with this email';
+            echo json_encode($response);
+            exit;
         }
         
-        if ($user) {
+        // Get all matching users
+        $users = [];
+        while ($row = $result->fetch_assoc()) {
+            $users[] = $row;
+        }
+        
+        logDebug("Found " . count($users) . " users with email: $email");
+        
+        // Check if any of the returned users match the role
+        $user_found = false;
+        $user = null;
+        
+        foreach ($users as $potential_user) {
+            logDebug("Checking user ID: " . $potential_user['id'] . " with role_id: " . $potential_user['role_id']);
+            
+            // Check if role_id matches
+            if ($potential_user['role_id'] == $role_id) {
+                $user = $potential_user;
+                $user_found = true;
+                logDebug("Found matching user with correct role");
+                break;
+            }
+        }
+        
+        // If no user with matching role was found, use the first user
+        if (!$user_found) {
+            $user = $users[0];
+            logDebug("User found but with different role. Requested: $role_id, Found: {$user['role_id']}");
+            $response['message'] = 'Your account has a different role. Please select the correct role.';
+            echo json_encode($response);
+            exit;
+        }
+        
+        // Debug log for password verification
+        logDebug("Attempting to verify password for user: {$user['email']}");
+        
+        // Verify password
+        if (password_verify($password, $user['password_hash'])) {
+            logDebug("Password verified successfully");
+            
             // Set session variables
             $_SESSION['user_id'] = $user['id'];
-            $_SESSION['username'] = $user['username'] ?? '';
             $_SESSION['email'] = $user['email'];
-            $_SESSION['first_name'] = $user['first_name'] ?? '';
-            $_SESSION['last_name'] = $user['last_name'] ?? '';
-            $_SESSION['role'] = (int)$user['role']; // Ensure role is an integer
+            $_SESSION['username'] = $user['username'];
+            $_SESSION['first_name'] = $user['first_name'];
+            $_SESSION['last_name'] = $user['last_name'];
+            $_SESSION['role_id'] = $user['role_id'];
             
-            error_log("User authenticated successfully. Role ID: " . $_SESSION['role'] . " (Type: " . gettype($_SESSION['role']) . ")");
-            
-            // Redirect based on role - use == instead of === for comparison
-            if ($_SESSION['role'] == 1) {
-                $response['redirect'] = '../dashboards/doctor/doctor.php';
-                error_log("Redirecting to doctor dashboard");
-            } elseif ($_SESSION['role'] == 2) {
-                $response['redirect'] = '../dashboards/nurse/nurse.php';
-                error_log("Redirecting to nurse dashboard");
-            } elseif ($_SESSION['role'] == 3) {
-                $response['redirect'] = '../admin/admin.php';
-                error_log("Redirecting to admin dashboard");
-            } else {
-                $response['redirect'] = '../index.php';
-                error_log("Unknown role: " . $_SESSION['role'] . ", redirecting to index");
+            // Set role string based on role_id for backward compatibility
+            switch ($user['role_id']) {
+                case 1:
+                    $_SESSION['role'] = 'doctor';
+                    $response['redirect'] = '../dashboards/doctor/doctor.php';
+                    break;
+                case 2:
+                    $_SESSION['role'] = 'nurse';
+                    $response['redirect'] = '../dashboards/nurse/nurse.php';
+                    break;
+                case 3:
+                    $_SESSION['role'] = 'admin';
+                    $response['redirect'] = '../admin/admin.php';
+                    break;
+                default:
+                    $_SESSION['role'] = 'unknown';
+                    $response['redirect'] = '../index.php';
+                    break;
             }
+            
+            // Set additional session variables if available
+            if (isset($user['profile_pic_url'])) $_SESSION['profile_pic_url'] = $user['profile_pic_url'];
+            if (isset($user['phone'])) $_SESSION['phone'] = $user['phone'];
+            if (isset($user['address'])) $_SESSION['address'] = $user['address'];
+            if (isset($user['created_at'])) $_SESSION['created_at'] = $user['created_at'];
+            if (isset($user['updated_at'])) $_SESSION['updated_at'] = $user['updated_at'];
             
             $response['success'] = true;
             $response['message'] = 'Login successful!';
+            
+            // Log successful login
+            logDebug("User {$user['email']} logged in successfully with role {$_SESSION['role']}");
         } else {
-            error_log("Authentication failed for user: $email");
-            $response['message'] = 'Invalid email or password';
+            logDebug("Password verification failed");
+            $response['message'] = 'Invalid password';
         }
     } catch (Exception $e) {
-        error_log("Exception during login: " . $e->getMessage());
-        $response['message'] = 'An error occurred during login. Please try again.';
+        logDebug("Exception during login: " . $e->getMessage());
+        $response['message'] = 'An error occurred during login: ' . $e->getMessage();
     }
+} else {
+    $response['message'] = 'Invalid request method';
+    logDebug("Invalid request method: " . $_SERVER['REQUEST_METHOD']);
 }
 
-// Return JSON response
-header('Content-Type: application/json');
+logDebug("Login process completed. Response: " . json_encode($response));
 echo json_encode($response);
 exit;
 ?>
