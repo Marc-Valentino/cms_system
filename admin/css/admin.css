@@ -481,3 +481,54 @@ svg.heart-icon path {
         stroke-dashoffset: -1000;
     }
 }
+
+
+/* Navbar User Styles */
+.navbar-user {
+    display: flex;
+    align-items: center;
+    margin-left: auto;
+}
+
+.avatar-img {
+    width: 36px;
+    height: 36px;
+    object-fit: cover;
+    border: 2px solid #fff;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.dropdown-toggle::after {
+    display: none;
+}
+
+.activity-list {
+    max-height: 350px;
+    overflow-y: auto;
+}
+
+.activity-item {
+    display: flex;
+    align-items: flex-start;
+    padding: 12px 0;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+}
+
+.activity-item:last-child {
+    border-bottom: none;
+}
+
+.activity-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 12px;
+    color: #fff;
+}
+
+.activity-content {
+    flex: 1;
+}

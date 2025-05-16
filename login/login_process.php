@@ -50,19 +50,42 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // First try to find the user by email only (without role restriction)
         logDebug("Querying Supabase for user with email: $email");
         
-        // Use Supabase query instead of direct MySQL
+        // Use Supabase query instead of direct MySQL - IMPORTANT: Convert email to lowercase for comparison
         $users = supabase_query('users', 'GET', null, [
             'select' => '*',
-            'email' => 'eq.' . $email
+            'email' => 'ilike.' . strtolower($email) // Use case-insensitive comparison
         ]);
         
         logDebug("Supabase query result: " . json_encode($users));
         
         if (!$users || empty($users)) {
-            logDebug("No user found with email: $email");
-            $response['message'] = 'No account found with this email';
-            echo json_encode($response);
-            exit;
+            // Try a more direct query without filters
+            logDebug("No user found with email: $email, trying direct query");
+            $all_users = supabase_query('users', 'GET', null, [
+                'select' => '*'
+            ]);
+            
+            logDebug("All users: " . json_encode($all_users));
+            
+            // Manually check for email match
+            $matched_users = [];
+            if ($all_users && !empty($all_users)) {
+                foreach ($all_users as $u) {
+                    if (strtolower($u['email']) === strtolower($email)) {
+                        $matched_users[] = $u;
+                    }
+                }
+            }
+            
+            if (!empty($matched_users)) {
+                $users = $matched_users;
+                logDebug("Found users after manual check: " . count($users));
+            } else {
+                logDebug("No user found with email: $email after manual check");
+                $response['message'] = 'No account found with this email';
+                echo json_encode($response);
+                exit;
+            }
         }
         
         logDebug("Found " . count($users) . " users with email: $email");
@@ -94,6 +117,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         
         // Debug log for password verification
         logDebug("Attempting to verify password for user: {$user['email']}");
+        logDebug("Password hash from DB: {$user['password_hash']}");
         
         // Verify password
         if (password_verify($password, $user['password_hash'])) {
@@ -106,6 +130,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $_SESSION['first_name'] = $user['first_name'];
             $_SESSION['last_name'] = $user['last_name'];
             $_SESSION['role_id'] = $user['role_id'];
+            
+            // Set toast notification
+            $_SESSION['toast'] = [
+                'message' => 'Welcome back, ' . $user['first_name'] . '!',
+                'type' => 'success'
+            ];
             
             // Set role string based on role_id for backward compatibility
             switch ($user['role_id']) {

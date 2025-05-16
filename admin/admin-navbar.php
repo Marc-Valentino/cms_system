@@ -6,26 +6,23 @@
 <!-- Header -->
 <!-- Add this style section if you don't have these styles in your styles.css -->
 
-<link rel="stylesheet" href="admin-navbar.css">
+<link rel="stylesheet" href="css/admin-navbar.css">
 <div class="header">
     <button class="btn d-lg-none" id="toggle-sidebar">
         <i class="bi bi-list"></i>
     </button>
-    <div class="doctor-info">
-        <img src="<?php echo isset($doctor['profile_pic']) ? $doctor['profile_pic'] : (isset($user['profile_pic']) ? $user['profile_pic'] : 'https://via.placeholder.com/40'); ?>" 
-             alt="User Profile" 
-             onerror="this.src='https://via.placeholder.com/40'">
-        <div>
-            <p class="doctor-name"><?php echo isset($doctor['name']) ? $doctor['name'] : (isset($user['name']) ? $user['name'] : 'User'); ?></p>
-            <p class="doctor-role">
-                <?php 
-                if (isset($doctor['specialty'])) {
-                    echo "Doctor - " . $doctor['specialty'];
-                } elseif (isset($user['role'])) {
-                    echo $user['role'];
-                }
-                ?>
-            </p>
+    <div class="navbar-user">
+        <span class="me-2">Welcome, Administrator</span>
+        <div class="dropdown">
+            <button class="btn btn-link dropdown-toggle" type="button" id="settingsDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="bi bi-gear-fill fs-5"></i>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="settingsDropdown">
+                <li><a class="dropdown-item" href="admin-profile.php"><i class="bi bi-person me-2"></i>Profile</a></li>
+                <li><a class="dropdown-item" href="admin-settings.php"><i class="bi bi-sliders me-2"></i>Settings</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="logout.php"><i class="bi bi-box-arrow-right me-2"></i>Logout</a></li>
+            </ul>
         </div>
     </div>
     <div class="notification-bell" id="notificationBell">

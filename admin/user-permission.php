@@ -73,8 +73,8 @@ $permissions = [
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="admin.css">
-    <link rel="stylesheet" href="user-permission.css">
+    <link rel="stylesheet" href="css/admin.css">
+    <link rel="stylesheet" href="css/user-permission.css">
 </head>
 <body>
     <div class="dashboard-container">
@@ -465,6 +465,6 @@ $permissions = [
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     
     <!-- Custom JS -->
-    <script src="user-permission.js"></script>
+    <script src="js/user-permission.js"></script>
 </body>
 </html>

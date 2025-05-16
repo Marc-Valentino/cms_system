@@ -5,15 +5,23 @@ if (session_status() == PHP_SESSION_NONE) {
 }
 
 // Check if user is logged in and has admin role
-// if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
-//     header("Location: ../login/login.php");
-//     exit();
-// }
+if (!isset($_SESSION['user_id']) || $_SESSION['role_id'] != 3) {
+    header("Location: ../login/login.php");
+    exit();
+}
 
-// Include database configuration
+// Include database configuration and functions
 include('../includes/config.php');
+include_once '../includes/db_connection.php';
+include_once '../includes/user_functions.php';
+include_once '../includes/cache_config.php';
 
-// Placeholder for system settings - replace with actual data from your database
+// Fetch system settings from Supabase
+$systemSettingsResult = supabase_query('system_settings', 'GET', null, [
+    'select' => '*'
+]);
+
+// Initialize default settings in case the query fails
 $systemSettings = [
     'site_name' => 'MediCare Clinic',
     'site_email' => 'admin@medicare-clinic.com',
@@ -30,12 +38,27 @@ $systemSettings = [
     'time_format' => '12h'
 ];
 
-// Placeholder for cache settings
+// If we have settings from the database, use those instead
+if (!empty($systemSettingsResult) && isset($systemSettingsResult[0])) {
+    $systemSettings = $systemSettingsResult[0];
+}
+
+// Fetch cache settings from Supabase
+$cacheSettingsResult = supabase_query('cache_settings', 'GET', null, [
+    'select' => '*'
+]);
+
+// Initialize default cache settings
 $cacheSettings = [
     'enable_cache' => true,
     'cache_lifetime' => 3600,
     'clear_on_update' => true
 ];
+
+// If we have cache settings from the database, use those instead
+if (!empty($cacheSettingsResult) && isset($cacheSettingsResult[0])) {
+    $cacheSettings = $cacheSettingsResult[0];
+}
 
 // Handle form submissions
 $message = '';
@@ -44,19 +67,85 @@ $messageType = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['update_system_settings'])) {
         // Process system settings update
-        // In a real application, you would update the database here
-        $message = 'System settings updated successfully!';
-        $messageType = 'success';
+        $updateData = [
+            'site_name' => $_POST['site_name'],
+            'site_email' => $_POST['site_email'],
+            'appointment_interval' => (int)$_POST['appointment_interval'],
+            'working_hours_start' => $_POST['working_hours_start'],
+            'working_hours_end' => $_POST['working_hours_end'],
+            'maintenance_mode' => isset($_POST['maintenance_mode']) ? true : false,
+            'enable_notifications' => isset($_POST['enable_notifications']) ? true : false,
+            'enable_sms' => isset($_POST['enable_sms']) ? true : false,
+            'enable_email' => isset($_POST['enable_email']) ? true : false,
+            'default_language' => $_POST['default_language'],
+            'timezone' => $_POST['timezone'],
+            'date_format' => $_POST['date_format'],
+            'time_format' => $_POST['time_format']
+        ];
+        
+        // Update the database
+        $result = supabase_query('system_settings', 'PATCH', $updateData, [
+            'id' => 'eq.' . $systemSettings['id']
+        ]);
+        
+        if ($result) {
+            $message = 'System settings updated successfully!';
+            $messageType = 'success';
+            
+            // Update our local copy of the settings
+            $systemSettings = array_merge($systemSettings, $updateData);
+            
+            // Clear cache if enabled
+            if ($cacheSettings['clear_on_update']) {
+                $cache->clear();
+            }
+        } else {
+            $message = 'Failed to update system settings.';
+            $messageType = 'danger';
+        }
     } elseif (isset($_POST['update_cache_settings'])) {
         // Process cache settings update
-        // In a real application, you would update the database here
-        $message = 'Cache settings updated successfully!';
-        $messageType = 'success';
+        $updateData = [
+            'enable_cache' => isset($_POST['enable_cache']) ? true : false,
+            'cache_lifetime' => (int)$_POST['cache_lifetime'],
+            'clear_on_update' => isset($_POST['clear_on_update']) ? true : false
+        ];
+        
+        // Update the database
+        $result = supabase_query('cache_settings', 'PATCH', $updateData, [
+            'id' => 'eq.' . $cacheSettings['id']
+        ]);
+        
+        if ($result) {
+            $message = 'Cache settings updated successfully!';
+            $messageType = 'success';
+            
+            // Update our local copy of the settings
+            $cacheSettings = array_merge($cacheSettings, $updateData);
+            
+            // Apply new cache settings
+            if ($updateData['enable_cache'] != $cacheSettings['enable_cache']) {
+                // Cache status changed, update the config
+                update_cache_config($updateData['enable_cache']);
+            }
+            
+            // Update cache lifetime
+            if ($updateData['cache_lifetime'] != $cacheSettings['cache_lifetime']) {
+                update_cache_lifetime($updateData['cache_lifetime']);
+            }
+        } else {
+            $message = 'Failed to update cache settings.';
+            $messageType = 'danger';
+        }
     } elseif (isset($_POST['clear_cache'])) {
         // Process cache clearing
-        // In a real application, you would clear the cache here
-        $message = 'Cache cleared successfully!';
-        $messageType = 'success';
+        if ($cache->clear()) {
+            $message = 'Cache cleared successfully!';
+            $messageType = 'success';
+        } else {
+            $message = 'Failed to clear cache.';
+            $messageType = 'danger';
+        }
     }
 }
 ?>
@@ -78,7 +167,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="admin.css">
+    <link rel="stylesheet" href="css/admin.css">
 </head>
 <body>
     <div class="dashboard-container">
