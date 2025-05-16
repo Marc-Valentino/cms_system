@@ -166,7 +166,7 @@ $completed_appointments = $completed_count['count'] ?? 0;
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="css/nurse.css">
+    <link rel="stylesheet" href="css/doctor.css">
 </head>
 <body>
     <div class="dashboard-container">

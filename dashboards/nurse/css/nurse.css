@@ -46,7 +46,6 @@ body {
 .main-content {
     margin-left: 250px;
     padding: 20px;
-    padding-top: 90px; /* Add padding to account for fixed navbar */
     transition: all 0.3s;
 }
 
