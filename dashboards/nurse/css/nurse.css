@@ -1,0 +1,242 @@
+body {
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 250px;
+    z-index: 999;
+    transition: all 0.3s;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.sidebar .nav-link {
+    padding: 12px 20px;
+    color: #333;
+    border-radius: 5px;
+    margin: 5px 10px;
+    transition: all 0.3s ease;
+}
+
+.sidebar .nav-link:hover {
+    background-color: #e9ecef;
+    transform: translateX(5px);
+}
+
+.sidebar .nav-link.active {
+    background-color: #0d6efd;
+    color: white;
+}
+
+.sidebar .nav-link i {
+    margin-right: 10px;
+    width: 20px;
+    text-align: center;
+}
+
+.sidebar-header {
+    padding: 20px;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.main-content {
+    margin-left: 250px;
+    padding: 20px;
+    padding-top: 90px; /* Add padding to account for fixed navbar */
+    transition: all 0.3s;
+}
+
+@media (max-width: 768px) {
+    .sidebar {
+        margin-left: -250px;
+    }
+    
+    .sidebar.active {
+        margin-left: 0;
+    }
+    
+    .main-content {
+        margin-left: 0;
+        width: 100%;
+    }
+    
+    .main-content.active {
+        margin-left: 250px;
+    }
+    
+    .toggle-btn {
+        display: block !important;
+    }
+}
+
+.toggle-btn {
+    position: fixed;
+    top: 15px;
+    left: 15px;
+    z-index: 1000;
+    display: none;
+}
+
+
+/* Nurse Dashboard Styles */
+:root {
+    --primary-color: #4e73df;
+    --secondary-color: #1cc88a;
+    --info-color: #36b9cc;
+    --light-blue: #e8f1ff;
+    --light-green: #e6f8f3;
+    --light-gray: #f8f9fc;
+    --border-radius: 0.5rem;
+    --box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+    --transition: all 0.3s ease;
+}
+
+/* Shift Info Card */
+.shift-info-card {
+    background-color: var(--light-blue);
+    border: none;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    transition: var(--transition);
+}
+
+.shift-icon-container {
+    width: 50px;
+    height: 50px;
+    background-color: rgba(78, 115, 223, 0.1);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.shift-icon-container i {
+    font-size: 1.5rem;
+    color: var(--primary-color);
+}
+
+.current-date {
+    color: #5a5c69;
+}
+
+.current-day {
+    font-size: 0.9rem;
+    opacity: 0.8;
+}
+
+.current-time {
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+
+/* Summary Cards */
+.summary-card {
+    border: none;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    transition: var(--transition);
+    overflow: hidden;
+    position: relative;
+}
+
+.summary-card:nth-child(1) {
+    background-color: var(--light-blue);
+}
+
+.summary-card:nth-child(2) {
+    background-color: var(--light-green);
+}
+
+.summary-card:nth-child(3) {
+    background-color: var(--light-gray);
+}
+
+.summary-icon {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    font-size: 2rem;
+    opacity: 0.2;
+    color: var(--primary-color);
+}
+
+.summary-card:nth-child(1) .summary-icon {
+    color: var(--primary-color);
+}
+
+.summary-card:nth-child(2) .summary-icon {
+    color: var(--secondary-color);
+}
+
+.summary-card:nth-child(3) .summary-icon {
+    color: var(--info-color);
+}
+
+.card-title {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+}
+
+.summary-value {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 0;
+    line-height: 1;
+}
+
+.summary-label {
+    color: #6c757d;
+    font-size: 0.875rem;
+    margin-bottom: 1rem;
+}
+
+/* Card Hover Animation */
+.card-hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0.5rem 2rem 0 rgba(58, 59, 69, 0.2);
+}
+
+/* Next Shift Card */
+.next-shift-card {
+    background-color: var(--light-gray);
+    border: none;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    transition: var(--transition);
+}
+
+.next-shift-icon {
+    width: 40px;
+    height: 40px;
+    background-color: rgba(28, 200, 138, 0.1);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.next-shift-icon i {
+    font-size: 1.2rem;
+    color: var(--secondary-color);
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .shift-info-card .row {
+        flex-direction: column;
+    }
+    
+    .current-date {
+        margin-top: 1rem;
+        text-align: left !important;
+    }
+    
+    .summary-card {
+        margin-bottom: 1rem;
+    }
+}

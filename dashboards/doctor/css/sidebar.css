@@ -1,0 +1,51 @@
+/* Heart Logo Animation */
+.heart-logo {
+    width: 65px;
+    height: 65px;
+    margin-right: 10px;
+}
+
+.heart {
+    animation: pulse 2s ease-in-out infinite;
+    transform-origin: center;
+    will-change: transform;
+}
+
+.heartbeat-line {
+    stroke-dasharray: 400;
+    stroke-dashoffset: 400;
+    animation: dash 4s linear infinite;
+    will-change: stroke-dashoffset;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+}
+
+@keyframes dash {
+    0% {
+        stroke-dashoffset: 400;
+    }
+    100% {
+        stroke-dashoffset: 0;
+    }
+}
+
+/* Logo container styling */
+.logo-container {
+    display: flex;
+    align-items: center;
+    padding: 15px;
+}
+
+.logo-container h3 {
+    margin: 0;
+    color: #fff;
+    font-size: 1.3rem;
+    font-weight: 700;
+}

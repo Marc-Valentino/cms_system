@@ -1,0 +1,761 @@
+s:33146:"
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doctor Dashboard - Clinic Management System</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    
+    <!-- Google Fonts - Poppins -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/doctor.css">
+    
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Include the sidebar -->
+        <link rel="stylesheet" href="css/sidebar.css">
+<div class="sidebar">
+    <div class="sidebar-header">
+        <div class="logo-container">
+            <div class="heart-logo">
+                <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Heart shape -->
+                    <path class="heart" d="M50,30 C50,30 65,10 80,20 C95,30 95,50 80,65 C65,80 50,90 50,90 C50,90 35,80 20,65 C5,50 5,30 20,20 C35,10 50,30 50,30 Z" fill="#e74c3c" />
+                    
+                    <!-- Heart rate line -->
+                    <path class="heartbeat-line" d="M10,50 L30,50 L40,30 L50,70 L60,30 L70,70 L80,50 L90,50" fill="none" stroke="#fff" stroke-width="3" />
+                </svg>
+            </div>
+            <h3>MediCare Clinic</h3>
+        </div>
+        <!-- Removed the X button here -->
+    </div>
+    <div class="sidebar-menu">
+        <ul>
+            <li><a href="doctor.php" class="active"><i class="bi bi-speedometer2"></i> <span>Dashboard</span></a></li>
+            <li><a href="appointments.php" ><i class="bi bi-calendar-check"></i> <span>Appointments</span></a></li>
+            <li><a href="patients.php" ><i class="bi bi-people"></i> <span>Patients</span></a></li>
+            <li><a href="medical-notes.php" ><i class="bi bi-journal-medical"></i> <span>Medical Notes</span></a></li>
+            <li><a href="notifications.php" ><i class="bi bi-bell"></i> <span>Notifications</span></a></li>
+            <li><a href="settings.php" ><i class="bi bi-gear"></i> <span>Settings</span></a></li>
+            <li><a href="logout.php"><i class="bi bi-box-arrow-right"></i> <span>Logout</span></a></li>
+        </ul>
+    </div>
+    <div class="sidebar-footer">
+        <p>&copy; 2025 Clinic Management System</p>
+    </div>
+</div>
+
+<!-- Logout Confirmation Modal -->
+<div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="logoutModalLabel">
+                    <i class="bi bi-exclamation-triangle-fill text-warning me-2"></i>
+                    Confirm Logout
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to log out of your session?</p>
+                <p class="text-muted small">Any unsaved changes will be lost.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="bi bi-x-circle me-1"></i> Cancel
+                </button>
+                <a href="logout.php" class="btn btn-primary">
+                    <i class="bi bi-box-arrow-right me-1"></i> Yes, Logout
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Add event listener to logout link
+    document.addEventListener('DOMContentLoaded', function() {
+        const logoutLink = document.getElementById('logout-link');
+        if (logoutLink) {
+            logoutLink.addEventListener('click', function(e) {
+                e.preventDefault();
+                const logoutModal = new bootstrap.Modal(document.getElementById('logoutModal'));
+                logoutModal.show();
+            });
+        }
+    });
+</script>
+
+        
+        <div class="main-content">
+            <!-- Include the navbar/header -->
+            
+<!-- Header -->
+<link rel="stylesheet" href="css/navbar.css">
+<div class="header">
+    <!-- Burger icon removed as requested -->
+    <div class="doctor-info">
+        <i class="bi bi-person-circle user-icon"></i>
+        <div>
+            <p class="doctor-name">
+                testuser1            </p>
+            <p class="doctor-role">
+                doctor            </p>
+        </div>
+    </div>
+    <div class="notification-bell" id="notificationBell">
+        <i class="bi bi-bell"></i>
+                <div class="notification-dropdown">
+            <!-- Notification content here -->
+        </div>
+    </div>
+    
+    <!-- Dropdown menu removed as requested -->
+</div>
+
+<!-- Add this script to fix the sidebar toggle functionality -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const toggleButton = document.getElementById('toggle-sidebar');
+        const sidebar = document.querySelector('.sidebar');
+        const mainContent = document.querySelector('.main-content');
+        
+        // Create overlay element
+        const overlay = document.createElement('div');
+        overlay.className = 'sidebar-overlay';
+        document.body.appendChild(overlay);
+        
+        if (toggleButton && sidebar && mainContent) {
+            toggleButton.addEventListener('click', function(e) {
+                e.preventDefault();
+                sidebar.classList.toggle('active');
+                mainContent.classList.toggle('active');
+                overlay.classList.toggle('active');
+            });
+            
+            // Close sidebar when clicking on overlay
+            overlay.addEventListener('click', function() {
+                sidebar.classList.remove('active');
+                mainContent.classList.remove('active');
+                overlay.classList.remove('active');
+            });
+        }
+    });
+</script>
+
+<!-- Add notification panel styles and script -->
+<style>
+    /* Notification Panel Styles */
+    .notification-bell {
+        position: relative;
+        cursor: pointer;
+    }
+    
+    /* User Icon Styles */
+    .user-icon {
+        font-size: 2.2rem;
+        color: #0d6efd;
+        margin-right: 15px;
+    }
+    
+    .notification-panel {
+        position: absolute;
+        top: 100%;
+        right: 0;
+        width: 320px;
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        z-index: 1000;
+        display: none;
+        overflow: hidden;
+    }
+    
+    .notification-panel-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px;
+        border-bottom: 1px solid #f0f0f0;
+    }
+    
+    .mark-all-read {
+        color: #0d6efd;
+        font-size: 0.8rem;
+        cursor: pointer;
+    }
+    
+    .notification-panel-body {
+        max-height: 350px;
+        overflow-y: auto;
+    }
+    
+    .notification-item {
+        display: flex;
+        padding: 12px 15px;
+        border-bottom: 1px solid #f0f0f0;
+        transition: background-color 0.2s;
+    }
+    
+    .notification-item:hover {
+        background-color: #f8f9fa;
+    }
+    
+    .notification-icon {
+        margin-right: 15px;
+        color: #0d6efd;
+    }
+    
+    .notification-details {
+        flex: 1;
+    }
+    
+    .notification-title {
+        font-weight: 600;
+        margin-bottom: 3px;
+    }
+    
+    .notification-message {
+        font-size: 0.9rem;
+        margin-bottom: 5px;
+    }
+    
+    .notification-time {
+        font-size: 0.8rem;
+        color: #6c757d;
+        margin-bottom: 0;
+    }
+    
+    /* Heartbeat Loader Styles */
+    .heartbeat-loader {
+        padding: 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    
+    .heartbeat-line {
+        width: 100%;
+        height: 40px;
+    }
+    
+    .heartbeat-line svg {
+        width: 100%;
+        height: 100%;
+    }
+    
+    .heartbeat-line svg path {
+        fill: none;
+        stroke: #0d6efd;
+        stroke-width: 2;
+        stroke-linecap: round;
+        animation: pulse 1.5s infinite ease-in-out;
+    }
+    
+    @keyframes pulse {
+        0% {
+            stroke-dasharray: 0 1000;
+            stroke-dashoffset: 0;
+        }
+        50% {
+            stroke-dasharray: 1000 1000;
+            stroke-dashoffset: 0;
+        }
+        100% {
+            stroke-dasharray: 1000 1000;
+            stroke-dashoffset: -1000;
+        }
+    }
+</style>
+
+<!-- Add notification panel script -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const notificationBell = document.getElementById('notificationBell');
+        const notificationPanel = document.getElementById('notificationPanel');
+        const heartbeatLoader = document.getElementById('heartbeatLoader');
+        const notificationContent = document.getElementById('notificationContent');
+        
+        // Toggle notification panel
+        if (notificationBell) {
+            notificationBell.addEventListener('click', function(e) {
+                e.stopPropagation();
+                
+                if (notificationPanel.style.display === 'block') {
+                    notificationPanel.style.display = 'none';
+                } else {
+                    notificationPanel.style.display = 'block';
+                    heartbeatLoader.style.display = 'flex';
+                    notificationContent.style.display = 'none';
+                    
+                    // Show content after animation (500ms)
+                    setTimeout(function() {
+                        heartbeatLoader.style.display = 'none';
+                        notificationContent.style.display = 'block';
+                    }, 500);
+                }
+            });
+        }
+        
+        // Close panel when clicking outside
+        document.addEventListener('click', function(e) {
+            if (notificationBell && notificationPanel && !notificationBell.contains(e.target) && !notificationPanel.contains(e.target)) {
+                notificationPanel.style.display = 'none';
+            }
+        });
+        
+        // Mark all as read functionality
+        const markAllRead = document.querySelector('.mark-all-read');
+        if (markAllRead) {
+            markAllRead.addEventListener('click', function(e) {
+                e.stopPropagation();
+                const badge = document.querySelector('.notification-badge');
+                if (badge) {
+                    badge.textContent = '0';
+                }
+                // Here you would also make an AJAX call to update the notification status in the database
+            });
+        }
+    });
+</script>
+
+<!-- Add sidebar script -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Get the toggle button and sidebar elements
+        const toggleButton = document.getElementById('toggle-sidebar');
+        const sidebar = document.querySelector('.sidebar');
+        const mainContent = document.querySelector('.main-content');
+        const closeButton = document.getElementById('close-sidebar');
+        
+        // Toggle sidebar when burger icon is clicked
+        if (toggleButton) {
+            toggleButton.addEventListener('click', function() {
+                if (sidebar) {
+                    sidebar.classList.toggle('active');
+                }
+                if (mainContent) {
+                    mainContent.classList.toggle('active');
+                }
+            });
+        }
+        
+        // Close sidebar when X button is clicked
+        if (closeButton) {
+            closeButton.addEventListener('click', function() {
+                if (sidebar) {
+                    sidebar.classList.remove('active');
+                }
+                if (mainContent) {
+                    mainContent.classList.remove('active');
+                }
+            });
+        }
+        
+        // Close sidebar when clicking outside on mobile
+        document.addEventListener('click', function(event) {
+            const isClickInsideSidebar = sidebar.contains(event.target);
+            const isClickOnToggleButton = toggleButton.contains(event.target);
+            
+            // Only apply this behavior on mobile screens
+            if (window.innerWidth < 992 && !isClickInsideSidebar && !isClickOnToggleButton && sidebar.classList.contains('active')) {
+                sidebar.classList.remove('active');
+                mainContent.classList.remove('active');
+            }
+        });
+    });
+</script>
+
+<nav class="navbar navbar-expand-lg">
+    <div class="container-fluid">
+    </div>
+</nav>
+
+            <!-- Search Bar -->
+            <div class="search-bar">
+                <i class="bi bi-search"></i>
+                <input type="text" placeholder="Search for patients by name or ID...">
+                
+            </div>
+
+            <div class="row">
+                <!-- Today's Appointments - Adjusted to full width -->
+                <div class="col-12 mb-4">
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0">Today's Appointments</h5>
+                            <a href="appointments.php" class="btn btn-sm btn-primary">View All</a>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Time</th>
+                                            <th>Patient</th>
+                                            <th>Purpose</th>
+                                            <th class="text-center">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                                                                <tr>
+                                            <td colspan="4" class="text-center">No appointments scheduled for today</td>
+                                        </tr>
+                                                                            </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <!-- Patient Records Quick Access - Now full width -->
+                <div class="col-12 mb-4">
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0">Patient Records Quick Access</h5>
+                            <a href="patients.php" class="btn btn-sm btn-primary">View All Patients</a>
+                        </div>
+                        <div class="card-body p-0">
+                                                                                    <div class="patient-card">
+                                <div class="patient-avatar">
+                                                                    </div>
+                                <div class="patient-info">
+                                    <p class="patient-name"> </p>
+                                    <p class="patient-details">ID: N/A | Last Visit: N/A</p>
+                                </div>
+                                <div class="patient-actions">
+                                    <button class="btn btn-sm btn-outline-primary"><i class="bi bi-eye"></i></button>
+                                    <button class="btn btn-sm btn-outline-success"><i class="bi bi-journal-plus"></i></button>
+                                </div>
+                            </div>
+                                                        <div class="patient-card">
+                                <div class="patient-avatar">
+                                                                    </div>
+                                <div class="patient-info">
+                                    <p class="patient-name"> </p>
+                                    <p class="patient-details">ID: N/A | Last Visit: N/A</p>
+                                </div>
+                                <div class="patient-actions">
+                                    <button class="btn btn-sm btn-outline-primary"><i class="bi bi-eye"></i></button>
+                                    <button class="btn btn-sm btn-outline-success"><i class="bi bi-journal-plus"></i></button>
+                                </div>
+                            </div>
+                                                        <div class="patient-card">
+                                <div class="patient-avatar">
+                                                                    </div>
+                                <div class="patient-info">
+                                    <p class="patient-name"> </p>
+                                    <p class="patient-details">ID: N/A | Last Visit: N/A</p>
+                                </div>
+                                <div class="patient-actions">
+                                    <button class="btn btn-sm btn-outline-primary"><i class="bi bi-eye"></i></button>
+                                    <button class="btn btn-sm btn-outline-success"><i class="bi bi-journal-plus"></i></button>
+                                </div>
+                            </div>
+                                                        <div class="patient-card">
+                                <div class="patient-avatar">
+                                                                    </div>
+                                <div class="patient-info">
+                                    <p class="patient-name"> </p>
+                                    <p class="patient-details">ID: N/A | Last Visit: N/A</p>
+                                </div>
+                                <div class="patient-actions">
+                                    <button class="btn btn-sm btn-outline-primary"><i class="bi bi-eye"></i></button>
+                                    <button class="btn btn-sm btn-outline-success"><i class="bi bi-journal-plus"></i></button>
+                                </div>
+                            </div>
+                                                                                </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // Toggle sidebar on mobile
+        document.getElementById('toggle-sidebar').addEventListener('click', function() {
+            document.querySelector('.sidebar').classList.toggle('active');
+            document.querySelector('.main-content').classList.toggle('active');
+        });
+    </script>
+</body>
+</html>
+
+<!-- View Appointment Modal -->
+<div class="modal fade" id="viewAppointmentModal" tabindex="-1" aria-labelledby="viewAppointmentModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="viewAppointmentModalLabel">
+                    <i class="bi bi-calendar-check me-2"></i>Appointment Details
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="text-center mb-4">
+                    <div class="avatar-container mb-3">
+                        <i class="bi bi-person-circle" style="font-size: 4rem; color: #6c757d;"></i>
+                    </div>
+                    <h4 id="modalPatientName">Patient Name</h4>
+                    <p class="text-muted">Patient ID: <span id="modalPatientId">P10045</span></p>
+                </div>
+                
+                <div class="patient-details">
+                    <div class="row mb-2">
+                        <div class="col-md-4 fw-bold">Purpose:</div>
+                        <div class="col-md-8" id="modalPurpose">Annual Checkup</div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-md-4 fw-bold">Date:</div>
+                        <div class="col-md-8" id="modalDate">2023-07-15</div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-md-4 fw-bold">Time:</div>
+                        <div class="col-md-8" id="modalTime">09:00 AM</div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-md-4 fw-bold">Contact:</div>
+                        <div class="col-md-8" id="modalContact">(555) 123-4567</div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-md-4 fw-bold">Medical History:</div>
+                        <div class="col-md-8" id="modalMedicalHistory">No significant medical history</div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Complete Appointment Modal -->
+<div class="modal fade" id="completeAppointmentModal" tabindex="-1" aria-labelledby="completeAppointmentModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="completeAppointmentModalLabel">
+                    <i class="bi bi-check-circle me-2"></i>Complete Appointment
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>You are about to mark this appointment as completed:</p>
+                <div class="alert alert-info">
+                    <strong>Patient:</strong> <span id="completePatientName">Patient Name</span><br>
+                    <strong>Purpose:</strong> <span id="completePurpose">Annual Checkup</span><br>
+                    <strong>Date/Time:</strong> <span id="completeDateTime">2023-07-15, 09:00 AM</span>
+                </div>
+                
+                <div class="mb-3">
+                    <label for="appointmentNotes" class="form-label">Appointment Notes</label>
+                    <textarea class="form-control" id="appointmentNotes" rows="4" placeholder="Enter notes about this appointment..."></textarea>
+                </div>
+                
+                <div class="mb-3">
+                    <label for="followUpRequired" class="form-label">Follow-up Required?</label>
+                    <select class="form-select" id="followUpRequired">
+                        <option value="no">No</option>
+                        <option value="yes">Yes</option>
+                    </select>
+                </div>
+                
+                <div id="followUpOptions" class="d-none">
+                    <div class="mb-3">
+                        <label for="followUpDate" class="form-label">Follow-up Date</label>
+                        <input type="date" class="form-control" id="followUpDate">
+                    </div>
+                    <div class="mb-3">
+                        <label for="followUpReason" class="form-label">Follow-up Reason</label>
+                        <input type="text" class="form-control" id="followUpReason" placeholder="Reason for follow-up">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-success" id="confirmCompleteBtn">
+                    <i class="bi bi-check-lg me-1"></i> Mark as Completed
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Success Toast -->
+<div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+    <div id="appointmentToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-header bg-success text-white">
+            <i class="bi bi-check-circle me-2"></i>
+            <strong class="me-auto">Success</strong>
+            <small>Just now</small>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body" id="toastMessage">
+            Appointment has been marked as completed!
+        </div>
+    </div>
+</div>
+
+<!-- Add custom styles for the modals -->
+<style>
+    /* Avatar styling */
+    .avatar-container {
+        display: inline-block;
+        position: relative;
+    }
+    
+    /* Responsive icon sizing */
+    @media (max-width: 576px) {
+        .avatar-container .bi-person-circle {
+            font-size: 3rem !important;
+        }
+    }
+    
+    /* Row styling for better mobile display */
+    .patient-details .row {
+        margin-bottom: 0.5rem;
+        padding: 0.5rem;
+        background-color: #f8f9fa;
+        border-radius: 0.25rem;
+    }
+    
+    /* Responsive text adjustments */
+    @media (max-width: 767px) {
+        .patient-details .col-md-4 {
+            margin-bottom: 0.25rem;
+        }
+    }
+</style>
+
+<!-- JavaScript for modal functionality -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialize tooltips
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        tooltipTriggerList.forEach(function (tooltipTriggerEl) {
+            new bootstrap.Tooltip(tooltipTriggerEl);
+        });
+        
+        // Get all patient view buttons in the Patient Records section
+        const patientViewButtons = document.querySelectorAll('.patient-actions .btn-outline-primary');
+        patientViewButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                // Get the patient data from the parent container
+                const patientCard = this.closest('.patient-card');
+                const patientName = patientCard.querySelector('.patient-name').textContent.trim();
+                const patientDetails = patientCard.querySelector('.patient-details').textContent.trim();
+                
+                // Extract patient ID and last visit from the details text
+                const patientId = patientDetails.split('|')[0].replace('ID:', '').trim();
+                const lastVisit = patientDetails.split('|')[1].replace('Last Visit:', '').trim();
+                
+                // Populate the modal with data
+                document.getElementById('patientModalName').textContent = patientName;
+                document.getElementById('patientModalId').textContent = patientId;
+                document.getElementById('patientModalLastVisit').textContent = lastVisit;
+                
+                // Show the modal
+                const viewPatientModal = new bootstrap.Modal(document.getElementById('viewPatientModal'));
+                viewPatientModal.show();
+            });
+        });
+        
+        // Get all add note buttons in the Patient Records section
+        const addNoteButtons = document.querySelectorAll('.patient-actions .btn-outline-success');
+        addNoteButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                // Get the patient data from the parent container
+                const patientCard = this.closest('.patient-card');
+                const patientName = patientCard.querySelector('.patient-name').textContent.trim();
+                const patientDetails = patientCard.querySelector('.patient-details').textContent.trim();
+                
+                // Extract patient ID from the details text
+                const patientId = patientDetails.split('|')[0].replace('ID:', '').trim();
+                
+                // Populate the modal with data
+                document.getElementById('notePatientName').textContent = patientName;
+                document.getElementById('notePatientId').textContent = patientId;
+                document.getElementById('noteDate').value = new Date().toISOString().split('T')[0]; // Set today's date
+                
+                // Show the modal
+                const addNoteModal = new bootstrap.Modal(document.getElementById('addPatientNoteModal'));
+                addNoteModal.show();
+            });
+        });
+        
+        // Handle save note button
+        document.getElementById('saveNoteBtn').addEventListener('click', function() {
+            // Here you would normally send the data to the server
+            // For now, just close the modal and show a success message
+            
+            const addNoteModal = bootstrap.Modal.getInstance(document.getElementById('addPatientNoteModal'));
+            addNoteModal.hide();
+            
+            // Show success toast
+            const toast = new bootstrap.Toast(document.getElementById('appointmentToast'));
+            document.getElementById('toastMessage').textContent = 'Medical note has been saved successfully!';
+            toast.show();
+        });
+        
+        // Get all view buttons
+        const viewButtons = document.querySelectorAll('.btn-outline-primary');
+        viewButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                // Get the appointment data from the row
+                const row = this.closest('tr');
+                const patientName = row.cells[1].textContent.trim(); // Changed from cells[0] to cells[1]
+                const purpose = row.cells[2].textContent.trim();
+                
+                // Populate the modal with data
+                document.getElementById('modalPatientName').textContent = patientName;
+                document.getElementById('modalPurpose').textContent = purpose;
+                
+                // Show the modal
+                const viewAppointmentModal = new bootstrap.Modal(document.getElementById('viewAppointmentModal'));
+                viewAppointmentModal.show();
+            });
+        });
+        });
+        
+        // Follow-up dropdown toggle
+        document.getElementById('followUpRequired').addEventListener('change', function() {
+            const followUpOptions = document.getElementById('followUpOptions');
+            if (this.value === 'yes') {
+                followUpOptions.classList.remove('d-none');
+            } else {
+                followUpOptions.classList.add('d-none');
+            }
+        });
+        
+        // Handle complete appointment button
+        document.getElementById('confirmCompleteBtn').addEventListener('click', function() {
+            // Here you would normally send the data to the server
+            // For now, just close the modal and show a success message
+            
+            const completeModal = bootstrap.Modal.getInstance(document.getElementById('completeAppointmentModal'));
+            completeModal.hide();
+            
+            // Show success toast
+            const toast = new bootstrap.Toast(document.getElementById('appointmentToast'));
+            document.getElementById('toastMessage').textContent = 'Appointment has been marked as completed!';
+            toast.show();
+        });
+        </script>
+        
+        ";
