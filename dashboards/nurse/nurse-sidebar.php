@@ -1,4 +1,4 @@
-<link rel="stylesheet" href="css/nurse-sidebar.css">
+<link rel="stylesheet" href="css/sidebar.css">
 <div class="sidebar">
     <div class="sidebar-header">
         <div class="logo-container">
@@ -18,17 +18,16 @@
     <div class="sidebar-menu">
         <ul>
             <li><a href="nurse.php" <?php echo basename($_SERVER['PHP_SELF']) == 'nurse.php' ? 'class="active"' : ''; ?>><i class="bi bi-speedometer2"></i> <span>Dashboard</span></a></li>
-            <li><a href="nurse-patients.php" <?php echo basename($_SERVER['PHP_SELF']) == 'nurse-patients.php' ? 'class="active"' : ''; ?>><i class="bi bi-people"></i> <span>Patients</span></a></li>
-            <li><a href="vitals.php" <?php echo basename($_SERVER['PHP_SELF']) == 'vitals.php' ? 'class="active"' : ''; ?>><i class="bi bi-heart-pulse"></i> <span>Vitals</span></a></li>
-            <li><a href="medications.php" <?php echo basename($_SERVER['PHP_SELF']) == 'medications.php' ? 'class="active"' : ''; ?>><i class="bi bi-capsule"></i> <span>Medications</span></a></li>
             <li><a href="schedule.php" <?php echo basename($_SERVER['PHP_SELF']) == 'schedule.php' ? 'class="active"' : ''; ?>><i class="bi bi-calendar-check"></i> <span>Schedule</span></a></li>
+            <li><a href="nurse-patients.php" <?php echo basename($_SERVER['PHP_SELF']) == 'nurse-patients.php' ? 'class="active"' : ''; ?>><i class="bi bi-people"></i> <span>Patients</span></a></li>
+            <li><a href="medications.php" <?php echo basename($_SERVER['PHP_SELF']) == 'medications.php' ? 'class="active"' : ''; ?>><i class="bi bi-capsule"></i> <span>Medications</span></a></li>
             <li><a href="nurse-notification.php" <?php echo basename($_SERVER['PHP_SELF']) == 'nurse-notification.php' ? 'class="active"' : ''; ?>><i class="bi bi-bell"></i> <span>Notifications</span></a></li>
             <li><a href="settings.php" <?php echo basename($_SERVER['PHP_SELF']) == 'settings.php' ? 'class="active"' : ''; ?>><i class="bi bi-gear"></i> <span>Settings</span></a></li>
             <li><a href="#" id="logout-link"><i class="bi bi-box-arrow-right"></i> <span>Logout</span></a></li>
         </ul>
     </div>
     <div class="sidebar-footer">
-        <p>&copy; 2025 Clinic Management System</p>
+        <p>&copy; <?php echo date('Y'); ?> Clinic Management System</p>
     </div>
 </div>
 
@@ -66,9 +65,76 @@
         if (logoutLink) {
             logoutLink.addEventListener('click', function(e) {
                 e.preventDefault();
-                const logoutModal = new bootstrap.Modal(document.getElementById('logoutModal'));
-                logoutModal.show();
+                
+                // Check if Bootstrap is loaded
+                if (typeof bootstrap !== 'undefined') {
+                    const logoutModal = new bootstrap.Modal(document.getElementById('logoutModal'));
+                    logoutModal.show();
+                } else {
+                    console.error('Bootstrap is not loaded. Make sure you have included bootstrap.bundle.min.js');
+                    // Fallback confirmation if Bootstrap is not available
+                    if (confirm('Are you sure you want to log out? Any unsaved changes will be lost.')) {
+                        window.location.href = 'logout.php';
+                    }
+                }
             });
+        } else {
+            console.error('Logout link not found');
         }
     });
 </script>
+
+<style>
+    /* Heart Logo Animation */
+    .heart-logo {
+        width: 65px;
+        height: 65px;
+        margin-right: 10px;
+    }
+    
+    .heart {
+        animation: pulse 1.5s ease-in-out infinite;
+        transform-origin: center;
+    }
+    
+    .heartbeat-line {
+        stroke-dasharray: 400;
+        stroke-dashoffset: 400;
+        animation: dash 3s linear infinite;
+    }
+    
+    @keyframes pulse {
+        0% {
+            transform: scale(1);
+        }
+        50% {
+            transform: scale(1.1);
+        }
+        100% {
+            transform: scale(1);
+        }
+    }
+    
+    @keyframes dash {
+        0% {
+            stroke-dashoffset: 400;
+        }
+        100% {
+            stroke-dashoffset: 0;
+        }
+    }
+    
+    /* Logo container styling */
+    .logo-container {
+        display: flex;
+        align-items: center;
+        padding: 15px;
+    }
+    
+    .logo-container h3 {
+        margin: 0;
+        color: #fff;
+        font-size: 1.3rem;
+        font-weight: 700;
+    }
+</style>
