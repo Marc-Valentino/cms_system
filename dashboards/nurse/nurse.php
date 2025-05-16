@@ -4,22 +4,27 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
+// Include necessary files
+require_once '../../includes/db_connection.php';
+require_once '../../includes/user_functions.php';
+
 // Check if user is logged in and has nurse role
 if (!isset($_SESSION['user_id']) || $_SESSION['role_id'] != 2) {
     header("Location: ../../login/login.php");
     exit();
 }
 
-// Include database connection
-require_once '../../includes/db_connection.php';
+// Get nurse information
+$nurse_id = $_SESSION['user_id'];
 
-// Get user information
-$user_id = $_SESSION['user_id'];
-$stmt = $conn->prepare("SELECT * FROM users WHERE id = ?");
-$stmt->bind_param("i", $user_id);
-$stmt->execute();
-$user = $stmt->get_result()->fetch_assoc();
-$stmt->close();
+// Use Supabase query instead of direct MySQL
+$nurse_info = supabase_query('users', 'GET', null, [
+    'select' => '*',
+    'id' => 'eq.' . $nurse_id
+]);
+
+// Get the first result
+$nurse = $nurse_info[0] ?? null;
 
 // Get current date and time
 $current_date = date('Y-m-d');
@@ -33,34 +38,32 @@ $medications_today_count = 0;
 $vitals_logged_count = 0;
 
 // Get assigned patients count
-$stmt = $conn->prepare("SELECT COUNT(*) as count FROM patient_assignments WHERE nurse_id = ?");
-$stmt->bind_param("i", $user_id);
-$stmt->execute();
-$result = $stmt->get_result();
-if ($row = $result->fetch_assoc()) {
-    $assigned_patients_count = $row['count'];
-}
-$stmt->close();
+$patient_assignments = supabase_query('patient_assignments', 'GET', null, [
+    'select' => 'count',
+    'nurse_id' => 'eq.' . $nurse_id,
+    'count' => 'exact'
+]);
+$assigned_patients_count = $patient_assignments['count'] ?? 0;
 
 // Get medications count for today
-$stmt = $conn->prepare("SELECT COUNT(*) as count FROM medication_schedules WHERE nurse_id = ? AND DATE(scheduled_time) = CURRENT_DATE()");
-$stmt->bind_param("i", $user_id);
-$stmt->execute();
-$result = $stmt->get_result();
-if ($row = $result->fetch_assoc()) {
-    $medications_today_count = $row['count'];
-}
-$stmt->close();
+$medication_schedules = supabase_query('medication_schedules', 'GET', null, [
+    'select' => 'count',
+    'nurse_id' => 'eq.' . $nurse_id,
+    'scheduled_time' => 'gte.' . $current_date,
+    'scheduled_time' => 'lt.' . date('Y-m-d', strtotime('+1 day')),
+    'count' => 'exact'
+]);
+$medications_today_count = $medication_schedules['count'] ?? 0;
 
 // Get vitals logged count for today
-$stmt = $conn->prepare("SELECT COUNT(*) as count FROM vitals_records WHERE recorded_by = ? AND DATE(date_time) = CURRENT_DATE()");
-$stmt->bind_param("i", $user_id);
-$stmt->execute();
-$result = $stmt->get_result();
-if ($row = $result->fetch_assoc()) {
-    $vitals_logged_count = $row['count'];
-}
-$stmt->close();
+$vitals_records = supabase_query('vitals_records', 'GET', null, [
+    'select' => 'count',
+    'recorded_by' => 'eq.' . $nurse_id,
+    'date_time' => 'gte.' . $current_date,
+    'date_time' => 'lt.' . date('Y-m-d', strtotime('+1 day')),
+    'count' => 'exact'
+]);
+$vitals_logged_count = $vitals_records['count'] ?? 0;
 
 // Get nurse shift information
 $shift_start = "";
@@ -70,29 +73,80 @@ $tomorrow_shift_end = "";
 $has_shift_today = false;
 $has_shift_tomorrow = false;
 
-$stmt = $conn->prepare("SELECT * FROM nurse_schedules WHERE nurse_id = ? AND date = CURRENT_DATE()");
-$stmt->bind_param("i", $user_id);
-$stmt->execute();
-$result = $stmt->get_result();
-if ($row = $result->fetch_assoc()) {
-    $shift_start = date('H:i A', strtotime($row['start_time']));
-    $shift_end = date('H:i A', strtotime($row['end_time']));
+// Get today's shift
+$today_shift = supabase_query('nurse_schedules', 'GET', null, [
+    'select' => '*',
+    'nurse_id' => 'eq.' . $nurse_id,
+    'date' => 'eq.' . $current_date
+]);
+
+// Fix for line 85 - Check if today_shift is not null and has elements
+if (!empty($today_shift) && isset($today_shift[0]) && is_array($today_shift[0])) {
+    $shift_start = date('h:i A', strtotime($today_shift[0]['start_time']));
+    $shift_end = date('h:i A', strtotime($today_shift[0]['end_time']));
     $has_shift_today = true;
 }
-$stmt->close();
 
 // Get tomorrow's shift
 $tomorrow = date('Y-m-d', strtotime('+1 day'));
-$stmt = $conn->prepare("SELECT * FROM nurse_schedules WHERE nurse_id = ? AND date = ?");
-$stmt->bind_param("is", $user_id, $tomorrow);
-$stmt->execute();
-$result = $stmt->get_result();
-if ($row = $result->fetch_assoc()) {
-    $tomorrow_shift_start = date('H:i A', strtotime($row['start_time']));
-    $tomorrow_shift_end = date('H:i A', strtotime($row['end_time']));
+$tomorrow_shift = supabase_query('nurse_schedules', 'GET', null, [
+    'select' => '*',
+    'nurse_id' => 'eq.' . $nurse_id,
+    'date' => 'eq.' . $tomorrow
+]);
+
+// Fix for lines 98-99 - Check if tomorrow_shift is not null and has elements
+if (!empty($tomorrow_shift) && isset($tomorrow_shift[0]) && is_array($tomorrow_shift[0])) {
+    $tomorrow_shift_start = date('h:i A', strtotime($tomorrow_shift[0]['start_time']));
+    $tomorrow_shift_end = date('h:i A', strtotime($tomorrow_shift[0]['end_time']));
     $has_shift_tomorrow = true;
 }
-$stmt->close();
+
+// Get appointments for this nurse
+$appointments = supabase_query('appointments', 'GET', null, [
+    'select' => '*,patients(*)',
+    'nurse_id' => 'eq.' . $nurse_id,
+    'order' => 'appointment_date.asc,appointment_time.asc'
+]);
+
+// Get today's appointments - Fix for line 114 - Use $current_date instead of $today
+$today_appointments = supabase_query('appointments', 'GET', null, [
+    'select' => '*,patients(*)',
+    'nurse_id' => 'eq.' . $nurse_id,
+    'appointment_date' => 'eq.' . $current_date,
+    'order' => 'appointment_time.asc'
+]);
+
+// Get recent patients
+$recent_patients = supabase_query('patients', 'GET', null, [
+    'select' => '*',
+    'order' => 'created_at.desc',
+    'limit' => 5
+]);
+
+// Get total patients count
+$patients_count = supabase_query('patients', 'GET', null, [
+    'select' => 'count',
+    'count' => 'exact'
+]);
+$total_patients = $patients_count['count'] ?? 0;
+
+// Get total appointments count
+$appointments_count = supabase_query('appointments', 'GET', null, [
+    'select' => 'count',
+    'nurse_id' => 'eq.' . $nurse_id,
+    'count' => 'exact'
+]);
+$total_appointments = $appointments_count['count'] ?? 0;
+
+// Get completed appointments count
+$completed_count = supabase_query('appointments', 'GET', null, [
+    'select' => 'count',
+    'nurse_id' => 'eq.' . $nurse_id,
+    'status' => 'eq.completed',
+    'count' => 'exact'
+]);
+$completed_appointments = $completed_count['count'] ?? 0;
 ?>
 
 <!DOCTYPE html>
@@ -251,11 +305,6 @@ $stmt->close();
 
     <!-- Bootstrap JS Bundle with Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
-
-    <!-- Bootstrap JS Bundle with Popper -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     
     <script>
         // Toggle sidebar on mobile
@@ -269,3 +318,5 @@ $stmt->close();
             }
         });
     </script>
+</body>
+</html>

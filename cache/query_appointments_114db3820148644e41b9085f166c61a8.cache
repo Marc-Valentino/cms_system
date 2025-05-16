@@ -1,0 +1,1 @@
+a:4:{s:4:"code";s:8:"PGRST100";s:7:"details";s:56:"unexpected "e" expecting "not" or operator (eq, gt, ...)";s:4:"hint";N;s:7:"message";s:51:""failed to parse filter (exact)" (line 1, column 1)";}

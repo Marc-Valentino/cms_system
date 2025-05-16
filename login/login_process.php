@@ -48,25 +48,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     
     try {
         // First try to find the user by email only (without role restriction)
-        logDebug("Querying database for user with email: $email");
+        logDebug("Querying Supabase for user with email: $email");
         
-        // Use direct SQL query for debugging
-        $stmt = $conn->prepare("SELECT * FROM users WHERE email = ?");
-        $stmt->bind_param("s", $email);
-        $stmt->execute();
-        $result = $stmt->get_result();
+        // Use Supabase query instead of direct MySQL
+        $users = supabase_query('users', 'GET', null, [
+            'select' => '*',
+            'email' => 'eq.' . $email
+        ]);
         
-        if ($result->num_rows === 0) {
+        logDebug("Supabase query result: " . json_encode($users));
+        
+        if (!$users || empty($users)) {
             logDebug("No user found with email: $email");
             $response['message'] = 'No account found with this email';
             echo json_encode($response);
             exit;
-        }
-        
-        // Get all matching users
-        $users = [];
-        while ($row = $result->fetch_assoc()) {
-            $users[] = $row;
         }
         
         logDebug("Found " . count($users) . " users with email: $email");

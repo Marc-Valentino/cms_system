@@ -3,6 +3,19 @@
 define('SUPABASE_URL', 'https://zdqaglewecydgxffsjqp.supabase.co');
 define('SUPABASE_KEY', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpkcWFnbGV3ZWN5ZGd4ZmZzanFwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDcxMjYwODYsImV4cCI6MjA2MjcwMjA4Nn0.yY1hT0rjN0GPFCXtQZI_flfKvNoDT1jrq8KZzX0gPCg');
 
+// Include cache class
+require_once 'cache.php';
+
+// Remove MySQL connection - we're using Supabase instead
+// $conn = new mysqli('localhost', 'root', '', 'cms_system');
+// if ($conn->connect_error) {
+//     error_log("Database connection failed: " . $conn->connect_error);
+//     die("Connection failed: " . $conn->connect_error);
+// }
+
+// Create a dummy $conn variable to avoid errors in code that might use it
+$conn = null;
+
 /**
  * Function to make API calls to Supabase
  * 
@@ -12,19 +25,7 @@ define('SUPABASE_KEY', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmF
  * @param array|null $params Query parameters
  * @return array|bool Response data or false on error
  */
-// Include cache class
-require_once 'cache.php';
-
-// Update with your actual database credentials
-$conn = new mysqli('localhost', 'root', '', 'cms_system');
-if ($conn->connect_error) {
-    error_log("Database connection failed: " . $conn->connect_error);
-    die("Connection failed: " . $conn->connect_error);
-}
-
 function supabase_query($table, $method = 'GET', $data = null, $params = []) {
-    global $supabase_url, $supabase_key;
-    
     // Get cache instance
     $cache = Cache::getInstance();
     
