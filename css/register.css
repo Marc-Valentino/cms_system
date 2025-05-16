@@ -1,0 +1,47 @@
+:root {
+    --primary-color: #1a73e8; /* Deeper blue */
+    --secondary-color: #4285f4; /* Google blue */
+    --accent-color: #34a0ff; /* Light blue accent */
+    --text-color: #202124; /* Darker text for better contrast */
+    --light-color: #f0f6ff; /* Light blue tint for backgrounds */
+    --error-color: #e74c3c;
+    --success-color: #0f9d58; /* Google green */
+    --shadow: 0 4px 12px rgba(26, 115, 232, 0.2);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+body {
+    background: #1a73e8; /* Solid blue background */
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+/* All the other CSS styles from the original file */
+/* ... */
+
+/* Modal styles */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    backdrop-filter: blur(5px);
+}
+
+/* Rest of the modal styles */
+/* ... */
