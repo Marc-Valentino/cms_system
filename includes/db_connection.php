@@ -1,7 +1,11 @@
 <?php
 // Supabase API credentials
-define('SUPABASE_URL', 'https://zdqaglewecydgxffsjqp.supabase.co');
-define('SUPABASE_KEY', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpkcWFnbGV3ZWN5ZGd4ZmZzanFwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDcxMjYwODYsImV4cCI6MjA2MjcwMjA4Nn0.yY1hT0rjN0GPFCXtQZI_flfKvNoDT1jrq8KZzX0gPCg');
+if (!defined('SUPABASE_URL')) {
+    define('SUPABASE_URL', 'https://zdqaglewecydgxffsjqp.supabase.co');
+}
+if (!defined('SUPABASE_KEY')) {
+    define('SUPABASE_KEY', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpkcWFnbGV3ZWN5ZGd4ZmZzanFwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDcxMjYwODYsImV4cCI6MjA2MjcwMjA4Nn0.yY1hT0rjN0GPFCXtQZI_flfKvNoDT1jrq8KZzX0gPCg');
+}
 
 // Include cache class
 require_once 'cache.php';

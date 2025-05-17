@@ -28,6 +28,13 @@ $dashboard_data = $cache->get($cache_key);
 
 // If we have cached data, use it
 if ($dashboard_data !== false && is_array($dashboard_data) && $GLOBALS['CACHE_ENABLED']) {
+    // Make sure we extract all the necessary variables from the cache
+    $total_users = $dashboard_data['total_users'] ?? 0;
+    $total_doctors = $dashboard_data['total_doctors'] ?? 0;
+    $total_nurses = $dashboard_data['total_nurses'] ?? 0;
+    $total_patients = $dashboard_data['total_patients'] ?? 0;
+    
+    // Extract any other cached data
     extract($dashboard_data);
 } else {
     // Otherwise, fetch fresh data
@@ -40,23 +47,29 @@ if ($dashboard_data !== false && is_array($dashboard_data) && $GLOBALS['CACHE_EN
 
     // Get user counts from database
     try {
-        // Total users - simplified query
-        $users_result = supabase_query('users', 'GET');
-        $total_users = is_array($users_result) ? count($users_result) : 0;
+        // Get all users with role information
+        $user_data = supabase_query('users', 'GET', null, [
+            'select' => 'id,created_at,role_id',
+            'order' => 'created_at.asc'
+        ]) ?: [];
         
-        // Doctors (role_id = 1)
-        $doctors_result = supabase_query('users', 'GET', null, [
-            'role_id' => 'eq.1'
-        ]);
-        $total_doctors = is_array($doctors_result) ? count($doctors_result) : 0;
+        // Count users by role
+        $total_users = count($user_data);
         
-        // Nurses (role_id = 2)
-        $nurses_result = supabase_query('users', 'GET', null, [
-            'role_id' => 'eq.2'
-        ]);
-        $total_nurses = is_array($nurses_result) ? count($nurses_result) : 0;
+        foreach ($user_data as $user) {
+            if (isset($user['role_id'])) {
+                switch ($user['role_id']) {
+                    case 1:  // Assuming role_id 1 is for doctors
+                        $total_doctors++;
+                        break;
+                    case 2:  // Assuming role_id 2 is for nurses
+                        $total_nurses++;
+                        break;
+                }
+            }
+        }
         
-        // Patients
+        // Get patients count
         $patients_result = supabase_query('patients', 'GET');
         $total_patients = is_array($patients_result) ? count($patients_result) : 0;
         
@@ -74,6 +87,15 @@ if ($dashboard_data !== false && is_array($dashboard_data) && $GLOBALS['CACHE_EN
         'order' => 'created_at.desc',
         'limit' => 5
     ]) ?: [];
+
+    // Store the recent activities in the dashboard data
+    $dashboard_data['recent_activities'] = $recent_activities;
+
+    // Store the user statistics in the dashboard data
+    $dashboard_data['total_users'] = $total_users;
+    $dashboard_data['total_doctors'] = $total_doctors;
+    $dashboard_data['total_nurses'] = $total_nurses;
+    $dashboard_data['total_patients'] = $total_patients;
 
     // Get system activity data for chart - specifically user logins
     $login_data = supabase_query('system_logs', 'GET', null, [
@@ -498,50 +520,3 @@ if ($dashboard_data !== false && is_array($dashboard_data) && $GLOBALS['CACHE_EN
     </script>
 </body>
 </html>
-
-// Get user count data for chart
-$user_data = supabase_query('users', 'GET', null, [
-    'select' => 'id,created_at',
-    'order' => 'created_at.asc'
-]) ?: [];
-
-// Process data for chart - track user growth over time
-$chart_labels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-$chart_values = array_fill(0, 12, 0); // Initialize with zeros
-
-// Count cumulative users per month
-$user_count = 0;
-foreach ($user_data as $user) {
-    if (isset($user['created_at'])) {
-        $month = date('n', strtotime($user['created_at'])) - 1; // 0-based index
-        $user_count++;
-        
-        // Update all months from user creation to current
-        $current_month = date('n') - 1;
-        $current_year = date('Y');
-        $user_year = date('Y', strtotime($user['created_at']));
-        
-        // Only count for current year
-        if ($user_year == $current_year) {
-            for ($i = $month; $i <= $current_month; $i++) {
-                $chart_values[$i] = max($chart_values[$i], $user_count);
-            }
-        } else if ($user_year < $current_year) {
-            // For users from previous years, count them in all months
-            for ($i = 0; $i <= $current_month; $i++) {
-                $chart_values[$i] = max($chart_values[$i], $user_count);
-            }
-        }
-    }
-}
-
-// If no data, provide sample data for demonstration
-if (array_sum($chart_values) == 0) {
-    $chart_values = [3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3]; // Show constant 3 users
-}
-
-// Add to dashboard data
-$dashboard_data['chart_data'] = [
-    'labels' => $chart_labels,
-    'values' => $chart_values
-];

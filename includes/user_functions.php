@@ -131,6 +131,12 @@ function get_role_name_by_id($role_id) {
 function authenticate_user($email, $password) {
     global $conn;
     
+    // Check if connection is established
+    if (!$conn) {
+        error_log("Database connection is null");
+        return false;
+    }
+    
     try {
         // Add debugging at the start
         error_log("Attempting to authenticate user: $email");
@@ -178,5 +184,43 @@ function authenticate_user($email, $password) {
     }
     
     return false;
+}
+
+/**
+ * Check if a user has a specific permission
+ * 
+ * @param int $user_id The user ID
+ * @param string $permission_name The permission name to check
+ * @return bool True if the user has the permission, false otherwise
+ */
+function user_has_permission($user_id, $permission_name) {
+    // Get user's role
+    $user = get_user_by_id($user_id);
+    if (empty($user) || !isset($user[0]['role_id'])) {
+        return false;
+    }
+    
+    $role_id = $user[0]['role_id'];
+    
+    // Get permission ID
+    $permission = supabase_query('permissions', 'GET', null, [
+        'select' => 'id',
+        'name' => 'eq.' . $permission_name
+    ]);
+    
+    if (empty($permission) || !isset($permission[0]['id'])) {
+        return false;
+    }
+    
+    $permission_id = $permission[0]['id'];
+    
+    // Check if role has this permission
+    $role_permission = supabase_query('role_permissions', 'GET', null, [
+        'select' => 'id',
+        'role_id' => 'eq.' . $role_id,
+        'permission_id' => 'eq.' . $permission_id
+    ]);
+    
+    return !empty($role_permission);
 }
 ?>

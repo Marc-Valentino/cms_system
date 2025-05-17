@@ -62,7 +62,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'first_name' => $_POST['first_name'],
             'last_name' => $_POST['last_name'],
             'role_id' => (int)$_POST['role_id'],
-            'status' => $_POST['status']
+            'active' => $_POST['status'] == 'active' ? 1 : 0
         ];
         
         // Update the user
@@ -238,8 +238,8 @@ function generate_random_password($length = 10) {
                                                     ?>
                                                 </td>
                                                 <td>
-                                                    <span class="badge bg-<?php echo $user['status'] === 'active' ? 'success' : 'danger'; ?>">
-                                                        <?php echo ucfirst(htmlspecialchars($user['status'])); ?>
+                                                    <span class="badge bg-<?php echo isset($user['active']) && $user['active'] == 1 ? 'success' : 'danger'; ?>">
+                                                        <?php echo isset($user['active']) && $user['active'] == 1 ? 'Active' : 'Inactive'; ?>
                                                     </span>
                                                 </td>
                                                 <td><?php echo date('M d, Y', strtotime($user['created_at'])); ?></td>
@@ -253,7 +253,7 @@ function generate_random_password($length = 10) {
                                                                 data-first-name="<?php echo htmlspecialchars($user['first_name']); ?>"
                                                                 data-last-name="<?php echo htmlspecialchars($user['last_name']); ?>"
                                                                 data-role-id="<?php echo $user['role_id']; ?>"
-                                                                data-status="<?php echo htmlspecialchars($user['status']); ?>">
+                                                                data-status="<?php echo isset($user['active']) ? ($user['active'] == 1 ? 'active' : 'inactive') : 'inactive'; ?>">
                                                             <i class="bi bi-pencil"></i>
                                                         </button>
                                                         <button type="button" class="btn btn-sm btn-outline-warning reset-password-btn"
@@ -374,7 +374,6 @@ function generate_random_password($length = 10) {
                             <select class="form-select" id="edit_status" name="status" required>
                                 <option value="active">Active</option>
                                 <option value="inactive">Inactive</option>
-                                <option value="suspended">Suspended</option>
                             </select>
                         </div>
                     </div>
