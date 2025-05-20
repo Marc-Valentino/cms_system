@@ -17,12 +17,18 @@
             <button class="btn btn-link dropdown-toggle" type="button" id="settingsDropdown" data-bs-toggle="dropdown" aria-expanded="false">
                 <i class="bi bi-gear-fill fs-5"></i>
             </button>
-            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="settingsDropdown">
-                <li><a class="dropdown-item" href="admin-profile.php"><i class="bi bi-person me-2"></i>Profile</a></li>
-                <li><a class="dropdown-item" href="admin-settings.php"><i class="bi bi-sliders me-2"></i>Settings</a></li>
-                <li><hr class="dropdown-divider"></li>
-                <li><a class="dropdown-item" href="logout.php"><i class="bi bi-box-arrow-right me-2"></i>Logout</a></li>
-            </ul>
+            <div class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                <a class="dropdown-item" href="profile.php">
+                    <i class="bi bi-person me-2"></i> Profile
+                </a>
+                <a class="dropdown-item" href="settings.php">
+                    <i class="bi bi-gear me-2"></i> Settings
+                </a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="logout.php">
+                    <i class="bi bi-box-arrow-right me-2"></i> Logout
+                </a>
+            </div>
         </div>
     </div>
     <div class="notification-bell" id="notificationBell">

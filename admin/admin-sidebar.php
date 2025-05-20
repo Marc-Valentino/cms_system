@@ -40,7 +40,7 @@
                 </a>
             </li>
             <li>
-                <a href="../logout.php" id="logout-link">
+                <a href="logout.php" id="logout-link">
                     <i class="bi bi-box-arrow-right"></i>
                     <span>Logout</span>
                 </a>
@@ -71,7 +71,7 @@
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
                     <i class="bi bi-x-circle me-1"></i> Cancel
                 </button>
-                <a href="../logout.php" class="btn btn-primary">
+                <a href="logout.php" class="btn btn-primary">
                     <i class="bi bi-box-arrow-right me-1"></i> Yes, Logout
                 </a>
             </div>

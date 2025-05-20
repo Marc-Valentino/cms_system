@@ -4,6 +4,19 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
+// Check if logout was requested
+if (isset($_GET['logout']) && $_GET['logout'] == 'true') {
+    // Clear all session variables
+    $_SESSION = array();
+    
+    // Destroy the session
+    session_destroy();
+    
+    // Redirect to login page
+    header("Location: ../login/login.php");
+    exit();
+}
+
 // Check if user is logged in and has admin role
 if (!isset($_SESSION['user_id']) || $_SESSION['role_id'] != 3) {
     header("Location: ../login/login.php");
